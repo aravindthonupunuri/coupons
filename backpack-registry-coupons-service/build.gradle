@@ -1,0 +1,10 @@
+apply from: "test.gradle"
+
+dependencies {
+    implementation "org.owasp.esapi:esapi:2.2.0.0"
+    implementation "io.micronaut.kafka:micronaut-kafka"
+    implementation "com.tgt.lists.micronaut:micronaut-resilience4j:$micronaut_resilience4j_version"
+}
+
+check.dependsOn testUnit
+

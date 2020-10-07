@@ -1,0 +1,4 @@
+rootProject.name="backpack-registry-coupons"
+include ':backpack-registry-coupons-app'
+include ':backpack-registry-coupons-consumer-app'
+include ':backpack-registry-coupons-service'
