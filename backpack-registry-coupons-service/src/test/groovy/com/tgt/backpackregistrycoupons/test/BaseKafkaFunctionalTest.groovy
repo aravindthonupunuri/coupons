@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.testcontainers.containers.KafkaContainer
 import spock.lang.Shared
 
 import javax.inject.Inject

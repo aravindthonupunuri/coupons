@@ -121,7 +121,7 @@ components:
       enabled: false
 
 list:
-  list-type: SHOPPING
+  list-type: COUPONS
   max-count: 50
   max-pending-item-count: 100
   max-completed-items-count: 100

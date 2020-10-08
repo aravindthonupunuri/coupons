@@ -42,7 +42,7 @@ class BasePersistenceFunctionalTest extends BaseFunctionalTest implements TestPr
         if(jdbc == null) {
             if (postgreSQLContainer == null) {
                 postgreSQLContainer = new PostgreSQLContainer()
-                    .withDatabaseName("lists")
+                    .withDatabaseName("REGISTRY_COUPONS")
                     .withUsername("postgres")
                     .withPassword("postgres")
                 postgreSQLContainer.start()
@@ -56,19 +56,21 @@ class BasePersistenceFunctionalTest extends BaseFunctionalTest implements TestPr
 
         logger.info("getProperties [datasources.default.url: $jdbc]")
 
+        def moduleDir = System.getProperty("user.dir")
+
         Map<String, String> properties = ["datasources.default.url" : jdbc,
                                           "datasources.default.driverClassName": "org.postgresql.Driver",
                                           "datasources.default.username": "postgres",
                                           "datasources.default.password": "postgres",
                                           "datasources.default.dialect": "POSTGRES",
-                                          "datasources.default.poolName": "listsapiapp",
+                                          "datasources.default.poolName": "registrycoupons",
                                           "datasources.default.maximumPoolSize": "2",
                                           "datasources.default.minimumIdle": "1",
                                           "datasources.default.idleTimeout": "600000",
                                           "datasources.default.maxLifetime": "1800000",
                                           "datasources.default.connectionTimeout": "10000",
-                                          "flyway.schemas": "lists",
-                                          "flyway.datasources.default.locations": "classpath:db.migration"]
+                                          "flyway.schemas": "registrycoupons",
+                                          "flyway.datasources.default.locations": "filesystem:${moduleDir}/../backpack-registry-coupons-service/src/main/resources/db/migration/"]
         def additionalProperties = getAdditionalProperties()
         if (additionalProperties != null) {
             properties.putAll(additionalProperties)
@@ -93,7 +95,7 @@ class BasePersistenceFunctionalTest extends BaseFunctionalTest implements TestPr
             if (jdbc != null) {
                 connection = DriverManager.getConnection(jdbc, "postgres", "postgres")
                 statement = connection.createStatement()
-                statement.executeUpdate("TRUNCATE TABLE GUEST_PREFERENCE, LIST")
+                statement.executeUpdate("TRUNCATE TABLE REGISTRY_COUPONS")
             }
         } catch(Throwable t) {
             t.printStackTrace()

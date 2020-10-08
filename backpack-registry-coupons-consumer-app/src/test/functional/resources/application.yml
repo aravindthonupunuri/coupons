@@ -1,16 +1,8 @@
 micronaut:
   application:
-    name: lists-kafka-consumer
+    name: backpack-registry-coupons-app
   server:
     port: ${server-port:33000}
-  http:
-    services:
-      carts-api:
-        urls:
-          - http://localhost:${server-port:33000}
-        pool:
-          enabled: false
-
   metrics:
     binders:
       web:
@@ -119,7 +111,7 @@ filter:
       oauth-key-filter: 700
 
 list:
-  list-type: SHOPPING
+  list-type: COUPONS
   max-count: 50
   max-pending-item-count: 3
   max-completed-items-count: 3
@@ -145,3 +137,6 @@ tracing:
     http:
       url: http://localhost:9411/zipkin
 
+endpoints:
+  prometheus:
+    sensitive: false

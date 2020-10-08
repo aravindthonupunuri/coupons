@@ -5,29 +5,8 @@ micronaut:
     host: localhost
     port: 8080
     idle-timeout: 2000ms
-  http:
-    client.connect-ttl: 30m
-    client.pool.acquire-timeout: 2000ms
-    services:
-      carts-api:
-        urls:
-          - "https://stgapi-internal.target.com"
-        connect-timeout: 300ms
-        read-timeout: 1000ms
-        pool:
-          enabled: true
-          max-connections: 128
-          max-pending-acquires: 50
-      redsky-api:
-        urls:
-          - "https://redsky-stage.perf.target.com"
-        connect-timeout: 1500ms
-        read-timeout: 1500ms
-        pool:
-          enabled: true
-          max-connections: 128
-          max-pending-acquires: 50
-
+    multipart:
+      max-file-size: '100MB'
   metrics:
     binders:
       web:
@@ -113,7 +92,7 @@ cart:
     gcp-lb-header: eggo_grapenuts
 
 list:
-  list-type: SHOPPING
+  list-type: COUPONS
   max-count: 50
   max-pending-item-count: 100
   max-completed-items-count: 100
@@ -127,7 +106,10 @@ list:
 components:
   server:
     list-authorization-filter:
+      enabled: false
       base-uri: /backpackregistrycoupons
+    sanitizing-filter:
+      enabled: false
 
 msgbus:
   source: backpack-registry-coupons
@@ -141,12 +123,13 @@ msgbus:
       enabled: false
     dlqproducer:
       enabled: true
-    topic: ${kafka-msgbus-topic}
+    topic: lists-msg-bus
     consumer-group: backpack-registry-coupons-msg-bus-consumer
     consumer-batch-size: 10
-    dlq-topic: ${kafka-dlq-topic}
+    dlq-topic: lists-dlq
     dlq-consumer-group: backpack-registry-coupons-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
     dlq-consumer-batch-size: 10
 
+api-key: 7ba07fb448c47d7b4e9961174f2c0191112dead6

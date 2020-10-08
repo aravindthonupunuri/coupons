@@ -1,17 +1,13 @@
 package com.tgt.backpackregistrycoupons.kafka
 
-import com.tgt.lists.msgbus.ApplicationDataObject
 import com.tgt.lists.msgbus.EventDispatcher
-import com.tgt.lists.msgbus.ExecutionId
 import com.tgt.lists.msgbus.event.DeadEventTransformedValue
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult
 import com.tgt.lists.msgbus.event.EventTransformedValue
-import com.tgt.lists.msgbus.execution.ExecutionSerialization
 import io.micronaut.context.annotation.Value
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
@@ -26,8 +22,7 @@ open class BackpackRegistryCouponsEventDispatcher(
         }
 
         logger.debug { "Unhandled eventType: ${eventHeaders.eventType}" }
-        return Mono.just(Triple(true, eventHeaders, data))
-    }
+        return Mono.just(EventProcessingResult(true, eventHeaders, data)) }
 
     /**
      * Transform ByteArray data to a concrete type based on event type header

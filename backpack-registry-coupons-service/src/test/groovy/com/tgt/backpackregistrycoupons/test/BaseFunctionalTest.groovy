@@ -45,9 +45,14 @@ class BaseFunctionalTest extends Specification implements TestPropertyProvider {
     @Value('${list.list-type}')
     String listType
 
+    @Value("\${msgbus.dlq-source}")
+    String dlqSource
+
     def setup() {
         mockServer = Mock(MockServer)
         mockServer.post({ path -> path.contains("/auth/oauth/v2/token") }, _, _) >> [status: 200, body: DataProvider.getTokenResponse()]
+        mockServer.post({ path -> path.contains("/api/v2/spans") }, _, _) >> [status: 200, body: []]
+
         mockServerDelegate.delegate = mockServer
     }
 
@@ -65,7 +70,7 @@ class BaseFunctionalTest extends Specification implements TestPropertyProvider {
 
     ListsMessageBusProducer newMockMsgbusKafkaProducerClient(EventLifecycleNotificationProvider eventNotificationsProvider) {
         MeterRegistry meterRegistry = new SimpleMeterRegistry(SimpleConfig.DEFAULT, new MockClock());
-        EventHeaderFactory eventHeaderFactory = new EventHeaderFactory(2, 5)
+        EventHeaderFactory eventHeaderFactory = new EventHeaderFactory(2, 5, dlqSource)
         return new ListsMessageBusProducer("dummySrc", "dummyTopic", eventHeaderFactory, new MsgbusKafkaProducerClient() {
             @Override
             Mono<RecordMetadata> sendEvent(Object partitionKey, @NotNull Mono data, @NotNull byte[] eventId, @NotNull byte[] eventType,

@@ -95,8 +95,8 @@ allprojects {
         implementation "io.micronaut.kotlin:micronaut-kotlin-runtime"
         implementation "io.micronaut:micronaut-runtime"
 
-        implementation "io.micronaut.data:micronaut-data-processor:1.0.0.M5"
-        implementation "io.micronaut.data:micronaut-data-jdbc:1.0.0.M5"
+        implementation "io.micronaut.data:micronaut-data-processor:1.0.2"
+        implementation "io.micronaut.data:micronaut-data-jdbc:1.0.2"
 
         compileOnly "jakarta.persistence:jakarta.persistence-api:2.2.2"
         runtimeOnly "org.postgresql:postgresql:42.2.4"
@@ -133,9 +133,7 @@ allprojects {
         testImplementation "org.testcontainers:kafka:1.14.3"
     }
 
-    configurations.all {
-        exclude group: "ch.qos.logback"
-    }
+    configurations.all { exclude group: "ch.qos.logback" }
 
     jar {
         exclude('**/log4j*.xml')
@@ -169,7 +167,7 @@ allprojects {
         url = "jdbc:postgresql://${postgres_host}:5432/postgres${postgres_ssl}"
         user = "${postgres_user}"
         password = "${postgres_pwd}"
-        schemas = ['lists']
+        schemas = ['registrycoupons']
     }
 
     detekt {
