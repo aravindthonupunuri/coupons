@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.api.app
 
-import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
-import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistrycoupons.domain.model.Coupons
+import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant
 import io.micronaut.http.HttpRequest
@@ -14,10 +14,10 @@ import io.micronaut.test.annotation.MicronautTest
 import javax.inject.Inject
 
 @MicronautTest
-class UploadRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest {
+class UploadCouponsFunctionalTest extends BasePersistenceFunctionalTest {
 
     @Inject
-    RegistryCouponsRepository registryCouponsRepository
+    CouponsRepository couponsRepository
 
     String uri = RegistryCouponsConstant.BASEPATH + "/upload?registry_type=BABY&coupon_type=ONLINE&offer_id=1&coupon_expiry_date=2991-12-03"
 
@@ -35,8 +35,8 @@ class UploadRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest 
             .build()
 
         when:
-        HttpResponse<RegistryCoupons> response = client.toBlocking()
-            .exchange(HttpRequest.POST(uri, multipartBody).contentType(MediaType.MULTIPART_FORM_DATA_TYPE), RegistryCoupons)
+        HttpResponse<Coupons> response = client.toBlocking()
+            .exchange(HttpRequest.POST(uri, multipartBody).contentType(MediaType.MULTIPART_FORM_DATA_TYPE), Coupons)
 
         def actualStatus = response.status()
 
@@ -44,9 +44,9 @@ class UploadRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest 
         actualStatus == HttpStatus.CREATED
     }
 
-    def "test valid existsByCouponId"() {
+    def "test valid existsByCouponCode"() {
         when:
-        def result1 = registryCouponsRepository.existsByCouponId("1000000").block()
+        def result1 = couponsRepository.existsByCouponCode("1000000").block()
 
         then:
         result1

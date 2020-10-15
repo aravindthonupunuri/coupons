@@ -1,30 +1,53 @@
 package com.tgt.backpackregistrycoupons.domain.model
 
-import com.tgt.backpackregistrycoupons.util.CouponType
+import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
+import io.micronaut.data.annotation.EmbeddedId
 import io.micronaut.data.annotation.MappedEntity
-import java.time.LocalDate
-import java.util.*
+import java.time.LocalDateTime
 import javax.persistence.Column
-import javax.persistence.Id
 import javax.persistence.Table
 
 @MappedEntity
 @Table(name = "registry_coupons")
 data class RegistryCoupons(
-    @Id
-    @Column(name = "coupon_id")
-    val couponId: String,
-
-    @Column(name = "coupon_type")
-    val couponType: CouponType,
+    @EmbeddedId
+    val id: Registry,
 
     @Column(name = "registry_type")
     val registryType: RegistryType,
 
-    @Column(name = "coupon_expiry_date")
-    val couponExpiryDate: LocalDate,
+    @Column(name = "registry_created_ts")
+    val registryCreatedTs: LocalDateTime,
 
-    @Column(name = "offer_id")
-    val offerId: String
+    @Column(name = "event_date")
+    val eventDate: LocalDateTime,
+
+    @Column(name = "coupon_code")
+    val couponCode: String?,
+
+    @Column(name = "coupon_notified")
+    val couponNotified: Boolean,
+
+    @Column(name = "coupon_redemption_status")
+    val couponRedemptionStatus: CouponRedemptionStatus?,
+
+    @Column(name = "coupon_issue_date")
+    val couponIssueDate: LocalDateTime?,
+
+    @Column(name = "coupon_expiry_date")
+    val couponExpiryDate: LocalDateTime?,
+
+    @Column(name = "created_user")
+    val createdUser: String,
+
+    @Column(name = "updated_user")
+    val updatedUser: String,
+
+    @Column(name = "created_ts")
+    val createdTs: LocalDateTime,
+
+    @Column(name = "updated_ts")
+    val updatedTs: LocalDateTime
+
 )

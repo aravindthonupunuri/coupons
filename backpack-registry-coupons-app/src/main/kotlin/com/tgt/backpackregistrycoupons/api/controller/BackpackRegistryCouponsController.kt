@@ -40,7 +40,7 @@ class BackpackRegistryCouponsController(
             .flatMap {
                 if (it) {
                     uploadRegistryCouponService.uploadRegistryCoupons(registryType, couponType,
-                        offerId, LocalDate.parse(couponExpiryDate), tempFile)
+                        offerId, LocalDate.parse(couponExpiryDate).atStartOfDay(), tempFile)
                 } else {
                     throw RuntimeException("Exception uploading coupon codes")
                 }
