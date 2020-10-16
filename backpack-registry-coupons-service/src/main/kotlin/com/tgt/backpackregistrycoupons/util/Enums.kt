@@ -7,3 +7,7 @@ enum class RegistryType {
 enum class CouponType {
     ONLINE, STORE
 }
+
+enum class CouponRedemptionStatus {
+    AVAILABLE, REDEEMED, EXPIRED
+}

@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: backpack-registry-coupons-app
+    name: backpack-registry-coupons-consumer-app
   server:
     port: ${server-port:33000}
   metrics:
@@ -17,12 +17,13 @@ resilience4j:
     minimum-number-of-calls: 10            # min calls required (per sliding window period) before cb calculates error rate (default: 10)
     permitted-number-of-calls-in-half-open-state: 10 # Number of permitted calls when the CircuitBreaker is half open.
 
-jdbc-stmt-timeout:
+jdbc-stmt:
   serverStatementTimeoutMillis: 250  # for server side statement timeout
   statementQueryTimeoutSeconds: 1    # for client side statement timeout
 
 jackson:
   property-naming-strategy: "SNAKE_CASE"
+
 
 kafka:
   consumers:
@@ -140,3 +141,22 @@ tracing:
 endpoints:
   prometheus:
     sensitive: false
+
+kafka-sources:
+  allow:
+    - backpack-registry-coupons
+    - backpack-registry-coupons-dlq
+    - cronbeacon
+    - cronbeacon-dlq
+
+cron-beacon:
+  source: backpack-registry-coupons
+  dlq-source: backpack-registry-coupons-dlq
+  kafka:
+    consumer:
+      client-id: backpack-registry-coupons-cron-beacon-consumer
+      topic: lists-msg-bus
+      metrics-name: backpack-registry-coupons-beacon-metrics
+      consumer-group: backpack-registry-coupons-cron-beacon-consumer
+      consumer-batch-size: 1
+      max-count-down-latch-wait-time: 240 # in secondsConsumerRecord

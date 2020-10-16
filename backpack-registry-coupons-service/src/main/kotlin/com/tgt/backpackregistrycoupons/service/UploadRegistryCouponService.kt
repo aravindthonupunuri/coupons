@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.service
 
-import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
-import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistrycoupons.domain.model.Coupons
+import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.util.CouponType
 import com.tgt.backpackregistrycoupons.util.RegistryType
 import mu.KotlinLogging
@@ -10,13 +10,13 @@ import reactor.core.publisher.Mono
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
-import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UploadRegistryCouponService(
-    @Inject private val registryCouponsRepository: RegistryCouponsRepository
+    @Inject private val couponsRepository: CouponsRepository
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -24,7 +24,7 @@ class UploadRegistryCouponService(
         registryType: RegistryType,
         couponType: CouponType,
         offerId: String,
-        couponExpiryDate: LocalDate,
+        couponExpiryDate: LocalDateTime,
         file: File
     ): Mono<Void> {
         return Flux.fromStream(BufferedReader(FileReader(file)).lines()).flatMap { coupon ->
@@ -33,12 +33,12 @@ class UploadRegistryCouponService(
                 Mono.just(true)
             } else {
                 val couponCode = coupon.trim()
-                registryCouponsRepository.existsByCouponId(couponCode).flatMap {
+                couponsRepository.existsByCouponCode(couponCode).flatMap {
                     if (it) {
                         logger.debug { "Coupon code already exists $couponCode" }
                         Mono.just(true)
                     } else {
-                        registryCouponsRepository.save(RegistryCoupons(couponCode, couponType, registryType, couponExpiryDate, offerId))
+                        couponsRepository.save(Coupons(couponCode, couponType, registryType, couponExpiryDate, offerId))
                     }
                 }
             }
