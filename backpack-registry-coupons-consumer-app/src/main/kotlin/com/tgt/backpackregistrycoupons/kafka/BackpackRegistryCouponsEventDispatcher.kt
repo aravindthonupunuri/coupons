@@ -4,7 +4,7 @@ import com.tgt.backpackregistrycoupons.kafka.handler.CreateListNotifyEventHandle
 import com.tgt.backpackregistrycoupons.kafka.handler.CronEventHandler
 import com.tgt.backpackregistrycoupons.kafka.handler.DeleteListNotifyEventHandler
 import com.tgt.backpackregistrycoupons.kafka.handler.UpdateListNotifyEventHandler
-import com.tgt.guestnotifications.kafka.model.CronEvent
+import com.tgt.backpackregistrycoupons.kafka.model.CronEvent
 import com.tgt.lists.lib.kafka.model.CreateListNotifyEvent
 import com.tgt.lists.lib.kafka.model.DeleteListNotifyEvent
 import com.tgt.lists.lib.kafka.model.UpdateListNotifyEvent
@@ -89,7 +89,11 @@ open class BackpackRegistryCouponsEventDispatcher(
                 }
                 CronEvent.getEventType() -> {
                     val cronEvent = CronEvent.deserialize(data)
-                    EventTransformedValue("cron_${cronEvent.eventDateTime}", ExecutionSerialization.ID_SERIALIZATION, cronEvent)
+                    if (cronEvent.target == "*" || cronEvent.target == source) {
+                        EventTransformedValue("cron_${cronEvent.eventDateTime}", ExecutionSerialization.ID_SERIALIZATION, cronEvent)
+                    } else {
+                        null
+                    }
                 }
                 else -> null
             }

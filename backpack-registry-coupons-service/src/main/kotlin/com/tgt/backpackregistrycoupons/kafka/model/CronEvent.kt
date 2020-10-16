@@ -1,4 +1,4 @@
-package com.tgt.guestnotifications.kafka.model
+package com.tgt.backpackregistrycoupons.kafka.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -39,6 +39,9 @@ data class CronEvent(
 
     @JsonProperty("month_of_year")
     val monthOfYear: Month,
+
+    @JsonProperty("target")
+    val target: String = "*",
 
     @JsonProperty("retry_state")
     var retryState: String? = null

@@ -1,6 +1,6 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
-import com.tgt.guestnotifications.kafka.model.CronEvent
+import com.tgt.backpackregistrycoupons.kafka.model.CronEvent
 import com.tgt.backpackregistrycoupons.service.async.CronEventService
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders

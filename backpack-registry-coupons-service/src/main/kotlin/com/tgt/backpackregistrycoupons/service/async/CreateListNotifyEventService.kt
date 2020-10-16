@@ -3,7 +3,7 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.tgt.backpackregistrycoupons.domain.model.Registry
+import com.tgt.backpackregistrycoupons.domain.model.RegistryPk
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.util.CouponType
@@ -50,12 +50,12 @@ class CreateListNotifyEventService(
         eventDateTs: LocalDateTime
     ): Mono<Boolean> {
         val guestRegistry = arrayListOf<RegistryCoupons>()
-        guestRegistry.add(RegistryCoupons(Registry(listId, CouponType.ONLINE), registryType, registryCreatedTs,
+        guestRegistry.add(RegistryCoupons(RegistryPk(listId, CouponType.ONLINE), registryType, registryCreatedTs,
             eventDateTs, null, false, null, null,
-            null, guestId, guestId, LocalDateTime.now(), LocalDateTime.now()))
-        guestRegistry.add(RegistryCoupons(Registry(listId, CouponType.STORE), registryType, registryCreatedTs,
+            null, guestId, guestId))
+        guestRegistry.add(RegistryCoupons(RegistryPk(listId, CouponType.STORE), registryType, registryCreatedTs,
             eventDateTs, null, false, null, null,
-            null, guestId, guestId, LocalDateTime.now(), LocalDateTime.now()))
+            null, guestId, guestId))
 
         return registryCouponsRepository.saveAll(guestRegistry).then().map { true }
             .onErrorResume {

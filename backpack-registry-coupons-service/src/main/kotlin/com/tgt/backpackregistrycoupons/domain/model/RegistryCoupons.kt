@@ -2,6 +2,7 @@ package com.tgt.backpackregistrycoupons.domain.model
 
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
+import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.EmbeddedId
 import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDateTime
@@ -12,7 +13,7 @@ import javax.persistence.Table
 @Table(name = "registry_coupons")
 data class RegistryCoupons(
     @EmbeddedId
-    val id: Registry,
+    val id: RegistryPk,
 
     @Column(name = "registry_type")
     val registryType: RegistryType,
@@ -44,10 +45,12 @@ data class RegistryCoupons(
     @Column(name = "updated_user")
     val updatedUser: String,
 
+    @DateCreated
     @Column(name = "created_ts")
-    val createdTs: LocalDateTime,
+    var createdTs: LocalDateTime? = null,
 
+    @DateCreated
     @Column(name = "updated_ts")
-    val updatedTs: LocalDateTime
+    var updatedTs: LocalDateTime? = null
 
 )

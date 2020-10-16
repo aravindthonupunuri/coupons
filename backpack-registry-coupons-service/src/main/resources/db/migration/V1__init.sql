@@ -22,8 +22,8 @@ create table REGISTRY_COUPONS (
                                             COUPON_EXPIRY_DATE timestamp,
                                             CREATED_USER text not null,
                                             UPDATED_USER text not null,
-                                            CREATED_TS timestamp not null,
-                                            UPDATED_TS timestamp not null,
+                                            CREATED_TS timestamp not null DEFAULT NOW(),
+                                            UPDATED_TS timestamp not null DEFAULT NOW(),
                                             CONSTRAINT REGISTRY_COUPONS_PK PRIMARY KEY (REGISTRY_ID, COUPON_TYPE)
 );
 

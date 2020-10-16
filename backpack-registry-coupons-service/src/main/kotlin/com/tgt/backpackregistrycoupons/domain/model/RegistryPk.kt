@@ -6,7 +6,7 @@ import java.util.*
 import javax.persistence.Column
 
 @Embeddable
-data class Registry(
+data class RegistryPk(
 
     @Column(name = "registry_id")
     val registryId: UUID,

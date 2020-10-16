@@ -1,6 +1,6 @@
 package com.tgt.backpackregistrycoupons.api.app
 
-import com.tgt.backpackregistrycoupons.domain.model.Registry
+import com.tgt.backpackregistrycoupons.domain.model.RegistryPk
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
@@ -25,12 +25,12 @@ class RegistryCouponsRepositoryFunctionalTest extends BasePersistenceFunctionalT
 
     def "test saveAll RegistryCoupons"() {
         given:
-        def registryCoupons1 = new RegistryCoupons(new Registry(registryId1, CouponType.ONLINE), RegistryType.BABY,
+        def registryCoupons1 = new RegistryCoupons(new RegistryPk(registryId1, CouponType.ONLINE), RegistryType.BABY,
             LocalDateTime.now().minusDays(3), LocalDateTime.now(), null , false,
-            null, null, null, "1234", "1234", LocalDateTime.now(), LocalDateTime.now()  )
-        def registryCoupons2 = new RegistryCoupons(new Registry(registryId1, CouponType.STORE), RegistryType.BABY,
+            null, null, null, "1234", "1234", null, null)
+        def registryCoupons2 = new RegistryCoupons(new RegistryPk(registryId1, CouponType.STORE), RegistryType.BABY,
             LocalDateTime.now().minusDays(3), LocalDateTime.now(), null , false,
-            null, null, null, "1234", "1234", LocalDateTime.now(), LocalDateTime.now()  )
+            null, null, null, "1234", "1234", null, null)
 
         when:
         def result = registryCouponsRepository.saveAll([registryCoupons1, registryCoupons2]).collectList().block()
