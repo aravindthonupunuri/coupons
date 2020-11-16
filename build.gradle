@@ -52,6 +52,10 @@ allprojects {
         implementation "io.projectreactor.kotlin:reactor-kotlin-extensions:1.1.0-M1"
         implementation "io.micronaut.reactor:micronaut-reactor-http-client:1.0.0"
 
+        implementation ("com.tgt.backpackregistry:backpack-transactions-client:2.201.10") {
+            exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
+        }
+
         implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
         implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
         implementation "io.github.microutils:kotlin-logging:1.6.24"

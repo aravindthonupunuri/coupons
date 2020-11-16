@@ -1,0 +1,21 @@
+plugins {
+    id "application"
+}
+
+apply from: "test.gradle"
+apply plugin: "com.target.platform.connector"
+
+mainClassName = "com.tgt.backpackregistrycoupons.kafka.Application"
+
+dependencies {
+    implementation project(":backpack-registry-coupons-service")
+    implementation "io.micronaut:micronaut-http-server-netty"
+    implementation "io.micronaut:micronaut-http-client"
+    implementation "io.micronaut.kafka:micronaut-kafka"
+    implementation "com.tgt.lists.micronaut:micronaut-resilience4j:$micronaut_resilience4j_version"
+    testImplementation project(':backpack-registry-coupons-service').sourceSets.test.output
+}
+
+distTar {
+    archiveFileName = project.name + ".tar"
+}

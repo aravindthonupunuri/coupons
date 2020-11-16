@@ -21,7 +21,7 @@ class FunctionalTestCleanup extends AbstractGlobalExtension {
         LOG.info("Running FunctionalTestCleanup.stop")
         if (BaseKafkaFunctionalTest.kafkaContainer != null) {
             LOG.info("Stopping kafkaContainer...")
-            BaseFunctionalTest.kafkaContainer.stop()
+            BaseKafkaFunctionalTest.kafkaContainer.stop()
         }
         if (BasePersistenceFunctionalTest.postgreSQLContainer != null) {
             LOG.info("Stopping postgreSQLContainer...")
