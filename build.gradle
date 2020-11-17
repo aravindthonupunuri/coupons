@@ -70,7 +70,7 @@ allprojects {
         implementation "javax.annotation:javax.annotation-api"
         implementation "com.lmax:disruptor:3.4.2"
 
-        implementation("com.tgt.lists:lists-lib:2.201.0") {
+        implementation("com.tgt.lists:atlas:2.201.27") {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
             exclude group: 'com.tgt.lists', module: 'lists-components'
             exclude group: 'com.tgt.lists', module: 'lists-oauth'

@@ -1,10 +1,11 @@
 package com.tgt.backpackregistrycoupons.api.app
 
-import com.tgt.backpackregistrycoupons.domain.model.RegistryPk
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
+import com.tgt.backpackregistrycoupons.domain.model.RegistryPk
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.util.CouponType
+import com.tgt.backpackregistrycoupons.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
 import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Shared
@@ -26,11 +27,13 @@ class RegistryCouponsRepositoryFunctionalTest extends BasePersistenceFunctionalT
     def "test saveAll RegistryCoupons"() {
         given:
         def registryCoupons1 = new RegistryCoupons(new RegistryPk(registryId1, CouponType.ONLINE), RegistryType.BABY,
-            LocalDateTime.now().minusDays(3), LocalDateTime.now(), null , false,
-            null, null, null, "1234", "1234", null, null)
+            RegistryStatus.INACTIVE, LocalDateTime.now().minusDays(3), LocalDateTime.now(), null ,
+            false, null, null, null, "1234",
+            "1234", null, null)
         def registryCoupons2 = new RegistryCoupons(new RegistryPk(registryId1, CouponType.STORE), RegistryType.BABY,
-            LocalDateTime.now().minusDays(3), LocalDateTime.now(), null , false,
-            null, null, null, "1234", "1234", null, null)
+            RegistryStatus.INACTIVE, LocalDateTime.now().minusDays(3), LocalDateTime.now(), null ,
+            false, null, null, null, "1234",
+            "1234", null, null)
 
         when:
         def result = registryCouponsRepository.saveAll([registryCoupons1, registryCoupons2]).collectList().block()
@@ -47,12 +50,36 @@ class RegistryCouponsRepositoryFunctionalTest extends BasePersistenceFunctionalT
         result.size() == 2
     }
 
-    def "test updateByRegistryId"() {
+    def "test findByCouponId"() {
+        when:
+        def result = registryCouponsRepository.findByCouponCodeIsNull().collectList().block()
+
+        then:
+        result.size() == 2
+    }
+
+    def "test updateByRegistryId, update event_date"() {
         when:
         def result = registryCouponsRepository.updateByRegistryId(registryId1, LocalDateTime.now()).block()
 
         then:
         result == 2
+    }
+
+    def "test updateByRegistryId, update registry_status"() {
+        when:
+        def result = registryCouponsRepository.updateByRegistryId(registryId1, RegistryStatus.ACTIVE).block()
+
+        then:
+        result == 2
+    }
+
+    def "test updateByRegistryId, update coupon_code"() {
+        when:
+        def result = registryCouponsRepository.updateByRegistryId(registryId1, CouponType.ONLINE, "1111111111").block()
+
+        then:
+        result == 1
     }
 
     def "test deleteByIdRegistryId"() {

@@ -7,7 +7,9 @@ import com.tgt.backpackregistrycoupons.domain.model.RegistryPk
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.util.CouponType
+import com.tgt.backpackregistrycoupons.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
+import com.tgt.lists.atlas.api.util.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.LocalDateTime
@@ -24,6 +26,7 @@ class CreateListNotifyEventService(
     fun processCreateListNotifyEvent(
         guestId: String,
         listId: UUID,
+        registryStatus: LIST_STATE,
         registryType: RegistryType,
         registryCreatedTs: LocalDateTime,
         eventDateTs: LocalDateTime,
@@ -31,7 +34,7 @@ class CreateListNotifyEventService(
     ): Mono<RetryState> {
         return if (retryState.incompleteState()) {
             logger.debug("From processCreateListNotifyEvent(), starting processing")
-            return addGuestRegistry(guestId, listId, registryType, registryCreatedTs, eventDateTs)
+            return addGuestRegistry(guestId, listId, registryStatus, registryType, registryCreatedTs, eventDateTs)
                 .map {
                     retryState.addGuestRegistry = it
                     retryState
@@ -45,16 +48,20 @@ class CreateListNotifyEventService(
     fun addGuestRegistry(
         guestId: String,
         listId: UUID,
+        registryStatus: LIST_STATE,
         registryType: RegistryType,
         registryCreatedTs: LocalDateTime,
         eventDateTs: LocalDateTime
     ): Mono<Boolean> {
         val guestRegistry = arrayListOf<RegistryCoupons>()
-        guestRegistry.add(RegistryCoupons(RegistryPk(listId, CouponType.ONLINE), registryType, registryCreatedTs,
-            eventDateTs, null, false, null, null,
+        // Adding 2 records for every registry created, for ONLINE and STORE coupons assignment. The RegistryStatus
+        // is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the
+        // registry.
+        guestRegistry.add(RegistryCoupons(RegistryPk(listId, CouponType.ONLINE), registryType, registryStatus.value,
+            registryCreatedTs, eventDateTs, null, false, null, null,
             null, guestId, guestId))
-        guestRegistry.add(RegistryCoupons(RegistryPk(listId, CouponType.STORE), registryType, registryCreatedTs,
-            eventDateTs, null, false, null, null,
+        guestRegistry.add(RegistryCoupons(RegistryPk(listId, CouponType.STORE), registryType, registryStatus.value,
+            registryCreatedTs, eventDateTs, null, false, null, null,
             null, guestId, guestId))
 
         return registryCouponsRepository.saveAll(guestRegistry).then().map { true }

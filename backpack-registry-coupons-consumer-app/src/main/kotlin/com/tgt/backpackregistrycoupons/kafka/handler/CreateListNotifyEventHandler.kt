@@ -2,7 +2,7 @@ package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistrycoupons.service.async.CreateListNotifyEventService
 import com.tgt.backpackregistrycoupons.transport.RegistryMetaDataTO
-import com.tgt.lists.lib.kafka.model.CreateListNotifyEvent
+import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult
@@ -31,6 +31,7 @@ class CreateListNotifyEventHandler(
 
         return createListNotifyEventService.processCreateListNotifyEvent(createListNotifyEvent.guestId,
             createListNotifyEvent.listId,
+            createListNotifyEvent.listState!!,
             RegistryMetaDataTO.getRegistryMetadata(createListNotifyEvent.userMetaData)?.registryType!!,
             RegistryMetaDataTO.getRegistryMetadata(createListNotifyEvent.userMetaData)?.registryCreatedTs!!,
             RegistryMetaDataTO.getRegistryMetadata(createListNotifyEvent.userMetaData)?.event?.eventDateTs!!,

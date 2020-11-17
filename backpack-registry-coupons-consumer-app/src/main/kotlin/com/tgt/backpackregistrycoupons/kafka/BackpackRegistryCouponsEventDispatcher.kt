@@ -1,13 +1,10 @@
 package com.tgt.backpackregistrycoupons.kafka
 
-import com.tgt.backpackregistrycoupons.kafka.handler.CreateListNotifyEventHandler
-import com.tgt.backpackregistrycoupons.kafka.handler.CronEventHandler
-import com.tgt.backpackregistrycoupons.kafka.handler.DeleteListNotifyEventHandler
-import com.tgt.backpackregistrycoupons.kafka.handler.UpdateListNotifyEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.*
 import com.tgt.backpackregistrycoupons.kafka.model.CronEvent
-import com.tgt.lists.lib.kafka.model.CreateListNotifyEvent
-import com.tgt.lists.lib.kafka.model.DeleteListNotifyEvent
-import com.tgt.lists.lib.kafka.model.UpdateListNotifyEvent
+import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
+import com.tgt.lists.atlas.kafka.model.DeleteListNotifyEvent
+import com.tgt.lists.atlas.kafka.model.UpdateListNotifyEvent
 import com.tgt.lists.msgbus.EventDispatcher
 import com.tgt.lists.msgbus.event.DeadEventTransformedValue
 import com.tgt.lists.msgbus.event.EventHeaders

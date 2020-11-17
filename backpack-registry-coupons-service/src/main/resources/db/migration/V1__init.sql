@@ -13,6 +13,7 @@ create table REGISTRY_COUPONS (
                                             REGISTRY_ID uuid not null,
                                             COUPON_TYPE text not null,
                                             REGISTRY_TYPE text not null,
+                                            REGISTRY_STATUS text not null,
                                             REGISTRY_CREATED_TS timestamp not null,
                                             EVENT_DATE timestamp not null,
                                             COUPON_CODE text,
