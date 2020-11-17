@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.tgt.lists.lib.api.util.EventType
+import com.tgt.lists.msgbus.EventType
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.Month

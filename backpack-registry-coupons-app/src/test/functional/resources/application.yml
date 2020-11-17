@@ -143,3 +143,11 @@ msgbus:
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
     dlq-consumer-batch-size: 10
+
+registry:
+  baby:
+    sla: 7
+  wedding:
+    sla: 56
+  completion-coupon:
+    sla: 14

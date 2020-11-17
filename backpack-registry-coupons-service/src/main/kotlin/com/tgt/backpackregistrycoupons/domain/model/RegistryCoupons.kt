@@ -18,6 +18,9 @@ data class RegistryCoupons(
     @Column(name = "registry_type")
     val registryType: RegistryType,
 
+    @Column(name = "registry_status")
+    val registryStatus: String,
+
     @Column(name = "registry_created_ts")
     val registryCreatedTs: LocalDateTime,
 

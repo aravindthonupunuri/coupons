@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.tgt.backpackregistrycoupons.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
 import java.time.LocalDateTime
 
@@ -13,6 +14,8 @@ data class RegistryMetaDataTO(
     val event: Event? = null,
     @JsonProperty("registry_type")
     val registryType: RegistryType? = null,
+    @JsonProperty("registry_status")
+    val registryStatus: RegistryStatus? = null,
     @JsonProperty("registry_created_ts")
     val registryCreatedTs: LocalDateTime? = null
 ) {

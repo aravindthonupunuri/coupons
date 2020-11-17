@@ -133,3 +133,10 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 api-key: 7ba07fb448c47d7b4e9961174f2c0191112dead6
+
+
+registry:
+  baby:
+    sla: 7
+  wedding:
+    sla: 56

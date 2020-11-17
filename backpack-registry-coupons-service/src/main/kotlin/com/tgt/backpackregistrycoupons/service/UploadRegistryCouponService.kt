@@ -18,7 +18,7 @@ import javax.inject.Singleton
 class UploadRegistryCouponService(
     @Inject private val couponsRepository: CouponsRepository
 ) {
-    private val logger = KotlinLogging.logger {}
+    private val logger = KotlinLogging.logger { UploadRegistryCouponService::class.java.name }
 
     fun uploadRegistryCoupons(
         registryType: RegistryType,

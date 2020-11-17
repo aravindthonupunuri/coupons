@@ -56,4 +56,22 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
         then:
         !result
     }
+
+    def "test findCouponCode"() {
+        when:
+        def result = couponsRepository.findCouponCode(CouponType.ONLINE, RegistryType.BABY).block()
+
+        then:
+        result != null
+    }
+
+    def "test deleteByCouponCode"() {
+        when:
+        def result = couponsRepository.deleteByCouponCode("1000000").block()
+
+        then:
+        result == 1
+    }
 }
+
+
