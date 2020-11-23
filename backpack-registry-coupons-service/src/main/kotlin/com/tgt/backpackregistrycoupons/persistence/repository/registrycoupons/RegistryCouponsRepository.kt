@@ -17,7 +17,8 @@ interface RegistryCouponsRepository {
 
     fun findByIdRegistryId(registryId: UUID): Flux<RegistryCoupons>
 
-    fun findByCouponCodeIsNull(): Flux<RegistryCoupons>
+    @Query("""SELECT * FROM registry_coupons WHERE registry_status='A' AND coupon_code IS NULL""")
+    fun findUnAssignedActiveRegistries(): Flux<RegistryCoupons>
 
     @Query("""SELECT * FROM registry_coupons WHERE coupon_code=:couponCode""")
     fun findByCouponCode(couponCode: String): Mono<RegistryCoupons>

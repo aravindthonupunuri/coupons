@@ -5,7 +5,7 @@ import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.Re
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
 import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemPromoTransactionActionEvent
-import com.tgt.lists.lib.api.domain.EventPublisher
+import com.tgt.lists.atlas.api.domain.EventPublisher
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import javax.inject.Inject

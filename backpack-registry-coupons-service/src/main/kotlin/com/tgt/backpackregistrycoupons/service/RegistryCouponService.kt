@@ -17,6 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class RegistryCouponService(
     @Inject private val registryCouponsRepository: RegistryCouponsRepository,
+    @Inject private val registryCouponAssignmentService: RegistryCouponAssignmentService,
     @Value("\${registry.baby.sla}") val babyRegistrySLA: Long,
     @Value("\${registry.wedding.sla}") val weddingRegistrySLA: Long,
     @Value("\${registry.completion-coupon.sla}") val completionCouponSLA: Long
@@ -34,17 +35,13 @@ class RegistryCouponService(
             .map {
                 val registryType = it.first().registryType
                 val registryStatus = RegistryStatus.ACTIVE
-                val eventDate = it.first().eventDate.toLocalDate()
-                val registryCreatedDate = it.first().registryCreatedTs.toLocalDate()
-                val couponCountDownDays: Long = it.first().couponCode?.let {
-                    if (Duration.between(registryCreatedDate.atStartOfDay(), eventDate.atStartOfDay()).toDays() >= completionCouponSLA) {
-                        val duration: Duration = Duration.between(LocalDate.now().atStartOfDay(),
-                            eventDate.atStartOfDay().minusDays(slaMap[registryType.name]!!))
-                        if (duration.isNegative) 0L else duration.toDays()
-                    } else {
-                        Duration.between(LocalDate.now().atStartOfDay(), registryCreatedDate.atStartOfDay().plusDays(14)).toDays()
-                    }
-                } ?: 0L
+                val couponCountDownDays: Long = if (it.first().couponCode == null) {
+                    val couponAssignmentDate = registryCouponAssignmentService.calculateCouponAssignmentDate(it.first())
+                    val duration: Duration = Duration.between(LocalDate.now().atStartOfDay(), couponAssignmentDate.minusDays(slaMap[registryType.name]!!))
+                    if (duration.isNegative) 0L else duration.toDays()
+                } else {
+                    0L
+                }
                 RegistryCouponsTO(registryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it))
             }
     }

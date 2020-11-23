@@ -4,16 +4,20 @@ import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.kafka.model.TracerEvent
 import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistrycoupons.service.RegistryCouponAssignmentService
 import com.tgt.backpackregistrycoupons.util.CouponType
 import mu.KotlinLogging
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CronEventService(
+    @Inject val registryCouponAssignmentService: RegistryCouponAssignmentService,
     @Inject val sendGuestNotificationsService: SendGuestNotificationsService,
     @Inject val registryCouponsRepository: RegistryCouponsRepository,
     @Inject val couponsRepository: CouponsRepository
@@ -22,8 +26,10 @@ class CronEventService(
     private val logger = KotlinLogging.logger { CronEventService::class.java.name }
 
     fun processCronEvent(): Mono<Boolean> {
-        return registryCouponsRepository.findByCouponCodeIsNull().collectList()
+        return registryCouponsRepository.findUnAssignedActiveRegistries().collectList()
             .flatMap { list ->
+                // RegistryPk is a composite key of  registryId and CouponType. So we create a Map of registryId and
+                // RegistryCoupons list to uniquely identify a Registry.
                 val registryMap = hashMapOf<UUID, ArrayList<RegistryCoupons>>()
                 list.map {
                     if (registryMap.containsKey(it.id.registryId)) {
@@ -46,7 +52,8 @@ class CronEventService(
     }
 
     fun assignCouponCode(registryCouponsList: List<RegistryCoupons>): Mono<Boolean> {
-        return if (isRegistryQualifiedForCoupon(registryCouponsList.first())) {
+        val couponAssignmentDate = registryCouponAssignmentService.calculateCouponAssignmentDate(registryCouponsList.first())
+        return if (LocalDateTime.now().isAfter(couponAssignmentDate)) {
             Flux.fromIterable(registryCouponsList).flatMap {
                 val registryCoupons = it
                 couponsRepository.findCouponCode(registryCoupons.id.couponType, registryCoupons.registryType)
@@ -58,10 +65,6 @@ class CronEventService(
         } else {
             Mono.just(true)
         }
-    }
-
-    fun isRegistryQualifiedForCoupon(registryCoupon: RegistryCoupons): Boolean {
-        return true
     }
 
     fun sendGuestNotification(registryId: UUID): Mono<Boolean> {

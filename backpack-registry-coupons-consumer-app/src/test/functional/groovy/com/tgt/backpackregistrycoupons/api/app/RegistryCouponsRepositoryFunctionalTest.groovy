@@ -27,11 +27,11 @@ class RegistryCouponsRepositoryFunctionalTest extends BasePersistenceFunctionalT
     def "test saveAll RegistryCoupons"() {
         given:
         def registryCoupons1 = new RegistryCoupons(new RegistryPk(registryId1, CouponType.ONLINE), RegistryType.BABY,
-            RegistryStatus.INACTIVE, LocalDateTime.now().minusDays(3), LocalDateTime.now(), null ,
+            RegistryStatus.INACTIVE.value, LocalDateTime.now().minusDays(3), LocalDateTime.now(), null ,
             false, null, null, null, "1234",
             "1234", null, null)
         def registryCoupons2 = new RegistryCoupons(new RegistryPk(registryId1, CouponType.STORE), RegistryType.BABY,
-            RegistryStatus.INACTIVE, LocalDateTime.now().minusDays(3), LocalDateTime.now(), null ,
+            RegistryStatus.INACTIVE.value, LocalDateTime.now().minusDays(3), LocalDateTime.now(), null ,
             false, null, null, null, "1234",
             "1234", null, null)
 
@@ -52,7 +52,7 @@ class RegistryCouponsRepositoryFunctionalTest extends BasePersistenceFunctionalT
 
     def "test findByCouponId"() {
         when:
-        def result = registryCouponsRepository.findByCouponCodeIsNull().collectList().block()
+        def result = registryCouponsRepository.findUnAssignedActiveRegistries().collectList().block()
 
         then:
         result.size() == 2
