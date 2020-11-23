@@ -7,7 +7,6 @@ import com.tgt.backpackregistrycoupons.domain.model.RegistryPk
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.util.CouponType
-import com.tgt.backpackregistrycoupons.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
 import com.tgt.lists.atlas.api.util.LIST_STATE
 import mu.KotlinLogging

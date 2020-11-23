@@ -10,13 +10,12 @@ import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
+import com.tgt.backpackregistrycoupons.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.util.RegistryType
 import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
-import com.tgt.lists.lib.kafka.model.CreateListItemNotifyEvent
 import com.tgt.lists.micronaut.persistence.instrumentation.DatabaseExecTestListener
 import com.tgt.lists.micronaut.persistence.instrumentation.RepositoryInstrumenter
 import com.tgt.lists.msgbus.GenericConsumer
-import com.tgt.lists.msgbus.ListsMessageBusProducer
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventLifecycleNotificationProvider
 import io.micronaut.context.annotation.Value
@@ -111,7 +110,7 @@ class PromoConsumerFunctionalTest extends  BaseKafkaFunctionalTest {
         def promoCouponRedemptionTO = new PromoCouponRedemptionTO("3991", "1234", "BABY", "REDEEMED", "2020", "1234", "1234", "1234")
 
         RegistryPk registryPk = new RegistryPk(listId, CouponType.STORE);
-        RegistryCoupons coupons = new RegistryCoupons(registryPk, RegistryType.BABY, LocalDateTime.now(), LocalDateTime.now(), "1234", true, CouponRedemptionStatus.AVAILABLE, null, null, "abc", "abc", null, null)
+        RegistryCoupons coupons = new RegistryCoupons(registryPk, RegistryType.BABY, RegistryStatus.ACTIVE.value, LocalDateTime.now(), LocalDateTime.now(), "1234", true, CouponRedemptionStatus.AVAILABLE, null, null, "abc", "abc", null, null)
         registryCouponsRepository.save(coupons).block()
         testEventListener.preDispatchLambda = new PreDispatchLambda() {
             @Override
