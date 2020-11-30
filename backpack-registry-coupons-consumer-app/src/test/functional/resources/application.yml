@@ -92,10 +92,6 @@ msgbus:
     dlq-max-event-retry-count: 3
     dlq-consumer-batch-size: 10
 
-cart:
-  client:
-    refresh-cycle-sec: 999999999
-
 api-key: "testkey"
 
 filter:
@@ -118,7 +114,6 @@ list:
   max-completed-items-count: 3
   abandon-after-duration-in-days: 730 # It is two years duration
   redsky-batch-size: 28
-  features.two-carts: true
   features.dedupe: true
   features.sort-position: true
   features.fixed-default-list: false
@@ -127,7 +122,7 @@ sic:
   batch-size: 3
 
 mockfilter:
-  paths: /carts/v4.*,/zipkin,/testserver/auth/oauth/v2/token,/storeItemPlacements,/ssa/cwlservice/api/v16/.*
+  paths: /zipkin,/testserver/auth/oauth/v2/token,/storeItemPlacements,/ssa/cwlservice/api/v16/.*
 
 tracing:
   zipkin:

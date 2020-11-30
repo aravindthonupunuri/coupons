@@ -3,17 +3,6 @@ micronaut:
     name: backpack-registry-coupons-consumer
   server:
     port: 8085
-  http:
-    services:
-      carts-api:
-        urls:
-          - ${cart-base-url}
-        follow-redirects: false
-        connect-timeout: 1500ms
-        read-timeout: 1500ms
-        pool:
-          enabled: true
-          max-connections: 5
 
   metrics:
     binders:
@@ -106,12 +95,6 @@ tracing:
       region: tdc
 
 api-key: ${api-key}
-
-cart:
-  client:
-    refresh-cycle-sec: 999999999
-    fastly-header-name: cartslb
-    gcp-lb-header: eggo_grapenuts
 
 components:
   server:

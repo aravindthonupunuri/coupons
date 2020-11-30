@@ -97,12 +97,6 @@ tracing:
 
 api-key: ${api-key}
 
-cart:
-  client:
-    refresh-cycle-sec: 999999999
-    fastly-header-name: cartslb
-    gcp-lb-header: eggo_grapenuts
-
 components:
   server:
     list-authorization-filter:

@@ -3,9 +3,9 @@ package com.tgt.backpackregistrycoupons.service
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
+import com.tgt.backpackregistrycoupons.util.EventPublisher
 import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
 import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemPromoTransactionActionEvent
-import com.tgt.lists.atlas.api.domain.EventPublisher
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import javax.inject.Inject

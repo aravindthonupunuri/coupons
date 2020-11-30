@@ -85,12 +85,6 @@ tracing:
       env: dev
       region: tdc
 
-cart:
-  client:
-    refresh-cycle-sec: 999999999
-    fastly-header-name: cartslb
-    gcp-lb-header: eggo_grapenuts
-
 list:
   list-type: COUPONS
   max-count: 50
@@ -98,7 +92,6 @@ list:
   max-completed-items-count: 100
   abandon-after-duration-in-days: 730 # It is two years duration
   redsky-batch-size: 28
-  features.two-carts: true
   features.dedupe: true
   features.sort-position: true
   features.fixed-default-list: false

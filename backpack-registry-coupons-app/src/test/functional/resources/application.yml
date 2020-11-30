@@ -70,7 +70,6 @@ list:
   default-list-title: "Registry Coupons"
   page-size: 2
   abandon-after-duration-in-days: 730 # It is two years duration
-  features.two-carts: false
   features.dedupe: true
   features.sort-position: false
   features.fixed-default-list: true
@@ -80,7 +79,7 @@ sic:
   batch-size: 3
 
 mockfilter:
-  paths: /carts/v4.*,/zipkin,/testserver/auth/oauth/v2/token,/storeItemPlacements,/ssa/cwlservice/api/v16/.*
+  paths: /zipkin,/testserver/auth/oauth/v2/token,/storeItemPlacements,/ssa/cwlservice/api/v16/.*
 
 tracing:
   zipkin:
