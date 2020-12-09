@@ -36,7 +36,7 @@ class DeleteListNotifyEventService(
     fun deleteGuestRegistry(
         listId: UUID
     ): Mono<Boolean> {
-        return registryCouponsRepository.deleteByIdRegistryId(listId).then().map { true }
+        return registryCouponsRepository.deleteByRegistryId(listId).then().map { true }
             .onErrorResume {
                 logger.error("Exception from deleteGuestRegistry() for registryId: $listId " +
                     "sending it for retry", it)

@@ -66,7 +66,7 @@ class UpdateListNotifyEventService(
         } else {
             // Note: If the registry is already assigned a coupon, updating the event date should not impact the
             // coupon validity. The coupon cannot be removed due to change in event date once its assigned to a registry.
-            registryCouponsRepository.updateByRegistryId(listId, eventDate).then().map { true }
+            registryCouponsRepository.updateRegistryEventDate(listId, eventDate).then().map { true }
         }.map {
             retryState.updateEventDate = true
             retryState
@@ -85,7 +85,7 @@ class UpdateListNotifyEventService(
         retryState: RetryState
     ): Mono<RetryState> {
         return if (registryCoupons.any { it.registryStatus != registryStatus.value }) {
-            registryCouponsRepository.updateByRegistryId(listId, registryStatus.value).then()
+            registryCouponsRepository.updateRegistryStatus(listId, registryStatus.value).then()
         } else {
             logger.debug("From updateRegistryStatus(), skipping the update since registry is already ACTIVE")
             Mono.just(true)

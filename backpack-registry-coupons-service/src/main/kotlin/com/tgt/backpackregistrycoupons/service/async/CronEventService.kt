@@ -6,6 +6,7 @@ import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRep
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.service.RegistryCouponAssignmentService
 import com.tgt.backpackregistrycoupons.util.CouponType
+import com.tgt.backpackregistrycoupons.util.RegistryStatus
 import mu.KotlinLogging
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -25,7 +26,7 @@ class CronEventService(
     private val logger = KotlinLogging.logger { CronEventService::class.java.name }
 
     fun processCronEvent(): Mono<Boolean> {
-        return registryCouponsRepository.findUnAssignedActiveRegistries().collectList()
+        return registryCouponsRepository.findByRegistryStatusAndCouponCodeIsNull(RegistryStatus.ACTIVE.value).collectList()
             .flatMap { list ->
                 // RegistryPk is a composite key of  registryId and CouponType. So we create a Map of registryId and
                 // RegistryCoupons list to uniquely identify a Registry.
@@ -55,9 +56,9 @@ class CronEventService(
         return if (LocalDateTime.now().isAfter(couponAssignmentDate)) {
             Flux.fromIterable(registryCouponsList).flatMap {
                 val registryCoupons = it
-                couponsRepository.findCouponCode(registryCoupons.id.couponType, registryCoupons.registryType)
+                couponsRepository.findTop1ByCouponTypeAndRegistryType(registryCoupons.id.couponType, registryCoupons.registryType)
                     .flatMap { coupon ->
-                        registryCouponsRepository.updateByRegistryId(registryCoupons.id.registryId, coupon.couponType,
+                        registryCouponsRepository.updateRegistry(registryCoupons.id.registryId, coupon.couponType,
                             coupon.couponCode).flatMap { couponsRepository.deleteByCouponCode(coupon.couponCode) }
                     }
             }.collectList().map { true }
