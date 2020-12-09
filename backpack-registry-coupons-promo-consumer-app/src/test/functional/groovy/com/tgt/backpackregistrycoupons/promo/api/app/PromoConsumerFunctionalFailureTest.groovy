@@ -30,7 +30,7 @@ import javax.inject.Inject
 import java.time.LocalDateTime
 import java.util.stream.Collectors
 @MicronautTest
-class PromoConsumerFunctionalFailureTest extends BaseKafkaFunctionalTest{
+class PromoConsumerFunctionalFailureTest extends BaseKafkaFunctionalTest {
     @Value("\${promo.source}")
     String promoSource
 

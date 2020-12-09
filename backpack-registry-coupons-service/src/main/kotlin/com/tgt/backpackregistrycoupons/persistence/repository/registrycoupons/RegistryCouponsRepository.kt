@@ -17,23 +17,20 @@ interface RegistryCouponsRepository {
 
     fun findByIdRegistryId(registryId: UUID): Flux<RegistryCoupons>
 
-    @Query("""SELECT * FROM registry_coupons WHERE registry_status='A' AND coupon_code IS NULL""")
-    fun findUnAssignedActiveRegistries(): Flux<RegistryCoupons>
+    fun findByRegistryStatusAndCouponCodeIsNull(registryStatus: String): Flux<RegistryCoupons>
 
-    @Query("""SELECT * FROM registry_coupons WHERE coupon_code=:couponCode""")
     fun findByCouponCode(couponCode: String): Mono<RegistryCoupons>
 
-    @Query("""DELETE FROM registry_coupons WHERE registry_id=uuid(:registryId)""")
-    fun deleteByIdRegistryId(registryId: UUID): Mono<Int>
+    fun deleteByRegistryId(registryId: UUID): Mono<Int>
 
-    @Query("""UPDATE registry_coupons SET event_date = (:eventDate) WHERE registry_id=uuid(:registryId)""")
-    fun updateByRegistryId(registryId: UUID, eventDate: LocalDateTime): Mono<Int>
+    @Query("UPDATE registry_coupons SET event_date = (:eventDate) WHERE registry_id=:registryId")
+    fun updateRegistryEventDate(registryId: UUID, eventDate: LocalDateTime): Mono<Int>
 
-    @Query("""UPDATE registry_coupons SET registry_status = (:registryStatus) WHERE registry_id=uuid(:registryId)""")
-    fun updateByRegistryId(registryId: UUID, registryStatus: String): Mono<Int>
+    @Query("""UPDATE registry_coupons SET registry_status = (:registryStatus) WHERE registry_id=:registryId""")
+    fun updateRegistryStatus(registryId: UUID, registryStatus: String): Mono<Int>
 
-    @Query("""UPDATE registry_coupons SET coupon_code = (:couponCode) WHERE registry_id=uuid(:registryId) AND coupon_type = (:couponType)""")
-    fun updateByRegistryId(registryId: UUID, couponType: CouponType, couponCode: String): Mono<Int>
+    @Query("""UPDATE registry_coupons SET coupon_code = (:couponCode) WHERE registry_id=:registryId AND coupon_type = (:couponType)""")
+    fun updateRegistry(registryId: UUID, couponType: CouponType, couponCode: String): Mono<Int>
 
     @Query("""UPDATE registry_coupons SET coupon_redemption_status = (:couponRedemptionStatus) WHERE coupon_code=:couponCode""")
     fun updateStatusByCouponCode(couponCode: String, couponRedemptionStatus: CouponRedemptionStatus): Mono<Int>

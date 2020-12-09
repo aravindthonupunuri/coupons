@@ -155,3 +155,19 @@ cron-beacon:
       consumer-group: backpack-registry-coupons-cron-beacon-consumer
       consumer-batch-size: 1
       max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
+
+tracer:
+  source: backpack-registry-coupons
+  dlq-source: backpack-registry-coupons-dlq
+  kafka:
+    producer:
+      enabled: true
+    topic: tracer-incoming-events
+
+registry:
+  baby:
+    sla: 7
+  wedding:
+    sla: 56
+  completion-coupon:
+    sla: 14
