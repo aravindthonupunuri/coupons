@@ -36,6 +36,8 @@ pipeline:
       event: [push]
       branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
+    environment:
+      CICD_MODE: 'true'
     secrets:
       - TAP_API_TOKEN
       - backpack_registry_coupons_app_private_key_dev
@@ -50,6 +52,8 @@ pipeline:
       ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
       branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
+    environment:
+      CICD_MODE: 'true'
     secrets:
       - TAP_API_TOKEN
       - backpack_registry_coupons_app_private_key_stage
@@ -64,6 +68,8 @@ pipeline:
       ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
       branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
+    environment:
+      CICD_MODE: 'true'
     secrets:
       - TAP_API_TOKEN
       - backpack_registry_coupons_app_private_key_prod
