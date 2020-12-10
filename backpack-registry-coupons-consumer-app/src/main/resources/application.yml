@@ -178,3 +178,9 @@ endpoints:
     enabled: true
     sensitive: false
 
+kafka-sources:
+  allow:
+    - backpack-registry-coupons
+    - backpack-registry-coupons-dlq
+    - cronbeacon
+    - cronbeacon-dlq
