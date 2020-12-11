@@ -1,4 +1,4 @@
-package com.tgt.guestnotifications.producer
+package com.tgt.backpackregistrycoupons.producer
 
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.producer.EventProducerClient

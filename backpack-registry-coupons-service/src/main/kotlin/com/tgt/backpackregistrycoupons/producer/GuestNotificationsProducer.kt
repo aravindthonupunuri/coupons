@@ -1,4 +1,4 @@
-package com.tgt.guestnotifications.producer
+package com.tgt.backpackregistrycoupons.producer
 
 import com.tgt.lists.msgbus.GenericProducer
 import com.tgt.lists.msgbus.MetricsName
