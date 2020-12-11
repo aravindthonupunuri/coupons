@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.service.async
 
 import com.tgt.backpackregistrycoupons.kafka.model.TracerEvent
-import com.tgt.guestnotifications.producer.GuestNotificationsProducer
+import com.tgt.backpackregistrycoupons.producer.GuestNotificationsProducer
 import org.apache.kafka.clients.producer.RecordMetadata
 import reactor.core.publisher.Mono
 import java.util.*
