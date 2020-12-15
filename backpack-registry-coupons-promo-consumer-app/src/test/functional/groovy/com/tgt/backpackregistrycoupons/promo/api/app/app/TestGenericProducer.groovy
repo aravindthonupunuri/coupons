@@ -26,7 +26,7 @@ class TestGenericProducer<K,V> extends GenericProducer<K, V>  {
                 eventTracer,
                 metricsPublisher,
                 mdcContext,
-                "test-producer"
+                "test-producer",
         )
     }
 }

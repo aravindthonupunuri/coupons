@@ -83,4 +83,17 @@ tracing:
 components:
   server:
     list-authorization-filter:
-      base-uri: /lists/v4
+      enabled: false
+      base-uri: /backpackregistrycoupons
+    sanitizing-filter:
+      enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
+
+registry:
+  baby:
+    sla: 7
+  wedding:
+    sla: 56
+  completion-coupon:
+    sla: 14

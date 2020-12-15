@@ -1,10 +1,10 @@
 package com.tgt.backpackregistrycoupons.api.app
 
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
 import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.util.CouponType
-import com.tgt.backpackregistrycoupons.util.RegistryType
 import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Stepwise
 

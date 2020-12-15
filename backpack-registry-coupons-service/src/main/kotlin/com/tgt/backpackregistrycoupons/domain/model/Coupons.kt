@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.domain.model
 
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.util.CouponType
-import com.tgt.backpackregistrycoupons.util.RegistryType
 import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDateTime
 import javax.persistence.Column

@@ -1,0 +1,9 @@
+package com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.internal
+
+import com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.CompositeTransactionalRepository
+import com.tgt.lists.micronaut.persistence.instrumentation.InstrumentedRepository
+import io.micronaut.context.annotation.Primary
+
+@Primary // make it primary to instrument CompositeTransactionalCrudRepository
+@InstrumentedRepository("CompositeTransactionalCrudRepository")
+interface CompositeTransactionalInstrumentedRepository : CompositeTransactionalRepository

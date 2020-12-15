@@ -1,8 +1,8 @@
 package com.tgt.backpackregistrycoupons.transport
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.tgt.backpackregistrycoupons.util.RegistryStatus
-import com.tgt.backpackregistrycoupons.util.RegistryType
+import com.tgt.backpackregistryclient.util.RegistryStatus
+import com.tgt.backpackregistryclient.util.RegistryType
 import java.util.*
 import javax.validation.constraints.NotNull
 

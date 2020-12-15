@@ -1,6 +1,6 @@
-package com.tgt.backpackregistrycoupons.kafka
+package com.tgt.backpackregistrycoupons.promo.kafka
 
-import com.tgt.backpackregistrycoupons.kafka.handler.RegistryTransactionEventHandler
+import com.tgt.backpackregistrycoupons.promo.kafka.handler.RegistryTransactionEventHandler
 import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
 import com.tgt.lists.msgbus.EventDispatcher
 import com.tgt.lists.msgbus.event.DeadEventTransformedValue
@@ -21,10 +21,18 @@ open class BackpackRegistryCouponsEventDispatcher(
     @Value("\${msgbus.dlq-source}") val dlqSource: String,
     @Value("\${kafka-sources.allow}") val allowedSources: Set<String>
 ) : EventDispatcher {
-
     private val logger = KotlinLogging.logger { BackpackRegistryCouponsEventDispatcher::class.java.name }
-    override fun handleDlqDeadEvent(eventHeaders: EventHeaders, data: ByteArray): DeadEventTransformedValue? {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+
+    override fun dispatchEvent(eventHeaders: EventHeaders, data: Any, isPoisonEvent: Boolean): Mono<EventProcessingResult> {
+        return when {
+            eventHeaders.source == source || allowedSources.contains(eventHeaders.source) -> {
+                registryTransactionEventHandler.handleCouponTransaction(data as PromoCouponRedemptionTO, eventHeaders)
+            }
+            else -> {
+                logger.debug { "Unhandled eventType: ${eventHeaders.eventType}" }
+                Mono.just(EventProcessingResult(true, eventHeaders, data))
+            }
+        }
     }
 
     override fun transformValue(eventHeaders: EventHeaders, data: ByteArray): EventTransformedValue? {
@@ -38,15 +46,7 @@ open class BackpackRegistryCouponsEventDispatcher(
         }
     }
 
-    override fun dispatchEvent(eventHeaders: EventHeaders, data: Any, isPoisonEvent: Boolean): Mono<EventProcessingResult> {
-        return when {
-            eventHeaders.source == source || allowedSources.contains(eventHeaders.source) -> {
-                registryTransactionEventHandler.handleCouponTransaction(data as PromoCouponRedemptionTO, eventHeaders)
-            }
-            else -> {
-                logger.debug { "Unhandled eventType: ${eventHeaders.eventType}" }
-                Mono.just(EventProcessingResult(true, eventHeaders, data))
-            }
-        }
+    override fun handleDlqDeadEvent(eventHeaders: EventHeaders, data: ByteArray): DeadEventTransformedValue? {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

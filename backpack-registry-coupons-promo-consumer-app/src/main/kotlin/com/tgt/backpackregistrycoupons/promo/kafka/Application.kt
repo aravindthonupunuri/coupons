@@ -1,4 +1,4 @@
-package com.tgt.backpackregistrycoupons.kafka
+package com.tgt.backpackregistrycoupons.promo.kafka
 
 import com.target.platform.connector.micronaut.PlatformPropertySource
 import com.tgt.lists.common.components.tap.TAPEnvironmentLoader

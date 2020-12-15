@@ -7,7 +7,6 @@ import com.tgt.swagger_sync.Swagger2Parser
 import spock.lang.Ignore
 import spock.lang.Specification
 
-@Ignore
 class ApiSpecTest extends Specification {
 
     static String staticSpecRelativePath = "/api-specs/backpack-registry-coupons-v1.yml"

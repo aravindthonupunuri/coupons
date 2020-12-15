@@ -1,10 +1,11 @@
 package com.tgt.backpackregistrycoupons.service
 
-import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistryclient.util.RegistryStatus
+import com.tgt.backpackregistryclient.util.RegistryType
+import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
+import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.transport.CouponsTO.Companion.toCouponsTOList
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
-import com.tgt.backpackregistrycoupons.util.RegistryStatus
-import com.tgt.backpackregistrycoupons.util.RegistryType
 import io.micronaut.context.annotation.Value
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
@@ -16,33 +17,32 @@ import javax.inject.Singleton
 
 @Singleton
 class RegistryCouponService(
-    @Inject private val registryCouponsRepository: RegistryCouponsRepository,
-    @Inject private val registryCouponAssignmentService: RegistryCouponAssignmentService,
+    @Inject private val registryRepository: RegistryRepository,
+    @Inject private val couponAssignmentCalculationManager: CouponAssignmentCalculationManager,
     @Value("\${registry.baby.sla}") val babyRegistrySLA: Long,
-    @Value("\${registry.wedding.sla}") val weddingRegistrySLA: Long,
-    @Value("\${registry.completion-coupon.sla}") val completionCouponSLA: Long
+    @Value("\${registry.wedding.sla}") val weddingRegistrySLA: Long
 ) {
-    private val logger = KotlinLogging.logger { RegistryCouponService::class.java.name }
+private val logger = KotlinLogging.logger { RegistryCouponService::class.java.name }
 
-    fun getRegistryCoupons(
-        registryId: UUID
-    ): Mono<RegistryCouponsTO> {
-        val slaMap = hashMapOf<String, Long>()
-        slaMap[RegistryType.BABY.name] = babyRegistrySLA
-        slaMap[RegistryType.WEDDING.name] = weddingRegistrySLA
+fun getRegistryCoupons(
+    registryId: UUID
+): Mono<RegistryCouponsTO> {
+    val slaMap = hashMapOf<String, Long>()
+    slaMap[RegistryType.BABY.name] = babyRegistrySLA
+    slaMap[RegistryType.WEDDING.name] = weddingRegistrySLA
 
-        return registryCouponsRepository.findByIdRegistryId(registryId).collectList()
-            .map {
-                val registryType = it.first().registryType
-                val registryStatus = RegistryStatus.ACTIVE
-                val couponCountDownDays: Long = if (it.first().couponCode == null) {
-                    val couponAssignmentDate = registryCouponAssignmentService.calculateCouponAssignmentDate(it.first())
-                    val duration: Duration = Duration.between(LocalDate.now().atStartOfDay(), couponAssignmentDate.minusDays(slaMap[registryType.name]!!))
-                    if (duration.isNegative) 0L else duration.toDays()
-                } else {
-                    0L
-                }
-                RegistryCouponsTO(registryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it))
+    return registryRepository.getByRegistryId(registryId)
+        .map {
+            val registryType = it.registryType
+            val registryStatus = RegistryStatus.ACTIVE
+            val couponCountDownDays: Long = if (it.registryCoupons.isNullOrEmpty()) {
+                val couponAssignmentDate = couponAssignmentCalculationManager.calculateCouponAssignmentDate(it)
+                val duration: Duration = Duration.between(LocalDate.now().atStartOfDay(), couponAssignmentDate.minusDays(slaMap[registryType.name]!!))
+                if (duration.isNegative) 0L else duration.toDays()
+            } else {
+                0L
             }
-    }
+            RegistryCouponsTO(registryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it.registryCoupons ?: emptySet()))
+        }
+}
 }

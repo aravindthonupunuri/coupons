@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.kafka
 
 import com.tgt.backpackregistrycoupons.kafka.handler.*
-import com.tgt.backpackregistrycoupons.kafka.model.CronEvent
+import com.tgt.cronbeacon.kafka.model.CronEvent
 import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
 import com.tgt.lists.atlas.kafka.model.DeleteListNotifyEvent
 import com.tgt.lists.atlas.kafka.model.UpdateListNotifyEvent
@@ -32,7 +32,6 @@ open class BackpackRegistryCouponsEventDispatcher(
 
     override fun dispatchEvent(eventHeaders: EventHeaders, data: Any, isPoisonEvent: Boolean): Mono<EventProcessingResult> {
         if (eventHeaders.source == source || eventHeaders.source == dlqSource || allowedSources.contains(eventHeaders.source)) {
-            // handle following events only from configured source
             when (eventHeaders.eventType) {
                 CreateListNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type

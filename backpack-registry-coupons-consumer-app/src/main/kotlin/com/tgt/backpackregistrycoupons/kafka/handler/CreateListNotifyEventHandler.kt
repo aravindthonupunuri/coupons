@@ -1,13 +1,15 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
+import com.tgt.backpackregistryclient.transport.RegistryMetaDataTO
+import com.tgt.backpackregistryclient.util.RegistryType.Companion.toRegistryType
 import com.tgt.backpackregistrycoupons.service.async.CreateListNotifyEventService
-import com.tgt.backpackregistrycoupons.transport.RegistryMetaDataTO
 import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,14 +31,15 @@ class CreateListNotifyEventHandler(
             CreateListNotifyEventService.RetryState()
         }
 
-        return createListNotifyEventService.processCreateListNotifyEvent(createListNotifyEvent.guestId,
-            createListNotifyEvent.listId,
-            createListNotifyEvent.listState!!,
-            RegistryMetaDataTO.getRegistryMetadata(createListNotifyEvent.userMetaData)?.registryType!!,
-            RegistryMetaDataTO.getRegistryMetadata(createListNotifyEvent.userMetaData)?.registryCreatedTs!!,
-            RegistryMetaDataTO.getRegistryMetadata(createListNotifyEvent.userMetaData)?.event?.eventDateTs!!,
-            processingState)
-            .map {
+        return createListNotifyEventService.processCreateListNotifyEvent(
+            guestId = createListNotifyEvent.guestId,
+            registryId = createListNotifyEvent.listId,
+            registryStatus = createListNotifyEvent.listState!!,
+            registryType = toRegistryType(createListNotifyEvent.listSubType!!), // defaulted to baby
+            registryCreatedTs = LocalDateTime.now(), // TODO: createListNotifyEvent not having registry create ts
+            eventDate = RegistryMetaDataTO.toEntityRegistryMetadata(createListNotifyEvent.userMetaData)?.event?.eventDate!!,
+            retryState = processingState
+        ).map {
                 if (it.completeState()) {
                     logger.debug("createListNotifyEvent processing is complete")
                     EventProcessingResult(true, eventHeaders, createListNotifyEvent)

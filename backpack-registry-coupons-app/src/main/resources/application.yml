@@ -92,6 +92,8 @@ components:
       base-uri: /backpackregistrycoupons
     sanitizing-filter:
       enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
 
 api-key: 7ba07fb448c47d7b4e9961174f2c0191112dead6
 
@@ -101,3 +103,5 @@ registry:
     sla: 7
   wedding:
     sla: 56
+  completion-coupon:
+    sla: 14

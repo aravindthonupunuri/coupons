@@ -31,6 +31,8 @@ components:
       enabled: false
     sanitizing-filter:
       enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
 
 #  ssl:
 #    keystore:

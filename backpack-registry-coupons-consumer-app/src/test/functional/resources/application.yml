@@ -20,6 +20,7 @@ resilience4j:
 jdbc-stmt:
   serverStatementTimeoutMillis: 250  # for server side statement timeout
   statementQueryTimeoutSeconds: 1    # for client side statement timeout
+  fetchSize: 1000                    # for controlling jdbc ResultSet fetch size globally (default 0)
 
 jackson:
   property-naming-strategy: "SNAKE_CASE"
@@ -108,18 +109,17 @@ filter:
       oauth-key-filter: 700
 
 list:
-  list-type: COUPONS
-  max-count: 50
-  max-pending-item-count: 3
-  max-completed-items-count: 3
-  abandon-after-duration-in-days: 730 # It is two years duration
-  redsky-batch-size: 28
-  features.dedupe: true
-  features.sort-position: true
-  features.fixed-default-list: false
+  list-type: REGISTRY
+#  max-count: 50
+#  max-pending-item-count: 3
+#  max-completed-items-count: 3
+#  abandon-after-duration-in-days: 730 # It is two years duration
+#  redsky-batch-size: 28
+#  features.dedupe: true
+#  features.sort-position: true
+#  features.fixed-default-list: false
 
-sic:
-  batch-size: 3
+
 
 mockfilter:
   paths: /zipkin,/testserver/auth/oauth/v2/token,/storeItemPlacements,/ssa/cwlservice/api/v16/.*
@@ -143,22 +143,26 @@ kafka-sources:
     - backpack-registry-coupons-dlq
     - cronbeacon
     - cronbeacon-dlq
+    - backpack-registry
+    - backpack-registry-dlq
 
-cron-beacon:
-  source: backpack-registry-coupons
-  dlq-source: backpack-registry-coupons-dlq
-  kafka:
-    consumer:
-      client-id: backpack-registry-coupons-cron-beacon-consumer
-      topic: lists-msg-bus
-      metrics-name: backpack-registry-coupons-beacon-metrics
-      consumer-group: backpack-registry-coupons-cron-beacon-consumer
-      consumer-batch-size: 1
-      max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
+beacon:
+  client:
+    enabled: true
+    source: backpack-registry-coupons
+    dlq-source: backpack-registry-coupons-dlq
+    kafka:
+      consumer:
+        client-id: backpack-registry-coupons-cron-beacon-consumer
+        topic: lists-msg-bus
+        metrics-name: backpack-registry-coupons-beacon-metrics
+        consumer-group: backpack-registry-coupons-cron-beacon-consumer
+        consumer-batch-size: 1
+        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
 
-tracer:
-  source: backpack-registry-coupons
-  dlq-source: backpack-registry-coupons-dlq
+notification-tracer:
+  source: testtracerclient
+  dlq-source: testtracerclient-dlq
   kafka:
     producer:
       enabled: true
@@ -167,7 +171,15 @@ tracer:
 registry:
   baby:
     sla: 7
+    coupon-types:
+      - STORE
+      - ONLINE
   wedding:
     sla: 56
+    coupon-types:
+      - STORE
+      - ONLINE
   completion-coupon:
     sla: 14
+    coupon-assignment-hour-of-day: 2
+    coupon-assignment-minute-block-of-hour: 1
