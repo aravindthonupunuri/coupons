@@ -3,71 +3,76 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.CompositeTransactionalRepository
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DeleteListNotifyEventService(
-    @Inject val registryCouponsRepository: RegistryCouponsRepository
+    @Inject val compositeTransactionalRepository: CompositeTransactionalRepository
 ) {
-    private val logger = KotlinLogging.logger { DeleteListNotifyEventService::class.java.name }
+private val logger = KotlinLogging.logger { DeleteListNotifyEventService::class.java.name }
 
-    fun processDeleteListNotifyEvent(
-        listId: UUID,
-        retryState: RetryState
-    ): Mono<RetryState> {
-        return if (retryState.incompleteState()) {
-            logger.debug("From processDeleteListNotifyEvent(), starting processing")
-            return deleteGuestRegistry(listId)
-                .map {
-                    retryState.deleteGuestRegistry = it
-                    retryState
-                }
-        } else {
-            logger.debug("From processDeleteListNotifyEvent(), processing complete")
-            Mono.just(retryState)
+fun processDeleteListNotifyEvent(
+    registryId: UUID,
+    retryState: RetryState
+): Mono<RetryState> {
+    return if (retryState.incompleteState()) {
+        logger.debug("From processDeleteListNotifyEvent(), starting processing")
+        return deleteGuestRegistry(registryId)
+            .map {
+                retryState.deleteGuestRegistry = it
+                retryState
+            }
+    } else {
+        logger.debug("From processDeleteListNotifyEvent(), processing complete")
+        Mono.just(retryState)
+    }
+}
+
+fun deleteGuestRegistry(
+    registryId: UUID
+): Mono<Boolean> {
+    return compositeTransactionalRepository.deleteRegistryCascaded(registryId).map { true }
+        .onErrorResume {
+            logger.error("Exception from deleteGuestRegistry() for registryId: $registryId " +
+                "sending it for retry", it)
+            Mono.just(false)
         }
+        .switchIfEmpty {
+            logger.error("Exception from deleteGuestRegistry(), registryId: $registryId not found to delete")
+            Mono.just(true)
+        }
+}
+
+data class RetryState(
+    var deleteGuestRegistry: Boolean = false
+) {
+    fun completeState(): Boolean {
+        return deleteGuestRegistry
     }
 
-    fun deleteGuestRegistry(
-        listId: UUID
-    ): Mono<Boolean> {
-        return registryCouponsRepository.deleteByRegistryId(listId).then().map { true }
-            .onErrorResume {
-                logger.error("Exception from deleteGuestRegistry() for registryId: $listId " +
-                    "sending it for retry", it)
-                Mono.just(false)
-            }
+    fun incompleteState(): Boolean {
+        return !deleteGuestRegistry
     }
 
-    data class RetryState(
-        var deleteGuestRegistry: Boolean = false
-    ) {
-        fun completeState(): Boolean {
-            return deleteGuestRegistry
+    companion object {
+        // jacksonObjectMapper() returns a normal ObjectMapper with the KotlinModule registered
+        val jsonMapper: ObjectMapper = jacksonObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+
+        @JvmStatic
+        fun deserialize(retryState: String): RetryState {
+            return jsonMapper.readValue<RetryState>(retryState, RetryState::class.java)
         }
 
-        fun incompleteState(): Boolean {
-            return !deleteGuestRegistry
-        }
-
-        companion object {
-            // jacksonObjectMapper() returns a normal ObjectMapper with the KotlinModule registered
-            val jsonMapper: ObjectMapper = jacksonObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
-
-            @JvmStatic
-            fun deserialize(retryState: String): RetryState {
-                return jsonMapper.readValue<RetryState>(retryState, RetryState::class.java)
-            }
-
-            @JvmStatic
-            fun serialize(retryState: RetryState): String {
-                return jsonMapper.writeValueAsString(retryState)
-            }
+        @JvmStatic
+        fun serialize(retryState: RetryState): String {
+            return jsonMapper.writeValueAsString(retryState)
         }
     }
+}
 }

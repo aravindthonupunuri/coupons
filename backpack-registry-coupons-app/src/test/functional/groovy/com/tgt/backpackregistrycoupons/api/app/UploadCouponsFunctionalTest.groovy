@@ -41,7 +41,7 @@ class UploadCouponsFunctionalTest extends BasePersistenceFunctionalTest {
         def actualStatus = response.status()
 
         then:
-        actualStatus == HttpStatus.CREATED
+        actualStatus == HttpStatus.NO_CONTENT
     }
 
     def "test valid existsByCouponCode"() {

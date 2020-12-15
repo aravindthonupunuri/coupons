@@ -15,18 +15,18 @@ data class CouponsTO(
     val couponExpiryDate: LocalDateTime?,
     val couponState: CouponRedemptionStatus?
 ) {
-    constructor(registryCoupons: RegistryCoupons) : this(
-        couponCode = registryCoupons.couponCode,
-        couponType = registryCoupons.id.couponType,
-        couponIssueDate = registryCoupons.couponIssueDate,
-        couponExpiryDate = registryCoupons.couponExpiryDate,
-        couponState = registryCoupons.couponRedemptionStatus
-    )
+constructor(registryCoupons: RegistryCoupons) : this(
+    couponCode = registryCoupons.couponCode,
+    couponType = registryCoupons.couponType,
+    couponIssueDate = registryCoupons.couponIssueDate,
+    couponExpiryDate = registryCoupons.couponExpiryDate,
+    couponState = registryCoupons.couponRedemptionStatus
+)
 
-    companion object {
-        @JvmStatic
-        fun toCouponsTOList(registryCouponsList: List<RegistryCoupons>): List<CouponsTO> {
-            return registryCouponsList.map { CouponsTO(it) }
-        }
+companion object {
+    @JvmStatic
+    fun toCouponsTOList(registryCouponsList: Set<RegistryCoupons>): List<CouponsTO> {
+        return registryCouponsList.map { CouponsTO(it) }
     }
+}
 }

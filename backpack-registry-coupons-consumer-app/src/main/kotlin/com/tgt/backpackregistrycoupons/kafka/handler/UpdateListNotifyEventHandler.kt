@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
+import com.tgt.backpackregistryclient.transport.RegistryMetaDataTO
 import com.tgt.backpackregistrycoupons.service.async.UpdateListNotifyEventService
-import com.tgt.backpackregistrycoupons.transport.RegistryMetaDataTO
 import com.tgt.lists.atlas.kafka.model.UpdateListNotifyEvent
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
@@ -29,10 +29,12 @@ class UpdateListNotifyEventHandler(
             UpdateListNotifyEventService.RetryState()
         }
 
-        return updateListNotifyEventService.processUpdateListNotifyEvent(updateListNotifyEvent.listId, updateListNotifyEvent.listState!!,
-            RegistryMetaDataTO.getRegistryMetadata(updateListNotifyEvent.userMetaData)?.event?.eventDateTs!!,
-
-            processingState).map {
+        return updateListNotifyEventService.processUpdateListNotifyEvent(
+            registryId = updateListNotifyEvent.listId,
+            registryStatus = updateListNotifyEvent.listState!!,
+            eventDate = RegistryMetaDataTO.toEntityRegistryMetadata(updateListNotifyEvent.userMetaData)?.event?.eventDate!!,
+            retryState = processingState
+        ).map {
             if (it.completeState()) {
                 logger.debug("updateListNotifyEvent processing is complete")
                 EventProcessingResult(true, eventHeaders, updateListNotifyEvent)

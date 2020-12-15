@@ -27,7 +27,7 @@ class EventPublisher(
         partitionKey: String
     ): Mono<RecordMetadata> {
         // Exception publishing item completion kafka event, so sending it to DLQ topic for retry
-        val headers = eventHeaderFactory.nextRetryHeaders(eventHeaders = eventHeaderFactory.newEventHeaders(eventType),
+        val headers = eventHeaderFactory.nextRetryHeaders(eventHeaders = eventHeaderFactory.newEventHeaders(eventType = eventType, testMode = false),
             errorCode = 500,
             errorMsg = "Failure publishing item completion kafka event with " +
                 "message with message $message to message bus kafka topic, so publishing it to DLQ topic")

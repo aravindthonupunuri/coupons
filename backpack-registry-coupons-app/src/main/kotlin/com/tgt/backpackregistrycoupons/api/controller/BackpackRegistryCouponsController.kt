@@ -1,11 +1,12 @@
 package com.tgt.backpackregistrycoupons.api.controller
 
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.service.RegistryCouponService
 import com.tgt.backpackregistrycoupons.service.UploadRegistryCouponService
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
 import com.tgt.backpackregistrycoupons.util.CouponType
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant
-import com.tgt.backpackregistrycoupons.util.RegistryType
+import com.tgt.backpacktransactionsclient.util.BackpackTransactionsConstants.PROFILE_ID
 import io.micronaut.core.convert.format.Format
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
@@ -38,7 +39,7 @@ class BackpackRegistryCouponsController(
      *
      */
     @Post(value = "/upload", consumes = [MediaType.MULTIPART_FORM_DATA])
-    @Status(HttpStatus.CREATED)
+    @Status(HttpStatus.NO_CONTENT)
     fun uploadRegistryCoupons(
         @QueryValue("registry_type") registryType: RegistryType,
         @QueryValue("coupon_type") couponType: CouponType,
@@ -73,7 +74,7 @@ class BackpackRegistryCouponsController(
     @Status(HttpStatus.OK)
     @ApiResponse(content = [Content(mediaType = "application/json", schema = Schema(implementation = RegistryCouponsTO::class))])
     fun getRegistryCoupons(
-        @Header(RegistryCouponsConstant.PROFILE_ID) guestId: String,
+        @Header(PROFILE_ID) guestId: String,
         @QueryValue("location_id") locationId: Long?,
         @PathVariable("registry_id") registryId: UUID
     ): Mono<RegistryCouponsTO> {

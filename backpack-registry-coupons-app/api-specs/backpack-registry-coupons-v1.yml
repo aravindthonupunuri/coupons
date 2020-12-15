@@ -110,20 +110,10 @@ paths:
           description: The consumer's valid API key.
           required: true
           type: string
-        - name: channel
-          in: query
-          description: The channel creating this request
-          required: true
-          type: string
-        - name: sub_channel
-          in: query
-          description: The sub channel creating this request
-          required: true
-          type: string
         - name: location_id
           in: query
           description: The store id
-          required: true
+          required: false
           type: integer
           format: int32
         - name: registry_id
@@ -136,7 +126,7 @@ paths:
         '200':
           description: registry coupons transfer object
           schema:
-            $ref: '#/definitions/RegistryCouponsResponseTO'
+            $ref: '#/definitions/RegistryCouponsTO'
         '400':
           description: Bad Request
           schema:
@@ -154,7 +144,6 @@ paths:
           schema:
             $ref: '#/definitions/Error404'
 
-
   '/upload':
     x-data_classification: PUBLIC
     post:
@@ -167,12 +156,12 @@ paths:
       tags:
         - registry_coupons
       consumes:
-         - multipart/form-data
+        - multipart/form-data
       parameters:
         - name: registry_type
           in: query
           description: The registry type for which coupons will be used
-          enum: [ "BABY", "WEDDING", "COLLEGE"]
+          enum: [ "BABY", "WEDDING"]
           required: true
           type: string
         - name: coupon_type
@@ -181,7 +170,7 @@ paths:
           enum: [ "ONLINE", "STORE"]
           required: true
           type: string
-        - in: body
+        - in: formData
           name: coupons_file
           type: file
           description: The coupons file to upload.
@@ -196,8 +185,10 @@ paths:
           required: true
           type: string
       responses:
-        '201':
-          description: registry coupons file uploaded
+        '204':
+          description: Void
+          schema:
+            $ref: '#/definitions/Void'
         '400':
           description: Bad Request
           schema:
@@ -216,39 +207,72 @@ paths:
             $ref: '#/definitions/Error404'
 
 definitions:
-  RegistryCouponsResponseTO:
+  RegistryCouponsTO:
+    required:
+      - registry_id
+      - registry_status
+      - registry_type
     type: object
     properties:
       registry_id:
         type: string
         format: uuid
       registry_type:
-        type: string
+        $ref: '#/definitions/RegistryType'
       registry_status:
-        type: string
+        $ref: '#/definitions/RegistryStatus'
       coupon_count_down_days:
-        type: string
+        type: integer
+        format: int32
       coupons:
         type: array
         items:
-          $ref: '#/definitions/RegistryCouponsTO'
+          $ref: '#/definitions/CouponsTO'
 
-  RegistryCouponsTO:
+  CouponsTO:
+    required:
+      - coupon_code
+      - coupon_type
     type: object
     properties:
       coupon_code:
         type: string
       coupon_type:
-        type: string
+        $ref: '#/definitions/CouponType'
       coupon_issue_date:
         type: string
       coupon_expiry_date:
         type: string
       coupon_state:
-        type: string
+        $ref: '#/definitions/CouponRedemptionStatus'
 
+  RegistryType:
+    type: string
+    enum:
+      - BABY
+      - WEDDING
 
+  CouponType:
+    type: string
+    enum:
+      - ONLINE
+      - STORE
 
+  RegistryStatus:
+    type: string
+    enum:
+      - ACTIVE
+      - INACTIVE
+
+  CouponRedemptionStatus:
+    type: string
+    enum:
+      - AVAILABLE
+      - REDEEMED
+      - EXPIRED
+
+  Void:
+    type: object
   Error401:
     type: object
     properties:

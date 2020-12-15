@@ -1,19 +1,20 @@
 package com.tgt.backpackregistrycoupons.service.async
 
-import com.tgt.backpackregistrycoupons.kafka.model.TracerEvent
-import com.tgt.backpackregistrycoupons.producer.GuestNotificationsProducer
-import org.apache.kafka.clients.producer.RecordMetadata
+import com.tgt.notification.tracer.client.model.NotificationTracerEvent
+import com.tgt.notification.tracer.client.producer.NotificationTracerProducer
 import reactor.core.publisher.Mono
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SendGuestNotificationsService(@Inject val guestNotificationsProducer: GuestNotificationsProducer<String, Any>) {
-    fun sendGuestNotifications(
-        tracerEvent: TracerEvent,
-        registryId: UUID
-    ): Mono<RecordMetadata> {
-        return guestNotificationsProducer.sendMessage("tracer-event", tracerEvent, registryId.toString())
-    }
+class SendGuestNotificationsService(@Inject val notificationTracerProducer: NotificationTracerProducer<String, Any>) {
+fun sendGuestNotifications(
+    notificationTracerEvent: NotificationTracerEvent,
+    registryId: String
+): Mono<Boolean> {
+    return notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), notificationTracerEvent, registryId).map { true }
+        .onErrorResume {
+            Mono.just(true)
+        }
+}
 }

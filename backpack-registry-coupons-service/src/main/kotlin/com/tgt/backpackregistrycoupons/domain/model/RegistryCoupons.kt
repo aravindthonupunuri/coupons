@@ -1,37 +1,33 @@
 package com.tgt.backpackregistrycoupons.domain.model
 
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
-import com.tgt.backpackregistrycoupons.util.RegistryType
+import com.tgt.backpackregistrycoupons.util.CouponType
 import io.micronaut.data.annotation.DateCreated
-import io.micronaut.data.annotation.EmbeddedId
 import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.data.annotation.Relation
 import java.time.LocalDateTime
+import javax.annotation.Nullable
 import javax.persistence.Column
+import javax.persistence.Id
 import javax.persistence.Table
 
 @MappedEntity
 @Table(name = "registry_coupons")
 data class RegistryCoupons(
-    @EmbeddedId
-    val id: RegistryPk,
-
-    @Column(name = "registry_type")
-    val registryType: RegistryType,
-
-    @Column(name = "registry_status")
-    val registryStatus: String,
-
-    @Column(name = "registry_created_ts")
-    val registryCreatedTs: LocalDateTime,
-
-    @Column(name = "event_date")
-    val eventDate: LocalDateTime,
-
+    @Id
     @Column(name = "coupon_code")
     val couponCode: String?,
 
-    @Column(name = "coupon_notified")
-    val couponNotified: Boolean,
+    /*
+    Column registry_id is used as foreign key to Registry,
+     */
+    @Relation(value = Relation.Kind.MANY_TO_ONE)
+    @Column(name = "registry_id")
+    @Nullable
+    var registry: Registry?,
+
+    @Column(name = "coupon_type")
+    val couponType: CouponType,
 
     @Column(name = "coupon_redemption_status")
     val couponRedemptionStatus: CouponRedemptionStatus?,
@@ -41,12 +37,6 @@ data class RegistryCoupons(
 
     @Column(name = "coupon_expiry_date")
     val couponExpiryDate: LocalDateTime?,
-
-    @Column(name = "created_user")
-    val createdUser: String,
-
-    @Column(name = "updated_user")
-    val updatedUser: String,
 
     @DateCreated
     @Column(name = "created_ts")

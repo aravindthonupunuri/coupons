@@ -96,6 +96,7 @@ class BasePersistenceFunctionalTest extends BaseFunctionalTest implements TestPr
                 connection = DriverManager.getConnection(jdbc, "postgres", "postgres")
                 statement = connection.createStatement()
                 statement.executeUpdate("TRUNCATE TABLE COUPONS")
+                statement.executeUpdate("TRUNCATE TABLE REGISTRY")
                 statement.executeUpdate("TRUNCATE TABLE REGISTRY_COUPONS")
             }
         } catch(Throwable t) {
