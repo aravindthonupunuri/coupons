@@ -22,7 +22,7 @@ datasources: # hikari
     maxLifetime: 1800000      # default 1800000ms (30min), should be shorter than any database imposed connection time limit
     connectionTimeout: 10000  # default: 30000ms (30 seconds)
 
-jdbc-stmt-timeout:
+jdbc-stmt:
   serverStatementTimeoutMillis: 200  # for server side statement timeout
   statementQueryTimeoutSeconds: 1    # for client side statement timeout
 
