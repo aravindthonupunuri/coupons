@@ -7,6 +7,7 @@ micronaut:
     idle-timeout: 2000ms
     multipart:
       max-file-size: 100
+
   metrics:
     binders:
       web:
@@ -89,6 +90,35 @@ components:
       enabled: false
     registry-channel-subchannel-filter:
       enabled: false
+
+msgbus:
+  source: backpack-registry-coupons-app
+  dlq-source: backpack-registry-coupons-app-dlq
+  kafka:
+    consumer:
+      enabled: false
+    producer:
+      enabled: true
+    dlqconsumer:
+      enabled: false
+    dlqproducer:
+      enabled: true
+    topic: lists-msg-bus
+    consumer-group: lists-msg-bus-consumer
+    consumer-batch-size: 10
+    dlq-topic: lists-dlq
+    dlq-consumer-group: lists-dlq-consumer
+    dlq-event-retry-interval-secs: 1
+    dlq-max-event-retry-count: 2
+    dlq-consumer-batch-size: 10
+
+notification-tracer:
+  source: backpack-registry-coupons-app
+  dlq-source: backpack-registry-coupons-app-dlq
+  kafka:
+    producer:
+      enabled: true
+    topic: lists-msg-bus
 
 registry:
   baby:
