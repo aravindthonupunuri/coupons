@@ -93,7 +93,15 @@ components:
 registry:
   baby:
     sla: 7
+    coupon-types:
+      - STORE
+      - ONLINE
   wedding:
     sla: 56
+    coupon-types:
+      - STORE
+      - ONLINE
   completion-coupon:
     sla: 14
+    coupon-assignment-hour-of-day: 2
+    coupon-assignment-minute-block-of-hour: 1

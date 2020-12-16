@@ -101,7 +101,15 @@ api-key: 7ba07fb448c47d7b4e9961174f2c0191112dead6
 registry:
   baby:
     sla: 7
+    coupon-types:
+      - STORE
+      - ONLINE
   wedding:
     sla: 56
+    coupon-types:
+      - STORE
+      - ONLINE
   completion-coupon:
     sla: 14
+    coupon-assignment-hour-of-day: 2
+    coupon-assignment-minute-block-of-hour: 1
