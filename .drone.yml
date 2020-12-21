@@ -101,6 +101,9 @@ pipeline:
       JDBC_URL: 'jdbc:postgresql://backpackregistrycouponspostgres:5432/lists'
       KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
     commands:
+      - 'mkdir -p masterspec'
+      - 'git clone https://git.target.com/Registry-Modernization/backpack-registry-coupons --branch master --single-branch masterspec'
+      - 'export GIT_MASTER_SPEC_PATH=`pwd`/masterspec'
       - './gradlew build distTar'
 
   rebuild_cache:

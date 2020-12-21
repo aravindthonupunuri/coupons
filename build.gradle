@@ -138,6 +138,9 @@ allprojects {
         exclude('**/logback*.xml')
         exclude('**/application*.yml')
         exclude('**/proxy*.yml')
+        from('api-specs') {
+            into 'apispec'
+        }
     }
 
     allOpen {

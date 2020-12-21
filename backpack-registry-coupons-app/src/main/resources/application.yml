@@ -86,7 +86,21 @@ tracing:
       region: tdc
 
 components:
+  apispec:
+    filepath: apispec/backpack-registry-coupons-v1.yml
+  errocodes:
+    classes:
+      - com.tgt.lists.common.components.exception.BaseErrorCodes #Haven't defined app specific error codes yet
   server:
+    onbehalf-filter:
+      enabled: true
+      gsp-validation-base-url: "https://backpackregistrycoupons.dev.target.com"
+      team-email-ids:
+        - Indrakumar.Thimmaiah@target.com
+        - Kiran.Shivalingaiah@target.com
+        - Parthasarathy.Hd@target.com
+      approver-email-ids:
+        - Indrakumar.Thimmaiah@target.com
     list-authorization-filter:
       enabled: false
       base-uri: /backpackregistrycoupons
