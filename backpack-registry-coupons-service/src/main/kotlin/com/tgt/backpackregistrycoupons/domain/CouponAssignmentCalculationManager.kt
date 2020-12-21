@@ -23,7 +23,7 @@ fun calculateCouponAssignmentDate(
     slaMap[RegistryType.WEDDING.name] = weddingRegistrySLA
 
     val registryType = registry.registryType
-    val registryCreatedDate = registry.registryCreatedTs.toLocalDate()?.atStartOfDay()!!
+    val registryCreatedDate = registry.registryCreatedDate.atStartOfDay()!!
     val registryEventDate = registry.eventDate.atStartOfDay()!!
     val earliestCouponAssignmentDate = registryCreatedDate.plusDays(completionCouponSLA)
 

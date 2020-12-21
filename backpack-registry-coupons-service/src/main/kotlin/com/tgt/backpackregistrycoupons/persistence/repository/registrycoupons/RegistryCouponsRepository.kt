@@ -14,7 +14,7 @@ interface RegistryCouponsRepository {
 
     fun save(registryCoupons: RegistryCoupons): Mono<RegistryCoupons>
 
-    fun saveAll(registryCoupons: Set<RegistryCoupons>): Flux<RegistryCoupons>
+    fun saveAll(registryCoupons: List<RegistryCoupons>): Flux<RegistryCoupons>
 
     fun findByCouponCode(couponCode: String): Mono<RegistryCoupons>
 

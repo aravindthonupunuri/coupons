@@ -10,7 +10,7 @@ import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.LocalDate
-import java.time.LocalDateTime
+
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,13 +26,13 @@ fun processCreateListNotifyEvent(
     registryId: UUID,
     registryStatus: LIST_STATE,
     registryType: RegistryType,
-    registryCreatedTs: LocalDateTime,
+    registryCreatedDate: LocalDate,
     eventDate: LocalDate,
     retryState: RetryState
 ): Mono<RetryState> {
     return if (retryState.incompleteState()) {
         logger.debug("From processCreateListNotifyEvent(), starting processing")
-        return addGuestRegistry(guestId, registryId, registryStatus, registryType, registryCreatedTs, eventDate)
+        return addGuestRegistry(guestId, registryId, registryStatus, registryType, registryCreatedDate, eventDate)
             .map {
                 retryState.addGuestRegistry = it
                 retryState
@@ -48,11 +48,11 @@ fun addGuestRegistry(
     registryId: UUID,
     registryStatus: LIST_STATE,
     registryType: RegistryType,
-    registryCreatedTs: LocalDateTime,
+    registryCreatedDate: LocalDate,
     eventDate: LocalDate
 ): Mono<Boolean> {
     // The RegistryStatus is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the registry.
-    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus.value, registryCreatedTs, eventDate, false, null, null))
+    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, null, null))
         .map { true }
         .onErrorResume {
             logger.error("Exception from addGuestRegistry() for guestID: $guestId and registryId: $registryId," +

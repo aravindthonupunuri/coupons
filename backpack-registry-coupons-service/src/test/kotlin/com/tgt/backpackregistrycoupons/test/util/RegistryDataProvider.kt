@@ -5,6 +5,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.tgt.backpackregistryclient.transport.*
 import com.tgt.backpackregistryclient.transport.RegistryItemMetaDataTO.Companion.toStringRegistryItemMetaData
 import com.tgt.backpackregistryclient.util.*
+import com.tgt.backpackregistrycoupons.migration.model.RegistryCouponMetaDataTO
+import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryTransactionTO
 import com.tgt.cronbeacon.kafka.model.CronEvent
 import com.tgt.lists.atlas.api.transport.ListItemResponseTO
@@ -263,6 +265,18 @@ class RegistryDataProvider {
     ): Map<String, Any>? {
         return toUserMetaData(RegistryMetaDataTO.toStringRegistryMetadata(RegistryMetaDataTO(profileAddressId, giftCardsEnabled, groupGiftEnabled,
             groupGiftAmount, recipients, event, babyRegistry, guestRulesMetaData, imageMetaData, customUrl)))?.metadata
+    }
+
+    fun getRegistryCouponMetaDataMap(
+        onlineCouponCode: String,
+        onlineCouponStatus: CouponRedemptionStatus,
+        storeCouponCode: String,
+        storeCouponStatus: CouponRedemptionStatus,
+        couponIssueDate: LocalDate,
+        couponExpiryDate: LocalDate
+    ): Map<String, Any>? {
+        return toUserMetaData(RegistryCouponMetaDataTO.toStringRegistryCouponMetadata(RegistryCouponMetaDataTO(onlineCouponCode, onlineCouponStatus, storeCouponCode,
+                    storeCouponStatus, couponIssueDate, couponExpiryDate)))?.metadata
     }
 
     fun createCronEvent(eventLocalDateTime: LocalDateTime, minuteBlockOfHour: Long, eventIntervalMinutes: Long, timeZoneId: ZoneId): CronEvent {

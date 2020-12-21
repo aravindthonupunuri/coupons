@@ -68,7 +68,7 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDateTime.now().minusDays(50), LocalDate.now().plusDays(1), false, null, null)
+        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(50), LocalDate.now().plusDays(1), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 
@@ -79,11 +79,11 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create unassigned coupons"() {
         given:
-        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons2 = new Coupons("2000000", CouponType.STORE, RegistryType.WEDDING, LocalDateTime.now(), "1")
-        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons4 = new Coupons("4000000", CouponType.STORE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.WEDDING, LocalDateTime.now(), "1")
+        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons2 = new Coupons("2000000", CouponType.STORE, RegistryType.WEDDING, LocalDate.now(), "1")
+        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons4 = new Coupons("4000000", CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.WEDDING, LocalDate.now(), "1")
 
         when:
         def result1 = couponsRepository.save(coupons1).block()

@@ -9,7 +9,7 @@ import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Stepwise
 
 import javax.inject.Inject
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @MicronautTest
 @Stepwise
@@ -20,11 +20,11 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test save RegistryCoupons"() {
         given:
-        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons2 = new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons4 = new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
-        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.BABY, LocalDateTime.now(), "1")
+        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons2 = new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons4 = new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
 
         when:
         def result1 = couponsRepository.save(coupons1).block()
