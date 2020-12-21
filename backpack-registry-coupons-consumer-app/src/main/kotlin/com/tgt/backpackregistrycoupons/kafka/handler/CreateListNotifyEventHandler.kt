@@ -9,7 +9,7 @@ import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
-import java.time.LocalDateTime
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +36,7 @@ class CreateListNotifyEventHandler(
             registryId = createListNotifyEvent.listId,
             registryStatus = createListNotifyEvent.listState!!,
             registryType = toRegistryType(createListNotifyEvent.listSubType!!), // defaulted to baby
-            registryCreatedTs = LocalDateTime.now(), // TODO: createListNotifyEvent not having registry create ts
+            registryCreatedDate = LocalDate.now(), // TODO: createListNotifyEvent not having registry create ts
             eventDate = RegistryMetaDataTO.toEntityRegistryMetadata(createListNotifyEvent.userMetaData)?.event?.eventDate!!,
             retryState = processingState
         ).map {

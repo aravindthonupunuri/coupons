@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
-import java.time.LocalDateTime
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +24,7 @@ class UploadRegistryCouponService(
         registryType: RegistryType,
         couponType: CouponType,
         offerId: String,
-        couponExpiryDate: LocalDateTime,
+        couponExpiryDate: LocalDate,
         file: File
     ): Mono<Void> {
         return Flux.fromStream(BufferedReader(FileReader(file)).lines()).flatMap { coupon ->

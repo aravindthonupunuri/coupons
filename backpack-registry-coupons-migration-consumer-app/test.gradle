@@ -1,0 +1,44 @@
+sourceSets {
+    main
+    testFunctional {
+        groovy {
+            srcDir { "src/test/functional/groovy" }
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        resources.srcDir "src/test/functional/resources"
+    }
+}
+
+configurations {
+    testFunctionalCompile.extendsFrom testCompile
+    testFunctionalImplementation.extendsFrom testImplementation
+    testFunctionalRuntime.extendsFrom testRuntime
+
+}
+
+task testFunctional(type: Test) {
+    testClassesDirs = sourceSets.testFunctional.output.classesDirs
+    classpath = sourceSets.testFunctional.runtimeClasspath
+}
+
+tasks.withType(Test) {
+    testLogging {
+        events "passed", "skipped", "failed", "standardError", "standard_out", "standard_error"
+    }
+}
+
+test {
+    useJUnitPlatform()
+    dependsOn testFunctional
+}
+
+testFunctional {
+    useJUnitPlatform()
+}
+
+cleanTest {
+    dependsOn cleanTestFunctional
+}
+
+compileTestGroovy.classpath += files(compileTestKotlin.destinationDir)

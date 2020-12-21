@@ -5,6 +5,7 @@ import com.tgt.backpackregistrycoupons.util.CouponType
 import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.Relation
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.annotation.Nullable
 import javax.persistence.Column
@@ -33,10 +34,10 @@ data class RegistryCoupons(
     val couponRedemptionStatus: CouponRedemptionStatus?,
 
     @Column(name = "coupon_issue_date")
-    val couponIssueDate: LocalDateTime?,
+    val couponIssueDate: LocalDate?,
 
     @Column(name = "coupon_expiry_date")
-    val couponExpiryDate: LocalDateTime?,
+    val couponExpiryDate: LocalDate?,
 
     @DateCreated
     @Column(name = "created_ts")

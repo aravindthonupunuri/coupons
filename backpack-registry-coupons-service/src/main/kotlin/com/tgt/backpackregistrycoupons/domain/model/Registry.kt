@@ -28,7 +28,7 @@ data class Registry(
     val registryStatus: String,
 
     @Column(name = "registry_created_ts")
-    val registryCreatedTs: LocalDateTime,
+    val registryCreatedDate: LocalDate,
 
     @Column(name = "event_date")
     val eventDate: LocalDate,

@@ -52,8 +52,12 @@ class BackpackRegistryCouponsController(
         return uploadPublisher.toMono()
             .flatMap {
                 if (it) {
-                    uploadRegistryCouponService.uploadRegistryCoupons(registryType, couponType,
-                        offerId, LocalDate.parse(couponExpiryDate).atStartOfDay(), tempFile)
+                    uploadRegistryCouponService.uploadRegistryCoupons(
+                        registryType = registryType,
+                        couponType = couponType,
+                        offerId = offerId,
+                        couponExpiryDate = LocalDate.parse(couponExpiryDate), // default, ISO_LOCAL_DATE("2016-08-16")
+                        file = tempFile)
                 } else {
                     throw RuntimeException("Exception uploading coupon codes")
                 }
