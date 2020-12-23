@@ -25,7 +25,6 @@ import spock.util.concurrent.PollingConditions
 
 import javax.inject.Inject
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.stream.Collectors
 
 @MicronautTest
