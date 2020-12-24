@@ -188,11 +188,12 @@ class RegistryDataProvider {
         itemsCount: Int,
         registryStatus: RegistryStatus
     ): RegistryResponseTO {
-        return RegistryResponseTO(registryId = registryId, channel = RegistryChannel.WEB, listType = "REGISTRY",
+        return RegistryResponseTO(registryId = registryId, channel = RegistryChannel.WEB,
             registryTitle = registryTitle, shortDescription = null, agentId = null, addedTs = null, lastModifiedTs = null,
             registryItems = null, itemsCount = itemsCount, subChannel = RegistrySubChannel.KIOSK, profileAddressId = UUID.randomUUID(),
             registryType = RegistryType.BABY, giftCardsEnabled = true, groupGiftEnabled = false, registryStatus = registryStatus,
-            recipients = null, event = null, babyRegistry = null, honeyFundItems = null)
+            recipients = null, event = null, babyRegistry = null, honeyFundItems = null, groupGiftAmount = null, imageInfo = null,
+            itemCount = null, pageSize = null, page = null)
     }
 
     fun getRegistryItemResponseTO(
