@@ -56,7 +56,7 @@ allprojects {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
         }
 
-        implementation "com.tgt.backpackregistry:backpack-registry-client:2.201.60"
+        implementation "com.tgt.backpackregistry:backpack-registry-client:2.201.68"
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
         implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
@@ -72,7 +72,7 @@ allprojects {
         implementation "javax.annotation:javax.annotation-api"
         implementation "com.lmax:disruptor:3.4.2"
 
-        implementation("com.tgt.lists:atlas-client:2.201.53")
+        implementation("com.tgt.lists:atlas-client:2.201.56")
         implementation("com.tgt.lists:lists-components:2.201.11") {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
