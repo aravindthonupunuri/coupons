@@ -56,7 +56,7 @@ allprojects {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
         }
 
-        implementation "com.tgt.backpackregistry:backpack-registry-client:2.201.68"
+        implementation "com.tgt.backpackregistry:backpack-registry-client:2.201.69"
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
         implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
