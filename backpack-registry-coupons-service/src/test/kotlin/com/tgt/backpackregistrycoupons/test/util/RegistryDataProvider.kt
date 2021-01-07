@@ -240,13 +240,13 @@ class RegistryDataProvider {
     }
 
     fun getDefaultRegistryItemMetaData(): String? {
-        return toStringRegistryItemMetaData(RegistryItemMetaDataTO(null, null, null,
+        return toStringRegistryItemMetaData(RegistryItemMetaDataTO(null, null,
             null, null, null, null, false, false,
             false, null, null, null, null))
     }
 
     fun getDefaultRegistryItemMetaDataMap(): Map<String, Any>? {
-        return toUserMetaData(toStringRegistryItemMetaData(RegistryItemMetaDataTO(null, null, null,
+        return toUserMetaData(toStringRegistryItemMetaData(RegistryItemMetaDataTO(null, null,
             null, null, null, null, false, false,
             false, null, null, null, null)))?.metadata
     }
