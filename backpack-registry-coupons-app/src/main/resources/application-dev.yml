@@ -39,6 +39,7 @@ filter:
   server:
     order:
       mdc-filter: 50
+      onbehalf-filter: 51
       lists-brave-tracing-server-filter: 100
       list-authorization-filter: 200
       sanitizing-filter: 300
