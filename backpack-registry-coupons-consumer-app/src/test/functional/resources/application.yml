@@ -38,6 +38,11 @@ kafka:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    backpack-registry-coupons-cron-beacon-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
     lists-msg-bus-producer:
@@ -154,7 +159,7 @@ beacon:
     kafka:
       consumer:
         client-id: backpack-registry-coupons-cron-beacon-consumer
-        topic: lists-msg-bus
+        topic: beacon-topic
         metrics-name: backpack-registry-coupons-beacon-metrics
         consumer-group: backpack-registry-coupons-cron-beacon-consumer
         consumer-batch-size: 1

@@ -13,29 +13,29 @@ class CouponAssignmentCalculationManager(
     @Value("\${registry.wedding.sla}") val weddingRegistrySLA: Long,
     @Value("\${registry.completion-coupon.sla}") val completionCouponSLA: Long
 ) {
-private val logger = KotlinLogging.logger { CouponAssignmentCalculationManager::class.java.name }
+    private val logger = KotlinLogging.logger { CouponAssignmentCalculationManager::class.java.name }
 
-fun calculateCouponAssignmentDate(
-    registry: Registry
-): LocalDateTime {
-    val slaMap = hashMapOf<String, Long>()
-    slaMap[RegistryType.BABY.name] = babyRegistrySLA
-    slaMap[RegistryType.WEDDING.name] = weddingRegistrySLA
+    fun calculateCouponAssignmentDate(registry: Registry): LocalDateTime {
+        val slaMap = hashMapOf<String, Long>()
+        slaMap[RegistryType.BABY.name] = babyRegistrySLA
+        slaMap[RegistryType.WEDDING.name] = weddingRegistrySLA
 
-    val registryType = registry.registryType
-    val registryCreatedDate = registry.registryCreatedDate.atStartOfDay()!!
-    val registryEventDate = registry.eventDate.atStartOfDay()!!
-    val earliestCouponAssignmentDate = registryCreatedDate.plusDays(completionCouponSLA)
+        val registryType = registry.registryType
+        val registryCreatedDate = registry.registryCreatedDate.atStartOfDay()!!
+        val registryEventDate = registry.eventDate.atStartOfDay()!!
+        val earliestCouponAssignmentDate = registryCreatedDate.plusDays(completionCouponSLA)
 
-    return if (earliestCouponAssignmentDate.isAfter(registryEventDate)) {
-        earliestCouponAssignmentDate
-    } else {
-        val registryQualifyingDate = registryEventDate.minusDays(slaMap[registryType.name]!!)
-        if (registryQualifyingDate.isAfter(earliestCouponAssignmentDate)) {
-            registryQualifyingDate
-        } else {
+        val couponAssignmentDate = if (earliestCouponAssignmentDate.isAfter(registryEventDate)) {
             earliestCouponAssignmentDate
+        } else {
+            val registryQualifyingDate = registryEventDate.minusDays(slaMap[registryType.name]!!)
+            if (registryQualifyingDate.isAfter(earliestCouponAssignmentDate)) {
+                registryQualifyingDate
+            } else {
+                earliestCouponAssignmentDate
+            }
         }
+        logger.debug("[calculateCouponAssignmentDate], couponAssignmentDate: $couponAssignmentDate")
+        return couponAssignmentDate
     }
-}
 }
