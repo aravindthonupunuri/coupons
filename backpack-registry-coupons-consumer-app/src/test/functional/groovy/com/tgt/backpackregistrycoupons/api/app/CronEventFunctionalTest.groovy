@@ -44,7 +44,7 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
     @Shared
     TestEventListener testEventListener
     @Inject
-    ListMsgBusClient msgBusClient
+    BeaconClient beaconClient
 
     @Inject
     RegistryRepository registryRepository
@@ -119,7 +119,7 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
         }
 
         when:
-        msgBusClient.sendMessage(UUID.randomUUID().toString(), UUID.randomUUID(), CronEvent.getEventType(), "cronbeacon", event)
+        beaconClient.sendMessage(UUID.randomUUID().toString(), UUID.randomUUID(), CronEvent.getEventType(), "cronbeacon", event)
 
         then:
         testEventListener.verifyEvents { consumerEvents, producerEvents, consumerStatusEvents ->
@@ -143,9 +143,9 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
         result.getRegistryCoupons().size() == 2
     }
 
-    @KafkaClient(acks = KafkaClient.Acknowledge.ALL, id = "lists-msg-bus")
-    static interface ListMsgBusClient {
-        @Topic("lists-msg-bus")
+    @KafkaClient(acks = KafkaClient.Acknowledge.ALL, id = "beacon-topic-client")
+    static interface BeaconClient {
+        @Topic("beacon-topic")
         String sendMessage(@KafkaKey String id, @Header UUID uuid, @Header String event_type, @Header String source,
                            @Body CronEvent cronEvent)
     }

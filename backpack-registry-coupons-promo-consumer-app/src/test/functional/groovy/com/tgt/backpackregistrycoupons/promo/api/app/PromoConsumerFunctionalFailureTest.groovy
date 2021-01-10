@@ -116,8 +116,8 @@ class PromoConsumerFunctionalFailureTest extends BaseKafkaFunctionalTest {
         def couponCode = "1234"
         executeTimeout = true
         def promoCouponRedemptionTO = new PromoCouponRedemptionTO("3991", couponCode, "BABY", "REDEEMED", "2020", "1234", "1234", "1234")
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDateTime.now().minusDays(3), LocalDate.now(), true, null, null)
-        def registryCoupons = new RegistryCoupons(couponCode, registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDateTime.now(), LocalDateTime.now().plusDays(2), null , null)
+        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def registryCoupons = new RegistryCoupons(couponCode, registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         Thread.sleep(2000)
         testEventListener.preDispatchLambda = new PreDispatchLambda() {
             @Override
