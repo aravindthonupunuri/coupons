@@ -4,6 +4,8 @@ create table COUPONS (
                                             REGISTRY_TYPE text not null,
                                             OFFER_ID text not null,
                                             COUPON_EXPIRY_DATE timestamp not null,
+                                            CREATED_TS timestamp not null DEFAULT NOW(),
+                                            UPDATED_TS timestamp not null DEFAULT NOW(),
                                             CONSTRAINT COUPONS_PK PRIMARY KEY (COUPON_CODE)
 );
 

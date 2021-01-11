@@ -2,8 +2,10 @@ package com.tgt.backpackregistrycoupons.domain.model
 
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.util.CouponType
+import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.MappedEntity
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Id
 import javax.persistence.Table
@@ -25,5 +27,13 @@ data class Coupons(
     val couponExpiryDate: LocalDate,
 
     @Column(name = "offer_id")
-    val offerId: String
+    val offerId: String,
+
+    @DateCreated
+    @Column(name = "created_ts")
+    var createdTs: LocalDateTime? = null,
+
+    @DateCreated
+    @Column(name = "updated_ts")
+    var updatedTs: LocalDateTime? = null
 )
