@@ -29,7 +29,7 @@ class CronEventHandler(
         val cronMinuteBlockOfHour: Long = cronEvent.minuteBlockOfHour
 
         return if (cronHourOfDay == hourOfDay && cronMinuteBlockOfHour == minuteBlockOfHour) {
-            cronEventService.processCronEvent().map {
+            cronEventService.processCronEvent(cronEvent.eventDateTime).map {
                 if (it) {
                     logger.debug("cronEvent processing is complete")
                     EventProcessingResult(true, eventHeaders, cronEvent)

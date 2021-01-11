@@ -6,8 +6,12 @@ import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistrycoupons.transport.CompletionCouponNotificationTO
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
+import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.COMPLETION_COUPON
+import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.GIFT_REGISTRY
+import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.PROFILE
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.notification.tracer.client.model.NotificationTracerEvent
 import mu.KotlinLogging
@@ -30,79 +34,103 @@ class CronEventService(
 ) {
     private val logger = KotlinLogging.logger { CronEventService::class.java.name }
     private final val registryCouponTypeMap = hashMapOf<RegistryType, List<CouponType>>()
+
     init {
         registryCouponTypeMap[RegistryType.BABY] = listOf(CouponType.ONLINE, CouponType.STORE)
         registryCouponTypeMap[RegistryType.WEDDING] = listOf(CouponType.ONLINE, CouponType.STORE)
     }
 
-    fun processCronEvent(): Mono<Boolean> {
+    fun processCronEvent(cronEventDate: LocalDateTime): Mono<Boolean> {
         return registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false).collectList()
             .flatMap { registryList ->
-                Flux.fromIterable(registryList).flatMap {
-                    val couponAssignmentDate = couponAssignmentCalculationManager.calculateCouponAssignmentDate(it)
-                    if (LocalDateTime.now().isAfter(couponAssignmentDate)) {
-                        assignCouponCode(it.registryId).flatMap { sendGuestNotification(it) }
+                logger.debug("[processCronEvent], Registry's being assigned coupon code: ${registryList.size} ")
+                Flux.fromIterable(registryList).flatMap { registry ->
+                    val couponAssignmentDate = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
+                    if (cronEventDate.isAfter(couponAssignmentDate)) {
+                        processAssignCouponCode(registry.registryId).flatMap { sendGuestNotification(registry.registryId, it) }
                     } else {
+                        logger.debug("[processCronEvent], Skipping coupon assignment for Registry's ${registry.registryId} with couponAssignmentDate $couponAssignmentDate")
                         Mono.just(true)
                     }
-                }.collectList().map { true }
+                }.collectList().map {
+                    logger.debug("[processCronEvent], Registry coupon assignment cron event complete")
+                    true
+                }
+            }
+            .onErrorResume {
+                logger.error("[processCronEvent], Assigning coupon codes, sending for retry")
+                Mono.just(false)
             }
     }
 
-    fun assignCouponCode(registryId: UUID): Mono<List<RegistryCoupons>> {
+    private fun processAssignCouponCode(registryId: UUID): Mono<List<RegistryCoupons>> {
         return registryRepository.getByRegistryId(registryId).flatMap {
             val validCouponTypes: List<CouponType> = registryCouponTypeMap[it.registryType] ?: emptyList()
             val assignedCouponTypes: List<CouponType> = it.registryCoupons?.map { it.couponType } ?: emptyList()
+            val unAssignedCouponTypes: List<CouponType> = validCouponTypes.filter { !assignedCouponTypes.contains(it) }
             val registryCoupons = arrayListOf<RegistryCoupons>()
+            logger.debug("[processAssignCouponCode ], UnAssignedCouponTypes: $unAssignedCouponTypes for registry: $registryId")
 
-            Flux.fromIterable(validCouponTypes).flatMap { validCouponType ->
-                if (assignedCouponTypes.contains(validCouponType)) {
-                    Mono.just(true)
-                } else {
-                    couponsRepository.findTop1ByCouponTypeAndRegistryType(validCouponType, it.registryType)
-                        .flatMap { coupon ->
-                            val registryCoupon = RegistryCoupons(
-                                coupon.couponCode,
-                                it,
-                                coupon.couponType,
-                                CouponRedemptionStatus.AVAILABLE,
-                                LocalDate.now(),
-                                coupon.couponExpiryDate,
-                                null,
-                                null
+            Flux.fromIterable(unAssignedCouponTypes).flatMap { couponType ->
+                val registryType = it.registryType
+                couponsRepository.findTop1ByCouponTypeAndRegistryType(couponType, registryType)
+                    .map { coupon ->
+                        registryCoupons.add(
+                            RegistryCoupons(
+                                couponCode = coupon.couponCode,
+                                registry = it,
+                                couponType = coupon.couponType,
+                                couponRedemptionStatus = CouponRedemptionStatus.AVAILABLE,
+                                couponIssueDate = LocalDate.now(),
+                                couponExpiryDate = coupon.couponExpiryDate
                             )
-                            registryCouponsRepository.save(registryCoupon)
-                                .flatMap { couponsRepository.deleteByCouponCode(coupon.couponCode) }
-                                .map {
-                                    registryCoupons.add(registryCoupon)
-                                    true
-                                }
-                        }
-                        .switchIfEmpty {
-                            Mono.just(false)
-                        }
-                        .onErrorResume {
-                            Mono.just(false)
-                        }
-                }
+                        )
+                        true
+                    }
+                    .switchIfEmpty {
+                        logger.info("[processAssignCouponCode], Empty response getting coupon code of type: $couponType for registry $registryId of type: $registryType")
+                        Mono.just(false)
+                    }
+                    .onErrorResume {
+                        logger.error("[processAssignCouponCode], Exception getting coupon code of type: $couponType for registry $registryId of type: $registryType")
+                        Mono.just(false)
+                    }
             }.collectList().flatMap {
-                val couponAssignmentCompletion = !it.contains(false)
-                if (couponAssignmentCompletion) {
-                    registryRepository.updateCouponAssignmentComplete(registryId, true).map { true }
-                } else {
-                    Mono.just(true)
-                }
-            }.map { registryCoupons.toList() }
+                assignCouponCode(registryId, registryCoupons, it).map { registryCoupons }
+            }
         }
     }
 
-    fun sendGuestNotification(registryCoupons: List<RegistryCoupons>): Mono<Boolean> {
+    private fun assignCouponCode(
+        registryId: UUID,
+        registryCoupons: List<RegistryCoupons>,
+        couponsAllocation: List<Boolean>
+    ): Mono<Boolean> {
         return if (registryCoupons.isNullOrEmpty()) {
+            logger.error("[assignCouponCode], Registry $registryId already has been assigned with valid coupon types so skipping coupon assignment process and updating coupon assignment flag to complete")
+            registryRepository.updateCouponAssignmentComplete(registryId, true).map { true }
+        } else {
+            registryCouponsRepository.saveAll(registryCoupons).collectList()
+                .flatMap { couponsRepository.deleteByCouponCodeInList(registryCoupons.map { it.couponCode!! }) }
+                .flatMap {
+                    if (couponsAllocation.contains(false)) {
+                        logger.debug("[assignCouponCode], Partial coupon assignment for Registry $registryId so not updating coupon assignment flag to complete")
+                        Mono.just(true)
+                    } else {
+                        registryRepository.updateCouponAssignmentComplete(registryId, true).map { true }
+                    }
+                }
+        }
+    }
+
+    private fun sendGuestNotification(registryId: UUID, registryCoupons: List<RegistryCoupons>): Mono<Boolean> {
+        return if (registryCoupons.isNullOrEmpty()) {
+            logger.debug("[sendGuestNotification], Coupons not assigned for registry $registryId skipping notification process")
             Mono.just(true)
         } else {
-            val registryId = registryCoupons.first().registry?.registryId.toString()
-            var registryStoreCouponCode: String
-            var registryOnlineCouponCode: String
+            val expirationDate = registryCoupons.first().couponExpiryDate // TODO: which coupon expiration should be sent out for notification
+            var registryStoreCouponCode: String? = null
+            var registryOnlineCouponCode: String? = null
 
             registryCoupons.map {
                 if (it.couponType == CouponType.STORE) {
@@ -112,16 +140,24 @@ class CronEventService(
                 }
             }
             val notificationTracerEvent = NotificationTracerEvent(
-                scenarioName = "Completion_Coupon",
-                id = registryId,
-                idType = "PROFILE",
-                origin = "GR",
-                transactionId = registryId,
+                scenarioName = COMPLETION_COUPON,
+                id = registryId.toString(),
+                idType = PROFILE,
+                origin = GIFT_REGISTRY,
+                transactionId = registryId.toString(),
                 earliestSendTime = null,
                 latestSendTime = null,
-                data = null
+                data = CompletionCouponNotificationTO(
+                    firstName = null, // TODO: find guest name
+                    lastName = null,
+                    emailAddress = null,
+                    registryId = registryId.toString(),
+                    onlinePromoCode = registryOnlineCouponCode,
+                    storeCouponCode = registryStoreCouponCode,
+                    expirationDate = expirationDate.toString()
+                )
             )
-            sendGuestNotificationsService.sendGuestNotifications(notificationTracerEvent, registryId)
+            sendGuestNotificationsService.sendGuestNotifications(notificationTracerEvent, registryId.toString())
         }
     }
 }

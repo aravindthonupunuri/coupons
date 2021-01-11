@@ -10,6 +10,7 @@ import spock.lang.Stepwise
 
 import javax.inject.Inject
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @MicronautTest
 @Stepwise
@@ -20,11 +21,12 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test save RegistryCoupons"() {
         given:
-        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
-        def coupons2 = new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
-        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
-        def coupons4 = new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
-        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1")
+        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons2 = new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons4 = new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons6 = new Coupons("6000000", CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
 
         when:
         def result1 = couponsRepository.save(coupons1).block()
@@ -32,6 +34,7 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
         def result3 = couponsRepository.save(coupons3).block()
         def result4 = couponsRepository.save(coupons4).block()
         def result5 = couponsRepository.save(coupons5).block()
+        def result6 = couponsRepository.save(coupons6).block()
 
         then:
         result1 != null
@@ -39,6 +42,7 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
         result3 != null
         result4 != null
         result5 != null
+        result6 != null
     }
 
     def "test valid existsByCouponCode"() {
@@ -67,11 +71,27 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test deleteByCouponCode"() {
         when:
-        def result = couponsRepository.deleteByCouponCode("1000000").block()
+        def result = couponsRepository.deleteByCouponCodeInList(["1000000", "2000000"]).block()
 
         then:
-        result == 1
+        result == 2
     }
+
+    def "test deleteByCouponCode if successful"() {
+        when:
+        def result = couponsRepository.findByRegistryType(RegistryType.BABY).collectList().block()
+
+        then:
+        result.size() ==  4
+    }
+
+//    def "test findTop1ByCouponTypeInListAndRegistryType"() {
+//        when:
+//        def result = couponsRepository.findTop1ByCouponTypeInListAndRegistryType([CouponType.ONLINE, CouponType.STORE] as List, RegistryType.BABY).block()
+//
+//        then:
+//        result != null
+//    }
 }
 
 

@@ -3,6 +3,8 @@ package com.tgt.backpackregistrycoupons.persistence.repository.coupons
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
 import com.tgt.backpackregistrycoupons.util.CouponType
+import io.micronaut.data.annotation.Query
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 interface CouponsRepository {
@@ -11,7 +13,15 @@ interface CouponsRepository {
 
     fun existsByCouponCode(couponCode: String): Mono<Boolean>
 
+    fun findByRegistryType(registryType: RegistryType): Flux<Coupons>
+
+    @Query("""SELECT * FROM COUPONS WHERE coupon_type IN (:couponType)""")
+    fun findByCouponTypeInList(couponType: List<CouponType>): Flux<Coupons>
+
     fun findTop1ByCouponTypeAndRegistryType(couponType: CouponType, registryType: RegistryType): Mono<Coupons>
 
-    fun deleteByCouponCode(couponCode: String): Mono<Int>
+    @Query("""SELECT * FROM COUPONS a INNER JOIN (SELECT coupon_type, MIN(created_ts) min_created_ts FROM COUPONS WHERE coupon_type IN (:couponType) AND registry_type=(:registryType) GROUP BY coupon_type) b ON a.coupon_type = b.coupon_type AND a.created_ts = b.min_create_ts""")
+    fun findTop1ByCouponTypeInListAndRegistryType(couponType: List<CouponType>, registryType: RegistryType): Mono<Coupons>
+
+    fun deleteByCouponCodeInList(couponCode: List<String>): Mono<Int>
 }

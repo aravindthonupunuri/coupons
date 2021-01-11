@@ -6,7 +6,7 @@ micronaut:
     port: 8081
     idle-timeout: 2000ms
     multipart:
-      max-file-size: 100
+      max-file-size: 100mb
 
   metrics:
     binders:
