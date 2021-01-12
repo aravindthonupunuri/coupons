@@ -66,7 +66,7 @@ allprojects {
         implementation "javax.annotation:javax.annotation-api"
         implementation "com.lmax:disruptor:3.4.2"
 
-        implementation("com.tgt.lists:atlas-client:2.201.58")
+        implementation("com.tgt.lists:atlas-client:2.201.62")
         implementation("com.tgt.lists:lists-components:2.201.11") {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
@@ -75,7 +75,7 @@ allprojects {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
-        implementation("com.tgt.backpackregistry:backpack-registry-client:2.201.70") {
+        implementation("com.tgt.backpackregistry:backpack-registry-client:2.201.73") {
             exclude group: 'com.tgt.lists', module: 'lists-components'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
