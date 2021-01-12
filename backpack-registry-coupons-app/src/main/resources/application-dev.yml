@@ -101,6 +101,12 @@ components:
     list-authorization-filter:
       enabled: false
       base-uri: /backpackregistrycoupons
+    id2-custom-scopes:
+      names: 
+        - axiom.user
+        - axiom.admin
+        - axiom.leader
+      profile-header: member_id
     sanitizing-filter:
       enabled: false
     registry-channel-subchannel-filter:
