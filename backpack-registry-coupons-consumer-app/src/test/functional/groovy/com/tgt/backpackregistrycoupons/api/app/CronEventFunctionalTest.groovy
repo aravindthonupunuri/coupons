@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.api.app
 
+import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
 import com.tgt.backpackregistrycoupons.domain.model.Registry
@@ -56,6 +57,8 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     RegistryDataProvider registryDataProvider = new RegistryDataProvider()
 
+    def getDetailsURI = "/registries/v2/"+registryId1+"/get_details"
+
     def setupSpec() {
         testEventListener = new TestEventListener()
         testEventListener.tracer = tracer
@@ -79,11 +82,11 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create unassigned coupons"() {
         given:
-        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", null, null)
-        def coupons2 = new Coupons("2000000", CouponType.STORE, RegistryType.WEDDING, LocalDate.now(), "1", null, null)
-        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", null, null)
-        def coupons4 = new Coupons("4000000", CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", null, null)
-        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.WEDDING, LocalDate.now(), "1", null, null)
+        def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(365), "1", null, null)
+        def coupons2 = new Coupons("2000000", CouponType.STORE, RegistryType.WEDDING, LocalDate.now().plusDays(365), "1", null, null)
+        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(365), "1", null, null)
+        def coupons4 = new Coupons("4000000", CouponType.STORE, RegistryType.BABY, LocalDate.now().plusDays(365), "1", null, null)
+        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.WEDDING, LocalDate.now().plusDays(365), "1", null, null)
 
         when:
         def result1 = couponsRepository.save(coupons1).block()
@@ -117,6 +120,9 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
                 return false
             }
         }
+        RegistryDetailsResponseTO registryDetailsResponseTO = registryDataProvider.getRegistryDetails(registryId1.toString())
+
+        1 * mockServer.get({ path -> path.contains(getDetailsURI)},_) >> [status: 200, body: registryDetailsResponseTO]
 
         when:
         beaconClient.sendMessage(UUID.randomUUID().toString(), UUID.randomUUID(), CronEvent.getEventType(), "cronbeacon", event)

@@ -3,6 +3,15 @@ micronaut:
     name: backpack-registry-coupons-consumer-app
   server:
     port: ${server-port:33000}
+  http:
+    client.connect-ttl: 30m
+    client.pool.acquire-timeout: 2000ms
+    services:
+      backpack-registry-api:
+        urls:
+          - http://localhost:${server-port:32000}
+        pool:
+          enabled: false
   metrics:
     binders:
       web:
@@ -65,6 +74,8 @@ components:
       enabled: false
     sanitizing-filter:
       enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
 
 #  ssl:
 #    keystore:
@@ -106,6 +117,7 @@ filter:
       lists-brave-tracing-server-filter: 100
       lists-traceid-filter: 101
       list-authorization-filter: 200
+      registry-channel-subchannel-filter: 400
   client:
     order:
       lists-brave-tracing-client-filter: 900
@@ -127,7 +139,7 @@ list:
 
 
 mockfilter:
-  paths: /zipkin,/testserver/auth/oauth/v2/token,/storeItemPlacements,/ssa/cwlservice/api/v16/.*
+  paths: /zipkin,/testserver/auth/oauth/v2/token,/,/redsky_aggregations/v1.*,/registries/v2.*
 
 tracing:
   zipkin:
@@ -186,5 +198,6 @@ registry:
       - ONLINE
   completion-coupon:
     sla: 14
+    expiration-days: 180
     coupon-assignment-hour-of-day: 2
     coupon-assignment-minute-block-of-hour: 1

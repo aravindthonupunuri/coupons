@@ -2,6 +2,18 @@ micronaut:
   application:
     name: backpack-registry-coupons-consumer
 
+  http:
+    client.connect-ttl: 30m
+    client.pool.acquire-timeout: 2000ms
+    services:
+      backpack-registry-api:
+        urls:
+          - "https://backpackregistry.dev.target.com"
+        connect-timeout: 500ms
+        read-timeout: 1000ms
+        pool:
+          enabled: true
+
   metrics:
     binders:
       web:
@@ -34,6 +46,7 @@ filter:
     order:
       lists-brave-tracing-server-filter: 100
       list-authorization-filter: 200
+      registry-channel-subchannel-filter: 400
   client:
     order:
       lists-brave-tracing-client-filter: 900
@@ -78,6 +91,8 @@ components:
     list-authorization-filter:
       enabled: false
     sanitizing-filter:
+      enabled: false
+    registry-channel-subchannel-filter:
       enabled: false
 
 msgbus:
@@ -143,5 +158,6 @@ registry:
       - ONLINE
   completion-coupon:
     sla: 14
+    expiration-days: 180
     coupon-assignment-hour-of-day: 2
     coupon-assignment-minute-block-of-hour: 1
