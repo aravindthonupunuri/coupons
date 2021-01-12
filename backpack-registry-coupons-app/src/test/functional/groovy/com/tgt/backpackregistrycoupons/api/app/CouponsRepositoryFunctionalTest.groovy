@@ -22,11 +22,11 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
     def "test save RegistryCoupons"() {
         given:
         def coupons1 = new Coupons("1000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
-        def coupons2 = new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
-        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
-        def coupons4 = new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
-        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
-        def coupons6 = new Coupons("6000000", CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons2 = new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(1), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons3 = new Coupons("3000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(2), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons4 = new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(3), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons5 = new Coupons("5000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(4), "1", LocalDateTime.now(),  LocalDateTime.now())
+        def coupons6 = new Coupons("6000000", CouponType.STORE, RegistryType.BABY, LocalDate.now().plusDays(5), "1", LocalDateTime.now(),  LocalDateTime.now())
 
         when:
         def result1 = couponsRepository.save(coupons1).block()
@@ -61,11 +61,12 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
         !result
     }
 
-    def "test findTop1ByCouponTypeAndRegistryType"() {
+    def "test findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals"() {
         when:
-        def result = couponsRepository.findTop1ByCouponTypeAndRegistryType(CouponType.ONLINE, RegistryType.BABY).block()
+        def result = couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(3)).block()
 
         then:
+        result.couponCode == "4000000"
         result != null
     }
 

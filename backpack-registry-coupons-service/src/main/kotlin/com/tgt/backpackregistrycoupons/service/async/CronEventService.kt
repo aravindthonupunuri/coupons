@@ -1,5 +1,9 @@
 package com.tgt.backpackregistrycoupons.service.async
 
+import com.tgt.backpackregistryclient.client.BackpackRegistryClient
+import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
+import com.tgt.backpackregistryclient.util.RegistryChannel
+import com.tgt.backpackregistryclient.util.RegistrySubChannel
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
@@ -14,6 +18,7 @@ import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.GIFT_REGISTR
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.PROFILE
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.notification.tracer.client.model.NotificationTracerEvent
+import io.micronaut.context.annotation.Value
 import mu.KotlinLogging
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -30,7 +35,10 @@ class CronEventService(
     @Inject val sendGuestNotificationsService: SendGuestNotificationsService,
     @Inject val registryCouponsRepository: RegistryCouponsRepository,
     @Inject val registryRepository: RegistryRepository,
-    @Inject val couponsRepository: CouponsRepository
+    @Inject val couponsRepository: CouponsRepository,
+    @Inject val backpackClient: BackpackRegistryClient,
+    @Value("\${registry.completion-coupon.expiration-days}") val couponExpirationDays: Long
+
 ) {
     private val logger = KotlinLogging.logger { CronEventService::class.java.name }
     private final val registryCouponTypeMap = hashMapOf<RegistryType, List<CouponType>>()
@@ -73,7 +81,9 @@ class CronEventService(
 
             Flux.fromIterable(unAssignedCouponTypes).flatMap { couponType ->
                 val registryType = it.registryType
-                couponsRepository.findTop1ByCouponTypeAndRegistryType(couponType, registryType)
+                val eventDate = it.eventDate
+                val couponExpirationDate = eventDate.plusDays(couponExpirationDays)
+                couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(couponType, registryType, couponExpirationDate)
                     .map { coupon ->
                         registryCoupons.add(
                             RegistryCoupons(
@@ -82,17 +92,17 @@ class CronEventService(
                                 couponType = coupon.couponType,
                                 couponRedemptionStatus = CouponRedemptionStatus.AVAILABLE,
                                 couponIssueDate = LocalDate.now(),
-                                couponExpiryDate = coupon.couponExpiryDate
-                            )
+                                couponExpiryDate = eventDate.plusDays(couponExpirationDays) // Coupon expiration will always be event date plus 180 days
+                            ) // irrespective of the actual coupon expiration date
                         )
                         true
                     }
                     .switchIfEmpty {
-                        logger.info("[processAssignCouponCode], Empty response getting coupon code of type: $couponType for registry $registryId of type: $registryType")
+                        logger.info("[processAssignCouponCode], Empty response getting coupon code of type: $couponType for registry $registryId with expiration $couponExpirationDate of type: $registryType")
                         Mono.just(false)
                     }
                     .onErrorResume {
-                        logger.error("[processAssignCouponCode], Exception getting coupon code of type: $couponType for registry $registryId of type: $registryType")
+                        logger.error("[processAssignCouponCode], Exception getting coupon code of type: $couponType for registry $registryId expiration $couponExpirationDate of type: $registryType")
                         Mono.just(false)
                     }
             }.collectList().flatMap {
@@ -128,36 +138,56 @@ class CronEventService(
             logger.debug("[sendGuestNotification], Coupons not assigned for registry $registryId skipping notification process")
             Mono.just(true)
         } else {
-            val expirationDate = registryCoupons.first().couponExpiryDate // TODO: which coupon expiration should be sent out for notification
-            var registryStoreCouponCode: String? = null
-            var registryOnlineCouponCode: String? = null
-
-            registryCoupons.map {
-                if (it.couponType == CouponType.STORE) {
-                    registryStoreCouponCode = it.couponCode!!
-                } else {
-                    registryOnlineCouponCode = it.couponCode!!
+            backpackClient.getRegistryDetails("1111", registryId, 3991L, RegistryChannel.WEB, RegistrySubChannel.TGTWEB, false)
+                .flatMap { sendNotification(it, registryId, registryCoupons) }
+                .onErrorResume {
+                    logger.error("[sendGuestNotification] Exception finding registry $registryId while sending guest notification for completion coupons", it)
+                    Mono.just(true)
                 }
-            }
-            val notificationTracerEvent = NotificationTracerEvent(
-                scenarioName = COMPLETION_COUPON,
-                id = registryId.toString(),
-                idType = PROFILE,
-                origin = GIFT_REGISTRY,
-                transactionId = registryId.toString(),
-                earliestSendTime = null,
-                latestSendTime = null,
-                data = CompletionCouponNotificationTO(
-                    firstName = null, // TODO: find guest name
-                    lastName = null,
-                    emailAddress = null,
-                    registryId = registryId.toString(),
-                    onlinePromoCode = registryOnlineCouponCode,
-                    storeCouponCode = registryStoreCouponCode,
-                    expirationDate = expirationDate.toString()
-                )
-            )
-            sendGuestNotificationsService.sendGuestNotifications(notificationTracerEvent, registryId.toString())
+                .switchIfEmpty {
+                    logger.info("[sendGuestNotification] No registry found with registryId $registryId while sending guest notification for completion coupons")
+                    Mono.just(true)
+                }
         }
+    }
+
+    private fun sendNotification(
+        registryDetailsResponseTO: RegistryDetailsResponseTO,
+        registryId: UUID,
+        registryCoupons: List<RegistryCoupons>
+    ): Mono<Boolean> {
+        val expirationDate = registryCoupons.first().couponExpiryDate
+        var registryStoreCouponCode: String? = null
+        var registryOnlineCouponCode: String? = null
+        registryCoupons.map {
+            if (it.couponType == CouponType.STORE) {
+                registryStoreCouponCode = it.couponCode!!
+            } else {
+                registryOnlineCouponCode = it.couponCode!!
+            }
+        }
+        val notificationTracerEvent = NotificationTracerEvent(
+            scenarioName = COMPLETION_COUPON,
+            id = registryId.toString(),
+            idType = PROFILE,
+            origin = GIFT_REGISTRY,
+            transactionId = registryId.toString(),
+            earliestSendTime = null,
+            latestSendTime = null,
+            data = CompletionCouponNotificationTO(
+                firstName = registryDetailsResponseTO.registrantFirstName,
+                lastName = registryDetailsResponseTO.registrantLastName,
+                emailAddress = registryDetailsResponseTO.emailAddress,
+                registryId = registryId.toString(),
+                onlinePromoCode = registryOnlineCouponCode,
+                storeCouponCode = registryStoreCouponCode,
+                expirationDate = expirationDate.toString()
+            )
+        )
+        return sendGuestNotificationsService.sendGuestNotifications(notificationTracerEvent, registryId.toString())
+            .onErrorResume {
+                logger.error("[sendNotification], Exception sending guest notification for registry $registryId")
+                Mono.just(true)
+            }
     }
 }

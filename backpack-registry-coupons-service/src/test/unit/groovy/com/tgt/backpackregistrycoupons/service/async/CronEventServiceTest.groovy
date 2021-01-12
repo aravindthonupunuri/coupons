@@ -1,5 +1,7 @@
 package com.tgt.backpackregistrycoupons.service.async
 
+import com.tgt.backpackregistryclient.client.BackpackRegistryClient
+import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
@@ -30,17 +32,18 @@ class CronEventServiceTest extends Specification {
     RegistryRepository registryRepository
     CouponsRepository couponsRepository
     NotificationTracerProducer notificationTracerProducer
-    RegistryCouponService registryCouponService
     CronEventService cronEventService
+    BackpackRegistryClient backpackRegistryClient
 
     def setup() {
         couponsRepository = Mock(CouponsRepository)
         registryRepository = Mock(RegistryRepository)
         registryCouponsRepository = Mock(RegistryCouponsRepository)
         notificationTracerProducer = Mock(NotificationTracerProducer)
+        backpackRegistryClient = Mock(BackpackRegistryClient)
         sendGuestNotificationsService = new SendGuestNotificationsService(notificationTracerProducer)
         couponAssignmentCalculationManager = new CouponAssignmentCalculationManager(7L , 56L, 14L)
-        cronEventService = new CronEventService(couponAssignmentCalculationManager, sendGuestNotificationsService, registryCouponsRepository, registryRepository, couponsRepository)
+        cronEventService = new CronEventService(couponAssignmentCalculationManager, sendGuestNotificationsService, registryCouponsRepository, registryRepository, couponsRepository, backpackRegistryClient, 180)
     }
 
     def "Test processCronEvent"() {
@@ -82,8 +85,8 @@ class CronEventServiceTest extends Specification {
 
         // First Registry
         1 * registryRepository.getByRegistryId(registry1.registryId) >> Mono.just(registry1)
-        1 * couponsRepository.findTop1ByCouponTypeAndRegistryType(CouponType.STORE, RegistryType.BABY) >> Mono.just(new Coupons("1000000", CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", null, null))
-        1 * couponsRepository.findTop1ByCouponTypeAndRegistryType(CouponType.ONLINE, RegistryType.BABY) >> Mono.just(new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", null, null))
+        1 * couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(CouponType.STORE, RegistryType.BABY, eventDate1.plusDays(180)) >> Mono.just(new Coupons("1000000", CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", null, null))
+        1 * couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(CouponType.ONLINE, RegistryType.BABY, eventDate1.plusDays(180)) >> Mono.just(new Coupons("2000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", null, null))
         1 * registryCouponsRepository.saveAll(_ as List<RegistryCoupons>) >> { arguments ->
             final List<RegistryCoupons> list = arguments[0]
             assert list.size() == 2
@@ -95,11 +98,12 @@ class CronEventServiceTest extends Specification {
             Mono.just(2)
         }
         1 * registryRepository.updateCouponAssignmentComplete(registry1.registryId, true) >> Mono.just(1)
+        1 * backpackRegistryClient.getRegistryDetails(_,_,_,_,_,_) >> Mono.just(new RegistryDetailsResponseTO(registry1.registryId, "", "", null, null, "regfname", "reglname", "coregfname", "coreglname", LocalDate.now()))
         1 * notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), _, registry1.registryId.toString()) >> Mono.just(recordMetadata)
 
         // Second Registry with partial coupon assigned
         1 * registryRepository.getByRegistryId(registry2.registryId) >> Mono.just(registry2)
-        1 * couponsRepository.findTop1ByCouponTypeAndRegistryType(CouponType.ONLINE, RegistryType.WEDDING) >> Mono.just(new Coupons("3000000", CouponType.ONLINE, RegistryType.WEDDING, LocalDate.now(), "1", null, null))
+        1 * couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(CouponType.ONLINE, RegistryType.WEDDING, eventDate2.plusDays(180)) >> Mono.just(new Coupons("3000000", CouponType.ONLINE, RegistryType.WEDDING, LocalDate.now(), "1", null, null))
         1 * registryCouponsRepository.saveAll(_ as List<RegistryCoupons>) >> { arguments ->
             final List<RegistryCoupons> list = arguments[0]
             assert list.size() == 1
@@ -111,12 +115,13 @@ class CronEventServiceTest extends Specification {
             Mono.just(1)
         }
         1 * registryRepository.updateCouponAssignmentComplete(registry2.registryId, true) >> Mono.just(1)
+        1 * backpackRegistryClient.getRegistryDetails(_,_,_,_,_,_) >> Mono.just(new RegistryDetailsResponseTO(registry1.registryId, "", "", null, null, "regfname", "reglname", "coregfname", "coreglname", LocalDate.now()))
         1 * notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), _, registry2.registryId.toString()) >> Mono.just(recordMetadata)
 
         // Forth Registry assigning only one coupon
         1 * registryRepository.getByRegistryId(registry4.registryId) >> Mono.just(registry4)
-        1 * couponsRepository.findTop1ByCouponTypeAndRegistryType(CouponType.ONLINE, RegistryType.BABY) >> Mono.just(new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", null, null))
-        1 * couponsRepository.findTop1ByCouponTypeAndRegistryType(CouponType.STORE, RegistryType.BABY) >> Mono.empty()
+        1 * couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(CouponType.ONLINE, RegistryType.BABY, eventDate4.plusDays(180)) >> Mono.just(new Coupons("4000000", CouponType.ONLINE, RegistryType.BABY, LocalDate.now(), "1", null, null))
+        1 * couponsRepository.findTop1ByCouponTypeAndRegistryTypeAndCouponExpiryDateGreaterThanEquals(CouponType.STORE, RegistryType.BABY, eventDate4.plusDays(180)) >> Mono.empty()
         1 * registryCouponsRepository.saveAll(_ as List<RegistryCoupons>) >> { arguments ->
             final List<RegistryCoupons> list = arguments[0]
             assert list.size() == 1
@@ -127,6 +132,7 @@ class CronEventServiceTest extends Specification {
             assert list.size() == 1
             Mono.just(1)
         }
+        1 * backpackRegistryClient.getRegistryDetails(_,_,_,_,_,_) >> Mono.just(new RegistryDetailsResponseTO(registry1.registryId, "", "", null, null, "regfname", "reglname", "coregfname", "coreglname", LocalDate.now()))
         1 * notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), _, registry4.registryId.toString()) >> Mono.just(recordMetadata)
 
         actual
