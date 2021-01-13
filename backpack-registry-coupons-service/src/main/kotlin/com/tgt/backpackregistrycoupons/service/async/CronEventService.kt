@@ -7,9 +7,9 @@ import com.tgt.backpackregistryclient.util.RegistrySubChannel
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
+import com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.CompositeTransactionalRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
-import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.transport.CompletionCouponNotificationTO
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
@@ -32,8 +32,8 @@ import javax.inject.Singleton
 @Singleton
 class CronEventService(
     @Inject val couponAssignmentCalculationManager: CouponAssignmentCalculationManager,
+    @Inject val compositeTransactionalRepository: CompositeTransactionalRepository,
     @Inject val sendGuestNotificationsService: SendGuestNotificationsService,
-    @Inject val registryCouponsRepository: RegistryCouponsRepository,
     @Inject val registryRepository: RegistryRepository,
     @Inject val couponsRepository: CouponsRepository,
     @Inject val backpackClient: BackpackRegistryClient,
@@ -120,8 +120,11 @@ class CronEventService(
             logger.error("[assignCouponCode], Registry $registryId already has been assigned with valid coupon types so skipping coupon assignment process and updating coupon assignment flag to complete")
             registryRepository.updateCouponAssignmentComplete(registryId, true).map { true }
         } else {
-            registryCouponsRepository.saveAll(registryCoupons).collectList()
-                .flatMap { couponsRepository.deleteByCouponCodeInList(registryCoupons.map { it.couponCode!! }) }
+            compositeTransactionalRepository.assignCoupons(registryCoupons)
+                .onErrorResume {
+                    logger.error("[assignCouponCode], Exception assigning coupon for registry $registryId")
+                    Mono.just(false)
+                }
                 .flatMap {
                     if (couponsAllocation.contains(false)) {
                         logger.debug("[assignCouponCode], Partial coupon assignment for Registry $registryId so not updating coupon assignment flag to complete")

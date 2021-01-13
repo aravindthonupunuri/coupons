@@ -1,12 +1,14 @@
 package com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.internal
 
 import com.tgt.backpackregistrycoupons.domain.model.Registry
+import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.CompositeTransactionalRepository
 import com.tgt.lists.micronaut.persistence.ApplicationTransaction
 import io.micronaut.data.annotation.Repository
 import io.micronaut.data.repository.reactive.ReactiveStreamsCrudRepository
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
+import java.time.LocalDateTime
 import java.util.*
 
 /*
@@ -48,6 +50,57 @@ abstract class CompositeTransactionalCrudRepository(
                     throw RuntimeException("No records to delete for registry for registryId $registryId")
                 }
                 result
+            }
+        }
+    }
+
+    override fun assignCoupons(registryCoupons: List<RegistryCoupons>): Mono<Boolean> {
+        logger.debug("Executing assignCoupons for registryCoupons $registryCoupons")
+        val couponCodes = registryCoupons.map { it.couponCode!! }
+
+        return nonBlockingExec {
+            applicationTransaction.executeWrite {
+                val registry_coupons_sql = "INSERT INTO registry_coupons (coupon_code, registry_id, coupon_type, coupon_redemption_status, coupon_issue_date, coupon_expiry_date, created_ts, updated_ts) VALUES (?,?,?,?,?,?,?,?)"
+                val coupons_sql = "DELETE FROM coupons WHERE coupon_code = ?"
+
+                var result: Pair<List<Int>, List<Int>> = Pair(emptyList(), emptyList())
+                applicationTransaction.jdbcRepositoryOperations().prepareStatement(registry_coupons_sql) { statement ->
+                    for (registryCoupon in registryCoupons) {
+                        statement.setObject(1, registryCoupon.couponCode)
+                        statement.setObject(2, registryCoupon.registry?.registryId)
+                        statement.setObject(3, registryCoupon.couponType.name)
+                        statement.setObject(4, registryCoupon.couponRedemptionStatus?.name)
+                        statement.setObject(5, registryCoupon.couponIssueDate)
+                        statement.setObject(6, registryCoupon.couponExpiryDate)
+                        statement.setObject(7, LocalDateTime.now())
+                        statement.setObject(8, LocalDateTime.now())
+                        statement.addBatch()
+                    }
+
+                    val updateCount = statement.executeBatch()
+                    result = result.copy(first = updateCount.toList())
+                }
+                if (result.first.none { it == 0 }) {
+                    applicationTransaction.jdbcRepositoryOperations().prepareStatement(coupons_sql) { statement ->
+                        for (couponCode in couponCodes) {
+                            statement.setObject(1, couponCode)
+                            statement.addBatch()
+                        }
+
+                        val updateCount = statement.executeBatch()
+                        result = result.copy(second = updateCount.toList())
+                    }
+                    if (result.first.any { it == 0 }) {
+                        // throw exception to rollback transaction
+                        // - see executeWrite in io.micronaut.transaction.support.AbstractSynchronousTransactionManager
+                        throw RuntimeException("Exception deleting coupon after being assigned to a registry with registryId $coupons_sql")
+                    }
+                } else {
+                    // throw exception to rollback transaction
+                    // - see executeWrite in io.micronaut.transaction.support.AbstractSynchronousTransactionManager
+                    throw RuntimeException("Exception inserting RegistryCoupons for registryId $registry_coupons_sql")
+                }
+                true
             }
         }
     }

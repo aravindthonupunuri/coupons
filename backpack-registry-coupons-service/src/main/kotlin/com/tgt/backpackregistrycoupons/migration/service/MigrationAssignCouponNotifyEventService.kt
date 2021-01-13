@@ -43,60 +43,55 @@ class MigrationAssignCouponNotifyEventService(
         }
     }
 
-fun assignRegistryCoupon(
-    registryId: UUID,
-    registryCouponMetaDataTO: RegistryCouponMetaDataTO
-): Mono<Boolean> {
-    return registryRepository.findByRegistryId(registryId).flatMap {
-        val couponsList = arrayListOf<RegistryCoupons>()
-        if (registryCouponMetaDataTO.onlineCouponCode != null) {
-            couponsList.add(RegistryCoupons(registryCouponMetaDataTO.onlineCouponCode, it, CouponType.ONLINE, registryCouponMetaDataTO.onlineCouponStatus, registryCouponMetaDataTO.couponIssueDate, registryCouponMetaDataTO.couponExpiryDate, null, null))
-        }
-        if (registryCouponMetaDataTO.storeCouponCode != null) {
-            couponsList.add(RegistryCoupons(registryCouponMetaDataTO.storeCouponCode, it, CouponType.STORE, registryCouponMetaDataTO.storeCouponStatus, registryCouponMetaDataTO.couponIssueDate, registryCouponMetaDataTO.couponExpiryDate, null, null))
-        }
+    fun assignRegistryCoupon(
+        registryId: UUID,
+        registryCouponMetaDataTO: RegistryCouponMetaDataTO
+    ): Mono<Boolean> {
+        return registryRepository.findByRegistryId(registryId).flatMap {
+            val couponsList = arrayListOf<RegistryCoupons>()
+            if (registryCouponMetaDataTO.onlineCouponCode != null) {
+                couponsList.add(RegistryCoupons(registryCouponMetaDataTO.onlineCouponCode, it, CouponType.ONLINE, registryCouponMetaDataTO.onlineCouponStatus, registryCouponMetaDataTO.couponIssueDate, registryCouponMetaDataTO.couponExpiryDate, null, null))
+            }
+            if (registryCouponMetaDataTO.storeCouponCode != null) {
+                couponsList.add(RegistryCoupons(registryCouponMetaDataTO.storeCouponCode, it, CouponType.STORE, registryCouponMetaDataTO.storeCouponStatus, registryCouponMetaDataTO.couponIssueDate, registryCouponMetaDataTO.couponExpiryDate, null, null))
+            }
 
-        if (couponsList.isNotEmpty()) {
-        registryCouponsRepository.saveAll(couponsList).collectList().map { true }
-        } else {
-            Mono.just(true)
-        }
-    }
-
-        .switchIfEmpty {
+            if (couponsList.isNotEmpty()) {
+                registryCouponsRepository.saveAll(couponsList).collectList().map { true }
+            } else {
+                Mono.just(true)
+            }
+        }.switchIfEmpty {
             logger.error("[MigrationAssignCouponNotifyEventService] Registry $registryId not found sending it for retry")
             Mono.just(false)
-        }
-        .onErrorResume {
+        }.onErrorResume {
             logger.error("[MigrationAssignCouponNotifyEventService] Exception from assignRegistryCoupon() for registryId: $registryId with online coupon code: ${registryCouponMetaDataTO.onlineCouponCode} and store coupon code ${registryCouponMetaDataTO.storeCouponCode} sending it for retry", it)
             Mono.just(false)
         }
-}
-
-data class RetryState(
-    var assignCoupon: Boolean = false
-) {
-    fun completeState(): Boolean {
-        return assignCoupon
     }
 
-    fun incompleteState(): Boolean {
-        return !assignCoupon
-    }
-
-    companion object {
-        // jacksonObjectMapper() returns a normal ObjectMapper with the KotlinModule registered
-        val jsonMapper: ObjectMapper = jacksonObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
-
-        @JvmStatic
-        fun deserialize(retryState: String): RetryState {
-            return jsonMapper.readValue<RetryState>(retryState, RetryState::class.java)
+    data class RetryState(var assignCoupon: Boolean = false) {
+        fun completeState(): Boolean {
+            return assignCoupon
         }
 
-        @JvmStatic
-        fun serialize(retryState: RetryState): String {
-            return jsonMapper.writeValueAsString(retryState)
+        fun incompleteState(): Boolean {
+            return !assignCoupon
+        }
+
+        companion object {
+            // jacksonObjectMapper() returns a normal ObjectMapper with the KotlinModule registered
+            val jsonMapper: ObjectMapper = jacksonObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+
+            @JvmStatic
+            fun deserialize(retryState: String): RetryState {
+                return jsonMapper.readValue<RetryState>(retryState, RetryState::class.java)
+            }
+
+            @JvmStatic
+            fun serialize(retryState: RetryState): String {
+                return jsonMapper.writeValueAsString(retryState)
+            }
         }
     }
-}
 }
