@@ -110,14 +110,14 @@ msgbus:
 beacon:
   client:
     enabled: false
-    source: backpack-registry-coupons-consumer-app
-    dlq-source: backpack-registry-coupons-consumer-app-dlq
+    source: backpack-registry-coupons-migration-consumer-app
+    dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
     kafka:
       consumer:
-        client-id: backpack-registry-coupons-consumer-app-cron-beacon-consumer
+        client-id: backpack-registry-coupons-migration-consumer-app-cron-beacon-consumer
         topic: lists-msg-bus
-        metrics-name: backpack-registry-coupons-consumer-app-cron-beacon-metrics
-        consumer-group: backpack-registry-coupons-consumer-app-cron-beacon
+        metrics-name: backpack-registry-coupons-migration-consumer-app-cron-beacon-metrics
+        consumer-group: backpack-registry-coupons-migration-consumer-app-cron-beacon
         consumer-batch-size: 1
         max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
 
