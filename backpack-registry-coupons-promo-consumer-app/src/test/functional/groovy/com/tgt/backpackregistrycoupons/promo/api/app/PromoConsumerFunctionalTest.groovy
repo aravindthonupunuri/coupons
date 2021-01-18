@@ -6,8 +6,8 @@ import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.promo.api.app.app.TestGenericProducer
-import com.tgt.backpackregistrycoupons.promo.kafka.consumer.PromoKafkaConsumer
-import com.tgt.backpackregistrycoupons.promo.kafka.handler.RegistryTransactionEventHandler
+import com.tgt.backpackregistrycoupons.kafka.consumer.PromoKafkaConsumer
+import com.tgt.backpackregistrycoupons.kafka.handler.RegistryTransactionEventHandler
 import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
