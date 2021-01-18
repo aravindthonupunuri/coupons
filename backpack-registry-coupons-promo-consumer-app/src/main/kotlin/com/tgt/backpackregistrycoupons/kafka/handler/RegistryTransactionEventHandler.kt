@@ -1,4 +1,4 @@
-package com.tgt.backpackregistrycoupons.promo.kafka.handler
+package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistrycoupons.service.RegistryTransactionService
 import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO

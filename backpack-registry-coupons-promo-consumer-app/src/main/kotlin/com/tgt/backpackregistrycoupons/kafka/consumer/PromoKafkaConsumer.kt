@@ -1,4 +1,4 @@
-package com.tgt.backpackregistrycoupons.promo.kafka.consumer
+package com.tgt.backpackregistrycoupons.kafka.consumer
 
 import com.tgt.lists.msgbus.EventDispatcher
 import com.tgt.lists.msgbus.GenericConsumer
