@@ -1,7 +1,9 @@
 micronaut:
   application:
     name: backpack-registry-coupons-consumer
-
+  server:
+    host: ${backpack-registry-coupons-consumer-host:localhost}
+    port: 8085
   http:
     client.connect-ttl: 30m
     client.pool.acquire-timeout: 2000ms
@@ -136,7 +138,7 @@ notification-tracer:
   kafka:
     producer:
       enabled: true
-    topic: lists-msg-bus
+    topic: tracer-general-input
 
 kafka-sources:
   allow:

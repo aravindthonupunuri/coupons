@@ -1,6 +1,9 @@
 micronaut:
   application:
     name: backpack-registry-coupons-migration-consumer-app
+  server:
+    host: ${backpack-registry-coupons-migration-consumer-host:localhost}
+    port: 8085
 
   metrics:
     binders:
@@ -34,6 +37,7 @@ filter:
     order:
       lists-brave-tracing-server-filter: 100
       list-authorization-filter: 200
+      registry-channel-subchannel-filter: 400
   client:
     order:
       lists-brave-tracing-client-filter: 900
@@ -79,6 +83,8 @@ components:
       enabled: false
     sanitizing-filter:
       enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
 
 msgbus:
   source: backpack-registry-coupons-migration-consumer-app
@@ -101,13 +107,27 @@ msgbus:
     dlq-max-event-retry-count: 2
     dlq-consumer-batch-size: 10
 
+beacon:
+  client:
+    enabled: false
+    source: backpack-registry-coupons-consumer-app
+    dlq-source: backpack-registry-coupons-consumer-app-dlq
+    kafka:
+      consumer:
+        client-id: backpack-registry-coupons-consumer-app-cron-beacon-consumer
+        topic: lists-msg-bus
+        metrics-name: backpack-registry-coupons-consumer-app-cron-beacon-metrics
+        consumer-group: backpack-registry-coupons-consumer-app-cron-beacon
+        consumer-batch-size: 1
+        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
+
 notification-tracer:
   source: backpack-registry-coupons-migration-consumer-app
   dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
   kafka:
     producer:
       enabled: false
-    topic: lists-msg-bus
+    topic: tracer-general-input
 
 kafka-sources:
   allow:
