@@ -84,3 +84,5 @@ handlers:
     allow_any_origin: true
     allowed_headers:
       - Authorization
+      - member_id
+      
