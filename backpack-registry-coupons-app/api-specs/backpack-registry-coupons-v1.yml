@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 1.0.0
+  version: 1.0.1
   title: backpack_registrycoupons-v1
   description: Api to get list of registry coupons associated with the registries
 host: api.target.com
@@ -12,6 +12,7 @@ produces:
 consumes:
   - application/json
 x-api-definition:
+  dependencies: []
   api_name: registry_coupons-v1
   personnel:
     portfolio: Digital
@@ -46,7 +47,7 @@ x-api-definition:
       proxy_pattern: side-car
   notification_ids:
     - description: ShuttleIO
-      id: 'null'
+      id: 360f50749fa3db6dc75dc9d2bfb8cba9
     - description: slack
       id: GQ10ZD7UZ
   slack_channel_id: GQ10ZD7UZ
@@ -70,8 +71,8 @@ x-api-definition:
     api_spec: https://git.target.com/Registry-Modernization/backpack_registrycoupons/blob/master/api-spec/backpack-registry-coupons-v1.yml
   endpoints:
     external:
-      production: https://api.target.com/registry_checklists/v1
-      stage: https://stage-api.target.com/registry_checklists/v1
+      production: https://api.target.com/registry_coupons/v1
+      stage: https://stage-api.target.com/registry_coupons/v1
       qa: null
       ci: null
     internal:
