@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.api.controller
 
+import com.tgt.backpackregistryclient.util.BackpackRegistryConstants.AUTHORIZATION
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.service.RegistryCouponService
 import com.tgt.backpackregistrycoupons.service.UploadRegistryCouponService
@@ -38,9 +39,10 @@ class BackpackRegistryCouponsController(
      * @return Void
      *
      */
-    @Post(value = "/upload", consumes = [MediaType.MULTIPART_FORM_DATA])
+    @Post(value = "/uploads", consumes = [MediaType.MULTIPART_FORM_DATA])
     @Status(HttpStatus.NO_CONTENT)
     fun uploadRegistryCoupons(
+        @Header(AUTHORIZATION) authorizationHeader: String,
         @QueryValue("registry_type") registryType: RegistryType,
         @QueryValue("coupon_type") couponType: CouponType,
         @QueryValue("offer_id") offerId: String,

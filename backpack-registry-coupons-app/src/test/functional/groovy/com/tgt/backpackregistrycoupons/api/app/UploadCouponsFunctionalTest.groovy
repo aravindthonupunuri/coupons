@@ -19,7 +19,7 @@ class UploadCouponsFunctionalTest extends BasePersistenceFunctionalTest {
     @Inject
     CouponsRepository couponsRepository
 
-    String uri = RegistryCouponsConstant.BASEPATH + "/upload?registry_type=BABY&coupon_type=ONLINE&offer_id=1&coupon_expiry_date=2991-12-03"
+    String uri = RegistryCouponsConstant.BASEPATH + "/uploads?registry_type=BABY&coupon_type=ONLINE&offer_id=1&coupon_expiry_date=2991-12-03"
 
     def "test upload registry coupons integrity"() {
         given:
