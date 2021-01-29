@@ -42,10 +42,12 @@ filter:
       onbehalf-filter: 51
       lists-brave-tracing-server-filter: 100
       list-authorization-filter: 200
+      id2-groupvalidation-filter: 201
       sanitizing-filter: 300
   client:
     order:
       lists-brave-tracing-client-filter: 900
+      id2-groupvalidation-filter: 200
       resilience-client-filter: 800
       oauth-filter: 701
       oauth-key-filter: 700
@@ -89,6 +91,16 @@ components:
     classes:
       - com.tgt.lists.common.components.exception.BaseErrorCodes #Haven't defined app specific error codes yet
   server:
+    id2-groupvalidation-filter:
+      enabled: true
+      base-uri: /lists_permissions/v1
+      ad-group-permissions:
+        post-access:
+          permissions[0]:
+            groups:
+              - APP-LISTS-STG-READ
+            urls:
+              - /lists_permissions/v1**
     onbehalf-filter:
       enabled: true
       gsp-validation-base-url: "https://backpackregistrycoupons.dev.target.com"
@@ -102,7 +114,7 @@ components:
       enabled: false
       base-uri: /backpackregistrycoupons
     id2-custom-scopes:
-      names: 
+      names:
         - axiom.user
         - axiom.admin
         - axiom.leader

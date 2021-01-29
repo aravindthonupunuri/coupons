@@ -16,7 +16,7 @@ handlers:
     anonymous_routes:
       - GET: /health
       - GET: /apispec
-      - POST: /v1/upload
+
     strategies:
       gsp:
           - routes_by_scope:
