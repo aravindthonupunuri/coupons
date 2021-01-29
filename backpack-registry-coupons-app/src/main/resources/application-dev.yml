@@ -98,7 +98,7 @@ components:
         post-access:
           permissions[0]:
             groups:
-              - APP-LISTS-STG-READ
+              - APP-BACKPACK-REGISTRY-STG-READ
             urls:
               - /lists_permissions/v1**
     onbehalf-filter:
