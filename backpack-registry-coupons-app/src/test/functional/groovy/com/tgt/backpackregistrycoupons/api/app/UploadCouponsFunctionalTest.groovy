@@ -10,6 +10,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.client.multipart.MultipartBody
 import io.micronaut.test.annotation.MicronautTest
+import static com.tgt.backpackregistrycoupons.test.DataProvider.*
 
 import javax.inject.Inject
 
@@ -36,7 +37,7 @@ class UploadCouponsFunctionalTest extends BasePersistenceFunctionalTest {
 
         when:
         HttpResponse<Coupons> response = client.toBlocking()
-            .exchange(HttpRequest.POST(uri, multipartBody).contentType(MediaType.MULTIPART_FORM_DATA_TYPE), Coupons)
+            .exchange(HttpRequest.POST(uri, multipartBody).headers(getHeaders("1234", false)).contentType(MediaType.MULTIPART_FORM_DATA_TYPE), Coupons)
 
         def actualStatus = response.status()
 
