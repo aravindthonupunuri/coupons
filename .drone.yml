@@ -34,7 +34,7 @@ pipeline:
   publish-config-backpack-registry-coupons-dev:
     when:
       event: [push]
-      branch: master
+      branch: migration_cluster
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
       CICD_MODE: 'true'
@@ -49,46 +49,6 @@ pipeline:
       - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0'
       - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-migration-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0'
       - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-promo-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0'
-
-  publish-config-backpack-registry-coupons-stage:
-    when:
-      event: tag
-      ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
-      branch: master
-    image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
-    environment:
-      CICD_MODE: 'true'
-    secrets:
-      - TAP_API_TOKEN
-      - backpack_registry_coupons_app_private_key_stage
-      - backpack_registry_coupons_consumer_app_private_key_stage
-      - backpack_registry_coupons_migration_consumer_app_private_key_stage
-      - backpack_registry_coupons_promo_consumer_app_private_key_stage
-    commands:
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_APP_PRIVATE_KEY_STAGE ./backpack-registry-coupons-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_STAGE ./backpack-registry-coupons-consumer-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_STAGE ./backpack-registry-coupons-migration-consumer-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_STAGE ./backpack-registry-coupons-promo-consumer-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-
-  publish-config-backpack-registry-coupons-prod:
-    when:
-      event: tag
-      ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
-      branch: master
-    image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
-    environment:
-      CICD_MODE: 'true'
-    secrets:
-      - TAP_API_TOKEN
-      - backpack_registry_coupons_app_private_key_prod
-      - backpack_registry_coupons_consumer_app_private_key_prod
-      - backpack_registry_coupons_migration_consumer_app_private_key_prod
-      - backpack_registry_coupons_promo_consumer_app_private_key_prod
-    commands:
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_APP_PRIVATE_KEY_PROD ./backpack-registry-coupons-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_PROD ./backpack-registry-coupons-consumer-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_PROD ./backpack-registry-coupons-migration-consumer-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
-      - 'tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_PROD ./backpack-registry-coupons-promo-consumer-app/scripts/config_deploy_manager.sh ${DRONE_TAG}'
 
   build:
     when:
@@ -138,39 +98,10 @@ pipeline:
       - latest
     when:
       event: [push]
-      branch: master
+      branch: migration_cluster
     secrets:
       - {source: artifactory_username, target: plugin_username}
       - {source: artifactory_password, target: plugin_password}
-
-  publish-docker-backpack-registry-coupons-app-stage:
-    image: 'plugins/docker:latest'
-    group: stgimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
-    dockerfile: ./backpack-registry-coupons-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:24}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
-    secrets:
-      - {source: artifactory_username, target: plugin_username}
-      - {source: artifactory_password, target: plugin_password}
-
-  publish-docker-backpack-registry-coupons-app-prod:
-    image: 'docker.target.com/drone/docker-promotion:1'
-    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
-    source_tag: 'rc.${DRONE_TAG:23}'
-    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
-    target_tags: 'prod.${DRONE_TAG:23}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
-    secrets:
-      - {source: artifactory_username, target: registry_username}
-      - {source: artifactory_password, target: registry_password}
 
   publish-docker-backpack-registry-coupons-consumer-app-dev:
     image: plugins/docker
@@ -183,39 +114,10 @@ pipeline:
       - latest
     when:
       event: [push]
-      branch: master
+      branch: migration_cluster
     secrets:
       - {source: artifactory_username, target: plugin_username}
       - {source: artifactory_password, target: plugin_password}
-
-  publish-docker-backpack-registry-coupons-consumer-app-stage:
-    image: 'plugins/docker:latest'
-    group: stgimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-consumer-app
-    dockerfile: ./backpack-registry-coupons-consumer-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:24}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
-    secrets:
-      - {source: artifactory_username, target: plugin_username}
-      - {source: artifactory_password, target: plugin_password}
-
-  publish-docker-backpack-registry-coupons-consumer-app-prod:
-    image: 'docker.target.com/drone/docker-promotion:1'
-    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-consumer-app
-    source_tag: 'rc.${DRONE_TAG:23}'
-    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-consumer-app
-    target_tags: 'prod.${DRONE_TAG:23}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
-    secrets:
-      - {source: artifactory_username, target: registry_username}
-      - {source: artifactory_password, target: registry_password}
 
   publish-docker-backpack-registry-coupons-migration-consumer-app-dev:
     image: plugins/docker
@@ -228,40 +130,10 @@ pipeline:
       - latest
     when:
       event: [ push ]
-      branch: master
+      branch: migration_cluster
     secrets:
       - { source: artifactory_username, target: plugin_username }
       - { source: artifactory_password, target: plugin_password }
-
-  publish-docker-backpack-registry-coupons-migration-consumer-app-stage:
-    image: 'plugins/docker:latest'
-    group: stgimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
-    dockerfile: ./backpack-registry-coupons-migration-consumer-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:24}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
-    secrets:
-      - { source: artifactory_username, target: plugin_username }
-      - { source: artifactory_password, target: plugin_password }
-
-  publish-docker-backpack-registry-coupons-migration-consumer-app-prod:
-    image: 'docker.target.com/drone/docker-promotion:1'
-    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
-    source_tag: 'rc.${DRONE_TAG:23}'
-    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
-    target_tags: 'prod.${DRONE_TAG:23}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
-    secrets:
-      - { source: artifactory_username, target: registry_username }
-      - { source: artifactory_password, target: registry_password }
-
 
   publish-docker-backpack-registry-coupons-promo-consumer-app-dev:
     image: plugins/docker
@@ -274,39 +146,10 @@ pipeline:
       - latest
     when:
       event: [ push ]
-      branch: master
+      branch: migration_cluster
     secrets:
       - { source: artifactory_username, target: plugin_username }
       - { source: artifactory_password, target: plugin_password }
-
-  publish-docker-backpack-registry-coupons-promo-consumer-app-stage:
-    image: 'plugins/docker:latest'
-    group: stgimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
-    dockerfile: ./backpack-registry-coupons-promo-consumer-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:24}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
-    secrets:
-      - { source: artifactory_username, target: plugin_username }
-      - { source: artifactory_password, target: plugin_password }
-
-  publish-docker-backpack-registry-coupons-promo-consumer-app-prod:
-    image: 'docker.target.com/drone/docker-promotion:1'
-    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
-    source_tag: 'rc.${DRONE_TAG:23}'
-    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
-    target_tags: 'prod.${DRONE_TAG:23}'
-    when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
-    secrets:
-      - { source: artifactory_username, target: registry_username }
-      - { source: artifactory_password, target: registry_password }
 
 secrets:
   cache_s3_server:
@@ -319,25 +162,9 @@ secrets:
     path: secret/shared/drone/prod-secrets/cache_s3_ca_cert
   backpack_registry_coupons_app_private_key_dev:
     path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycoupons-privkey-dev
-  backpack_registry_coupons_app_private_key_stage:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycoupons-privkey-stage
-  backpack_registry_coupons_app_private_key_prod:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycoupons-privkey-prod
   backpack_registry_coupons_consumer_app_private_key_dev:
     path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponsconsumer-privkey-dev
-  backpack_registry_coupons_consumer_app_private_key_stage:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponsconsumer-privkey-stage
-  backpack_registry_coupons_consumer_app_private_key_prod:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponsconsumer-privkey-prod
   backpack_registry_coupons_migration_consumer_app_private_key_dev:
     path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponsmigrationconsumer-privkey-dev
-  backpack_registry_coupons_migration_consumer_app_private_key_stage:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponsmigrationconsumer-privkey-stage
-  backpack_registry_coupons_migration_consumer_app_private_key_prod:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponsmigrationconsumer-privkey-prod
   backpack_registry_coupons_promo_consumer_app_private_key_dev:
     path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponspromoconsumer-privkey-dev
-  backpack_registry_coupons_promo_consumer_app_private_key_stage:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponspromoconsumer-privkey-stage
-  backpack_registry_coupons_promo_consumer_app_private_key_prod:
-    path: secret/repo/Registry-Modernization/backpack-registry-coupons/backpackregistrycouponspromoconsumer-privkey-prod

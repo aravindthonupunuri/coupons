@@ -126,23 +126,23 @@ kafka:
 #  security:
 #    protocol: ssl
   consumers:
-    lists-msg-bus-consumer:
+    backpack-registry-coupons-migration-bus-stage-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    lists-dlq-consumer:
+    backpack-registry-coupons-migration-bus-stage-dlq-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
-    lists-msg-bus-producer:
+    backpack-registry-coupons-migration-bus-stage-producer:
       retries: 3
       retry:
         backoff:
-          ms: 1_000
+          ms: 1000
       max:
         in:
           flight:
@@ -150,11 +150,11 @@ kafka:
               per:
                 connection: 1
         block:
-          ms: 2_000
+          ms: 2000
 
 msgbus:
-  source: backpack-registry-coupons
-  dlq-source: backpack-registry-coupons-dlq
+  source: backpack-registry-coupons-migration-consumer-app
+  dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
   kafka:
     consumer:
       enabled: true
@@ -164,11 +164,11 @@ msgbus:
       enabled: true
     dlqproducer:
       enabled: true
-    topic: ${kafka-msgbus-topic}
-    consumer-group: backpack-registry-coupons-msg-bus-consumer
+    topic: registry-internal-data-bus-stage
+    consumer-group: backpack-registry-coupons-migration-bus-stage-consumer
     consumer-batch-size: 10
-    dlq-topic: ${kafka-dlq-topic}
-    dlq-consumer-group: backpack-registry-coupons-dlq-consumer
+    dlq-topic: registry-internal-data-bus-stage-dlq
+    dlq-consumer-group: backpack-registry-coupons-migration-bus-stage-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
     dlq-consumer-batch-size: 10
@@ -180,7 +180,6 @@ endpoints:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons
-    - backpack-registry-coupons-dlq
-    - cronbeacon
-    - cronbeacon-dlq
+    - backpack-registry-coupons-migration-consumer-app
+    - backpack-registry-coupons-migration-consumer-app-dlq
+    - migration-GRWS
