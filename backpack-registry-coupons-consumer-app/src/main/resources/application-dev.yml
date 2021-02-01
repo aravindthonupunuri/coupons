@@ -109,11 +109,11 @@ msgbus:
       enabled: true
     dlqproducer:
       enabled: true
-    topic: lists-msg-bus
-    consumer-group: backpack-registry-coupons-consumer-app-lists-msg-bus
+    topic: registry-internal-data-bus-stage
+    consumer-group: backpack-registry-coupons-bus-stage-consumer
     consumer-batch-size: 10
-    dlq-topic: lists-dlq
-    dlq-consumer-group: backpack-registry-coupons-consumer-app-lists-dlq
+    dlq-topic: registry-internal-data-bus-stage-dlq
+    dlq-consumer-group: backpack-registry-coupons-bus-stage-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
     dlq-consumer-batch-size: 10
@@ -126,7 +126,7 @@ beacon:
     kafka:
       consumer:
         client-id: backpack-registry-coupons-consumer-app-cron-beacon-consumer
-        topic: lists-msg-bus
+        topic: registry-internal-data-bus-stage
         metrics-name: backpack-registry-coupons-consumer-app-cron-beacon-metrics
         consumer-group: backpack-registry-coupons-consumer-app-cron-beacon
         consumer-batch-size: 1
@@ -146,6 +146,8 @@ kafka-sources:
     - backpack-registry-coupons-consumer-app-dlq
     - cronbeacon
     - cronbeacon-dlq
+    - backpack-registry
+    - backpack-registry-dlq
 
 registry:
   baby:

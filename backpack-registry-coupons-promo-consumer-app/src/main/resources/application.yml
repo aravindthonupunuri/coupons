@@ -127,12 +127,12 @@ kafka:
 #  security:
 #    protocol: ssl
   consumers:
-    backpack-registry-coupons-msg-bus-consumer:
+    backpack-registry-coupons-promo-bus-stage-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    backpack-registry-coupons-dlq-consumer:
+    backpack-registry-coupons-promo-bus-stage-dlq-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
@@ -145,7 +145,7 @@ kafka:
 
   producers:
     # default is a Jackson based JSON serializer for key/value
-    lists-msg-bus-producer:
+    backpack-registry-coupons-promo-bus-stage-producer:
       retries: 3
       retry:
         backoff:
@@ -171,11 +171,11 @@ msgbus:
       enabled: true
     dlqproducer:
       enabled: true
-    topic: ${kafka-msgbus-topic}
-    consumer-group: backpack-registry-coupons-msg-bus-consumer
+    topic: registry-internal-data-bus-stage
+    consumer-group: backpack-registry-coupons-promo-bus-stage-consumer
     consumer-batch-size: 10
-    dlq-topic: ${kafka-dlq-topic}
-    dlq-consumer-group: backpack-registry-coupons-dlq-consumer
+    dlq-topic: registry-internal-data-bus-stage-dlq
+    dlq-consumer-group: ackpack-registry-coupons-promo-bus-stage-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
     dlq-consumer-batch-size: 10

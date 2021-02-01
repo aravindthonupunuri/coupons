@@ -136,9 +136,9 @@ class DeleteListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
         result == null
     }
 
-    @KafkaClient(acks = KafkaClient.Acknowledge.ALL, id = "lists-msg-bus")
+    @KafkaClient(acks = KafkaClient.Acknowledge.ALL, id = "registry-internal-data-bus-stage")
     static interface ListMsgBusClient {
-        @Topic("lists-msg-bus")
+        @Topic("registry-internal-data-bus-stage")
         String sendMessage(@KafkaKey String id, @Header UUID uuid, @Header String event_type, @Header String source,
                            @Body DeleteListNotifyEvent deleteListNotifyEvent)
     }

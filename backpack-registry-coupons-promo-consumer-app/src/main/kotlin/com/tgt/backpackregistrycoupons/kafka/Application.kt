@@ -9,7 +9,7 @@ object Application {
     fun main(args: Array<String>) {
 
         // TAP deployment specific
-        TAPEnvironmentLoader().setupTAPSpecificEnvironment(listOf("client-truststore", "lists-bus-keystore", "backpack-registry-keystore", "grsclient-truststore"))
+        TAPEnvironmentLoader().setupTAPSpecificEnvironment()
 
         Micronaut.build()
             .propertySources(PlatformPropertySource.connect())
