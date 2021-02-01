@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.domain.model
 
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.MappedEntity
@@ -25,7 +26,7 @@ data class Registry(
     val registryType: RegistryType,
 
     @Column(name = "registry_status")
-    val registryStatus: String,
+    val registryStatus: RegistryStatus,
 
     @Column(name = "registry_created_ts")
     val registryCreatedDate: LocalDate,

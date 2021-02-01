@@ -148,6 +148,7 @@ kafka-sources:
     - cronbeacon-dlq
     - backpack-registry
     - backpack-registry-dlq
+    - backpackregistry-migration
 
 registry:
   baby:

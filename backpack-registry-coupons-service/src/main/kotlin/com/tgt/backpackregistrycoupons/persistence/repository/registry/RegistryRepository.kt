@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.persistence.repository.registry
 
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import io.micronaut.data.annotation.Join
 import io.micronaut.data.annotation.Query
@@ -16,7 +17,7 @@ interface RegistryRepository {
 
     fun findByRegistryId(registryId: UUID): Mono<Registry>
 
-    fun findByRegistryStatusAndCouponAssignmentComplete(registryStatus: String, couponAssignmentComplete: Boolean): Flux<Registry>
+    fun findByRegistryStatusAndCouponAssignmentComplete(registryStatus: RegistryStatus, couponAssignmentComplete: Boolean): Flux<Registry>
 
     @Join(value = "registryCoupons", type = Join.Type.LEFT_FETCH)
     fun getByRegistryId(registryId: UUID): Mono<Registry>
@@ -25,7 +26,7 @@ interface RegistryRepository {
     fun updateRegistryEventDate(registryId: UUID, eventDate: LocalDate): Mono<Int>
 
     @Query("""UPDATE registry SET registry_status = (:registryStatus) WHERE registry_id=(:registryId)""")
-    fun updateRegistryStatus(registryId: UUID, registryStatus: String): Mono<Int>
+    fun updateRegistryStatus(registryId: UUID, registryStatus: RegistryStatus): Mono<Int>
 
     @Query("""UPDATE registry SET coupon_assignment_complete = (:couponAssignmentComplete) WHERE registry_id=(:registryId)""")
     fun updateCouponAssignmentComplete(registryId: UUID, couponAssignmentComplete: Boolean): Mono<Int>

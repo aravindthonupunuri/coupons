@@ -2,6 +2,7 @@ package com.tgt.backpackregistrycoupons.service.async
 
 import com.tgt.backpackregistryclient.client.BackpackRegistryClient
 import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
@@ -53,24 +54,24 @@ class CronEventServiceTest extends Specification {
         // First registry: No coupons assigned
         def registryCreatedDate1 = LocalDate.now().minusDays(15)
         def eventDate1 = LocalDate.now().minusDays(5)
-        def registry1 = new Registry(UUID.randomUUID(), RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate1,  eventDate1, false, null, null)
+        def registry1 = new Registry(UUID.randomUUID(), RegistryType.BABY,  RegistryStatus.@ACTIVE, registryCreatedDate1,  eventDate1, false, null, null)
 
         // Second registry: Partial coupon assigned
         def registryCreatedDate2 = LocalDate.now().minusDays(60)
         def eventDate2 = LocalDate.now()
-        def registry2 = new Registry(UUID.randomUUID(), RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate2,  eventDate2, false, null, null)
+        def registry2 = new Registry(UUID.randomUUID(), RegistryType.WEDDING,  RegistryStatus.@ACTIVE, registryCreatedDate2,  eventDate2, false, null, null)
         def registryCoupons21 = new RegistryCoupons("1234", registry2, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         registry2.registryCoupons = [registryCoupons21] as Set
 
         // Third registry: Registry not ready for coupon assignment yet
         def registryCreatedDate3 = LocalDate.now()
         def eventDate3 = LocalDate.now()
-        def registry3 = new Registry(UUID.randomUUID(), RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate3,  eventDate3, false, null, null)
+        def registry3 = new Registry(UUID.randomUUID(), RegistryType.BABY,  RegistryStatus.@ACTIVE, registryCreatedDate3,  eventDate3, false, null, null)
 
         // Fourth registry: Assign only one coupons type (partial assignment)
         def registryCreatedDate4 = LocalDate.now().minusDays(15)
         def eventDate4 = LocalDate.now().minusDays(5)
-        def registry4 = new Registry(UUID.randomUUID(), RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate4,  eventDate4, false, null, null)
+        def registry4 = new Registry(UUID.randomUUID(), RegistryType.BABY,  RegistryStatus.@ACTIVE, registryCreatedDate4,  eventDate4, false, null, null)
 
         def cronEventDate = LocalDateTime.now()
         def recordMetadata = GroovyMock(RecordMetadata)
@@ -79,7 +80,7 @@ class CronEventServiceTest extends Specification {
         def actual = cronEventService.processCronEvent(cronEventDate).block()
 
         then:
-        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false) >> Flux.just(registry1, registry2, registry3, registry4)
+        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(RegistryStatus.@ACTIVE, false) >> Flux.just(registry1, registry2, registry3, registry4)
 
         // First Registry
         1 * registryRepository.getByRegistryId(registry1.registryId) >> Mono.just(registry1)
@@ -126,7 +127,7 @@ class CronEventServiceTest extends Specification {
         def actual = cronEventService.processCronEvent(LocalDateTime.now()).block()
 
         then:
-        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false) >> Flux.empty()
+        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(RegistryStatus.@ACTIVE, false) >> Flux.empty()
 
         actual
     }
@@ -136,7 +137,7 @@ class CronEventServiceTest extends Specification {
         def actual = cronEventService.processCronEvent(LocalDateTime.now()).block()
 
         then:
-        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false) >> Flux.error(new RuntimeException("some exception"))
+        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(RegistryStatus.@ACTIVE, false) >> Flux.error(new RuntimeException("some exception"))
 
         !actual
     }

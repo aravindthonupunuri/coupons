@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.domain
 
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
@@ -24,7 +25,7 @@ class CouponAssignmentCalculationManagerTest extends Specification {
         def registryCreatedDate = LocalDate.now().minusDays(3)
         def eventDate = LocalDate.now()
 
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, RegistryType.BABY, RegistryStatus.@ACTIVE, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
@@ -39,7 +40,7 @@ class CouponAssignmentCalculationManagerTest extends Specification {
         def registryCreatedDate = LocalDate.now()
         def eventDate = LocalDate.now().plusDays(60)
 
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, RegistryType.BABY,  RegistryStatus.@ACTIVE, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
@@ -54,7 +55,7 @@ class CouponAssignmentCalculationManagerTest extends Specification {
         def registryCreatedDate = LocalDate.now()
         def eventDate = LocalDate.now().plusDays(60) // wedding registry
 
-        def registry = new Registry(registryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, RegistryType.WEDDING,  RegistryStatus.@ACTIVE, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)

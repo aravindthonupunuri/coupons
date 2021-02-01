@@ -3,6 +3,7 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.tgt.backpackregistryclient.client.BackpackRegistryClient
 import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
 import com.tgt.backpackregistryclient.util.RegistryChannel
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistrySubChannel
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
@@ -16,7 +17,6 @@ import com.tgt.backpackregistrycoupons.util.CouponType
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.COMPLETION_COUPON
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.GIFT_REGISTRY
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.PROFILE
-import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.notification.tracer.client.model.NotificationTracerEvent
 import io.micronaut.context.annotation.Value
 import mu.KotlinLogging
@@ -49,7 +49,7 @@ class CronEventService(
     }
 
     fun processCronEvent(cronEventDate: LocalDateTime): Mono<Boolean> {
-        return registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false).collectList()
+        return registryRepository.findByRegistryStatusAndCouponAssignmentComplete(RegistryStatus.ACTIVE, false).collectList()
             .flatMap { registryList ->
                 logger.debug("[processCronEvent], Registry's being assigned coupon code: ${registryList.size} ")
                 Flux.fromIterable(registryList).flatMap { registry ->

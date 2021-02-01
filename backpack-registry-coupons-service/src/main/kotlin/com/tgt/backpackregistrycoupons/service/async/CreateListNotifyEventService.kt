@@ -3,10 +3,10 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
-import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.LocalDate
@@ -24,7 +24,7 @@ private val logger = KotlinLogging.logger { CreateListNotifyEventService::class.
 fun processCreateListNotifyEvent(
     guestId: String,
     registryId: UUID,
-    registryStatus: LIST_STATE,
+    registryStatus: RegistryStatus,
     registryType: RegistryType,
     registryCreatedDate: LocalDate,
     eventDate: LocalDate,
@@ -46,13 +46,13 @@ fun processCreateListNotifyEvent(
 fun addGuestRegistry(
     guestId: String,
     registryId: UUID,
-    registryStatus: LIST_STATE,
+    registryStatus: RegistryStatus,
     registryType: RegistryType,
     registryCreatedDate: LocalDate,
     eventDate: LocalDate
 ): Mono<Boolean> {
     // The RegistryStatus is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the registry.
-    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, null, null))
+    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus, registryCreatedDate, eventDate, false, null, null))
         .map { true }
         .onErrorResume {
             logger.error("Exception from addGuestRegistry() for guestID: $guestId and registryId: $registryId," +
