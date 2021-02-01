@@ -110,13 +110,13 @@ msgbus:
 beacon:
   client:
     enabled: false
-    source: backpack-registry-coupons-migration-consumer-app
-    dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
+    source: backpack-registry-coupons-migration-kafkapp-consumer
+    dlq-source: backpack-registry-coupons-migration-kafkapp-consumer-dlq
     kafka:
       consumer:
-        client-id: backpack-registry-coupons-migration-consumer-app-cron-beacon-consumer
+        client-id: backpack-registry-coupons-migration-consumer-app-cron-beacon
         topic: registry-internal-data-bus-stage
-        metrics-name: backpack-registry-coupons-migration-consumer-app-cron-beacon-metrics
+        metrics-name: backpack-registry-coupons-migration-beacon-metrics
         consumer-group: backpack-registry-coupons-migration-consumer-app-cron-beacon
         consumer-batch-size: 1
         max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
@@ -133,6 +133,10 @@ kafka-sources:
   allow:
     - backpack-registry-coupons-migration-consumer-app
     - backpack-registry-coupons-migration-consumer-app-dlq
+    - cronbeacon
+    - cronbeacon-dlq
+    - backpack-registry
+    - backpack-registry-dlq
     - migration-GRWS
 
 registry:

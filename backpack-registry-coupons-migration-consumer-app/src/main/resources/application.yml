@@ -182,4 +182,47 @@ kafka-sources:
   allow:
     - backpack-registry-coupons-migration-consumer-app
     - backpack-registry-coupons-migration-consumer-app-dlq
+    - cronbeacon
+    - cronbeacon-dlq
+    - backpack-registry
+    - backpack-registry-dlq
     - migration-GRWS
+
+beacon:
+  client:
+    enabled: true
+    source: backpack-registry-coupons-migration-kafkapp-consumer
+    dlq-source: backpack-registry-coupons-migration-kafkapp-consumer-dlq
+    kafka:
+      consumer:
+        client-id: backpack-registry-coupons-migration-cron-beacon-consumer
+        topic: registry-internal-data-bus-stage
+        metrics-name: backpack-registry-coupons-migration-beacon-metrics
+        consumer-group: backpack-registry-coupons-migration-cron-beacon-consumer
+        consumer-batch-size: 1
+        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
+
+notification-tracer:
+  source: testtracerclient
+  dlq-source: testtracerclient-dlq
+  kafka:
+    producer:
+      enabled: true
+    topic: tracer-incoming-events
+
+registry:
+  baby:
+    sla: 7
+    coupon-types:
+      - STORE
+      - ONLINE
+  wedding:
+    sla: 56
+    coupon-types:
+      - STORE
+      - ONLINE
+  completion-coupon:
+    sla: 14
+    expiration-days: 180
+    coupon-assignment-hour-of-day: 2
+    coupon-assignment-minute-block-of-hour: 1

@@ -28,23 +28,23 @@ jackson:
 
 kafka:
   consumers:
-    lists-msg-bus-consumer-backpack-registry-coupons-migration:
+    backpack-registry-coupons-migration-bus-stage-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    lists-dlq-consumer-backpack-registry-coupons-migration:
+    backpack-registry-coupons-migration-bus-stage-dlq-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
-    lists-msg-bus-producer:
+    backpack-registry-coupons-migration-bus-stage-producer:
       retries: 3
       retry:
         backoff:
-          ms: 1_000
+          ms: 1000
       max:
         in:
           flight:
@@ -52,7 +52,7 @@ kafka:
               per:
                 connection: 1
         block:
-          ms: 2_000
+          ms: 2000
 
 components:
   server:
@@ -73,8 +73,8 @@ components:
 #    protocol: ssl
 
 msgbus:
-  source: backpack-registry-coupons-migration
-  dlq-source: backpack-registry-coupons-migration-dlq
+  source: backpack-registry-coupons-migration-consumer-app
+  dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
   kafka:
     consumer:
       enabled: true
@@ -84,11 +84,11 @@ msgbus:
       enabled: true
     dlqproducer:
       enabled: true
-    topic: lists-msg-bus
-    consumer-group: lists-msg-bus-consumer-backpack-registry-coupons-migration
+    topic: registry-internal-data-bus-stage
+    consumer-group: backpack-registry-coupons-migration-bus-stage-consumer
     consumer-batch-size: 10
-    dlq-topic: lists-dlq
-    dlq-consumer-group: lists-dlq-consumer-backpack-registry-coupons-migration
+    dlq-topic: registry-internal-data-bus-stage-dlq
+    dlq-consumer-group: backpack-registry-coupons-migration-bus-stage-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 3
     dlq-consumer-batch-size: 10
@@ -139,22 +139,23 @@ endpoints:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-migration
-    - backpack-registry-coupons-migration-dlq
+    - backpack-registry-coupons-migration-consumer-app
+    - backpack-registry-coupons-migration-consumer-app-dlq
     - cronbeacon
     - cronbeacon-dlq
     - backpack-registry
     - backpack-registry-dlq
+    - migration-GRWS
 
 beacon:
   client:
     enabled: true
-    source: lists-msg-bus-kafkapp-consumer
-    dlq-source: lists-msg-bus-kafkapp-consumer-dlq
+    source: backpack-registry-coupons-migration-kafkapp-consumer
+    dlq-source: backpack-registry-coupons-migration-kafkapp-consumer-dlq
     kafka:
       consumer:
         client-id: backpack-registry-coupons-migration-cron-beacon-consumer
-        topic: lists-msg-bus
+        topic: registry-internal-data-bus-stage
         metrics-name: backpack-registry-coupons-migration-beacon-metrics
         consumer-group: backpack-registry-coupons-migration-cron-beacon-consumer
         consumer-batch-size: 1
