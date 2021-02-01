@@ -6,6 +6,7 @@ import io.micronaut.data.annotation.DateCreated
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.Relation
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.annotation.Nullable
 import javax.persistence.Column
 import javax.persistence.Id
@@ -40,10 +41,10 @@ data class RegistryCoupons(
 
     @DateCreated
     @Column(name = "created_ts")
-    var createdTs: LocalDate? = null,
+    var createdTs: LocalDateTime? = null,
 
     @DateCreated
     @Column(name = "updated_ts")
-    var updatedTs: LocalDate? = null
+    var updatedTs: LocalDateTime? = null
 
 )

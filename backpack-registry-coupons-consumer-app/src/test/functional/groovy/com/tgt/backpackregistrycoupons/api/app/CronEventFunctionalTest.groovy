@@ -1,6 +1,7 @@
 package com.tgt.backpackregistrycoupons.api.app
 
 import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
 import com.tgt.backpackregistrycoupons.domain.model.Registry
@@ -71,7 +72,7 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(50), LocalDate.now().plusDays(1), false, null, null)
+        def registry = new Registry(registryId1, RegistryType.WEDDING,  RegistryStatus.@ACTIVE, LocalDate.now().minusDays(50), LocalDate.now().plusDays(1), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 

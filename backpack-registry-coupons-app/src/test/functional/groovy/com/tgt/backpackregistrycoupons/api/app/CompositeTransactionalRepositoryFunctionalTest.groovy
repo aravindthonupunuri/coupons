@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.api.app
 
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Coupons
 import com.tgt.backpackregistrycoupons.domain.model.Registry
@@ -10,7 +11,6 @@ import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryR
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
-import com.tgt.lists.atlas.api.type.LIST_STATE
 import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Shared
 import spock.lang.Stepwise
@@ -47,8 +47,8 @@ class CompositeTransactionalRepositoryFunctionalTest extends BasePersistenceFunc
 
     def "test save Registry and RegistryCoupons"() {
         given:
-        def registry1 = new Registry(registryId1, RegistryType.BABY, LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
-        def registry2 = new Registry(registryId2, RegistryType.WEDDING, LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
+        def registry1 = new Registry(registryId1, RegistryType.BABY, RegistryStatus.@ACTIVE, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def registry2 = new Registry(registryId2, RegistryType.WEDDING, RegistryStatus.@ACTIVE, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
 
         def coupons1 = new Coupons(couponCode1, CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(), LocalDateTime.now())
         def coupons2 = new Coupons(couponCode2, CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(1), "1", LocalDateTime.now(), LocalDateTime.now())

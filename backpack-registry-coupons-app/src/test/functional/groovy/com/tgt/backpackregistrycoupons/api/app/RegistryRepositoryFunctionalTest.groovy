@@ -1,6 +1,7 @@
  package com.tgt.backpackregistrycoupons.api.app
 
-import com.tgt.backpackregistryclient.util.RegistryType
+ import com.tgt.backpackregistryclient.util.RegistryStatus
+ import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
  import com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.CompositeTransactionalRepository
@@ -45,10 +46,10 @@ class RegistryRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test save Registry and RegistryCoupons"() {
         given:
-        def registry1 = new Registry(registryId1, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
-        def registry2 = new Registry(registryId2, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
-        def registry3 = new Registry(registryId3, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
-        def registry4 = new Registry(registryId4, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry1 = new Registry(registryId1, RegistryType.BABY,  RegistryStatus.@ACTIVE, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def registry2 = new Registry(registryId2, RegistryType.WEDDING,  RegistryStatus.@ACTIVE, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
+        def registry3 = new Registry(registryId3, RegistryType.WEDDING,  RegistryStatus.@ACTIVE, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry4 = new Registry(registryId4, RegistryType.WEDDING,  RegistryStatus.@INACTIVE, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
 
 
         def registryCoupons11 = new RegistryCoupons(couponCodes[0], registry1, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
@@ -108,7 +109,7 @@ class RegistryRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test findByCouponAssignmentComplete"() {
         when:
-        def result = registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false).collectList().block()
+        def result = registryRepository.findByRegistryStatusAndCouponAssignmentComplete(RegistryStatus.@ACTIVE, false).collectList().block()
 
         then:
         result != null
@@ -125,7 +126,7 @@ class RegistryRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test updateRegistryStatus"() {
         when:
-        def result1 = registryRepository.updateRegistryStatus(registryId1, LIST_STATE.ACTIVE.value).block()
+        def result1 = registryRepository.updateRegistryStatus(registryId1, RegistryStatus.@ACTIVE).block()
 
         then:
         result1 != null
@@ -137,7 +138,7 @@ class RegistryRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
         then:
         result2 != null
-        result2.registryStatus == LIST_STATE.ACTIVE.value
+        result2.registryStatus == RegistryStatus.@ACTIVE
     }
 
     def "test updateCouponAssignmentComplete"() {

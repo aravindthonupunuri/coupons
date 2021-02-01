@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.api.app
 
+import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.migration.model.CouponAssignmentNotifyEvent
@@ -8,7 +9,6 @@ import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
 import com.tgt.backpackregistrycoupons.test.util.RegistryDataProvider
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
-import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventLifecycleNotificationProvider
 import io.micronaut.configuration.kafka.annotation.KafkaClient
@@ -63,7 +63,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
 
     def "create new registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry = new Registry(registryId1, RegistryType.WEDDING,  RegistryStatus.@INACTIVE, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 

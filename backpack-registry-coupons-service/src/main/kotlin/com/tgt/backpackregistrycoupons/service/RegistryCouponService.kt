@@ -5,7 +5,6 @@ import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.transport.CouponsTO.Companion.toCouponsTOList
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
-import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.Duration
@@ -25,7 +24,7 @@ class RegistryCouponService(
         return registryRepository.getByRegistryId(registryId)
             .map {
                 val registryType = it.registryType
-                val registryStatus = RegistryStatus.toRegistryStatus(LIST_STATE.values().first { listState -> listState.value == it.registryStatus }.name)
+                val registryStatus = it.registryStatus
                 val couponCountDownDays: Long? =
                     if (registryStatus == RegistryStatus.ACTIVE) {
                         if (it.registryCoupons.isNullOrEmpty()) {
