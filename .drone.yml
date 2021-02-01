@@ -34,7 +34,7 @@ pipeline:
   publish-config-backpack-registry-coupons-dev:
     when:
       event: [push]
-      branch: migration_cluster
+      branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
       CICD_MODE: 'true'
@@ -98,7 +98,7 @@ pipeline:
       - latest
     when:
       event: [push]
-      branch: migration_cluster
+      branch: master
     secrets:
       - {source: artifactory_username, target: plugin_username}
       - {source: artifactory_password, target: plugin_password}
@@ -114,7 +114,7 @@ pipeline:
       - latest
     when:
       event: [push]
-      branch: migration_cluster
+      branch: master
     secrets:
       - {source: artifactory_username, target: plugin_username}
       - {source: artifactory_password, target: plugin_password}
@@ -130,7 +130,7 @@ pipeline:
       - latest
     when:
       event: [ push ]
-      branch: migration_cluster
+      branch: master
     secrets:
       - { source: artifactory_username, target: plugin_username }
       - { source: artifactory_password, target: plugin_password }
@@ -146,7 +146,7 @@ pipeline:
       - latest
     when:
       event: [ push ]
-      branch: migration_cluster
+      branch: master
     secrets:
       - { source: artifactory_username, target: plugin_username }
       - { source: artifactory_password, target: plugin_password }
