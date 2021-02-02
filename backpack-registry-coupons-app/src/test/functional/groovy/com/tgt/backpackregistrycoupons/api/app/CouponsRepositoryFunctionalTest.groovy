@@ -85,14 +85,6 @@ class CouponsRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
         then:
         result.size() ==  4
     }
-
-//    def "test findTop1ByCouponTypeInListAndRegistryType"() {
-//        when:
-//        def result = couponsRepository.findTop1ByCouponTypeInListAndRegistryType([CouponType.ONLINE, CouponType.STORE] as List, RegistryType.BABY).block()
-//
-//        then:
-//        result != null
-//    }
 }
 
 
