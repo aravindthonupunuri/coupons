@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -38,7 +41,19 @@ data class RegistryCouponMetaDataTO(
     @JsonDeserialize(using = LocalDateDeserializer::class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("coupon_expiry_date")
-    val couponExpiryDate: LocalDate? = null
+    val couponExpiryDate: LocalDate? = null,
+
+    @JsonProperty("added_date_time")
+    @JsonSerialize(using = LocalDateTimeSerializer::class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer::class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    val addedDate: LocalDateTime? = null,
+
+    @JsonProperty("last_modified_date_time")
+    @JsonSerialize(using = LocalDateTimeSerializer::class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer::class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    val lastModifiedDate: LocalDateTime? = null
 ) {
     companion object {
         const val REGISTRY_COUPON_METADATA = "registry-coupon-metadata"
