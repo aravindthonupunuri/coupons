@@ -3,6 +3,7 @@ package com.tgt.backpackregistrycoupons.domain.model
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
 import io.micronaut.data.annotation.DateCreated
+import io.micronaut.data.annotation.DateUpdated
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.Relation
 import java.time.LocalDate
@@ -43,7 +44,7 @@ data class RegistryCoupons(
     @Column(name = "created_ts")
     var createdTs: LocalDateTime? = null,
 
-    @DateCreated
+    @DateUpdated
     @Column(name = "updated_ts")
     var updatedTs: LocalDateTime? = null
 

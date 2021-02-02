@@ -3,13 +3,14 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
+import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 import java.util.*
 import javax.inject.Inject
@@ -24,15 +25,17 @@ private val logger = KotlinLogging.logger { CreateListNotifyEventService::class.
 fun processCreateListNotifyEvent(
     guestId: String,
     registryId: UUID,
-    registryStatus: RegistryStatus,
+    registryStatus: LIST_STATE,
     registryType: RegistryType,
     registryCreatedDate: LocalDate,
     eventDate: LocalDate,
+    addedDate: LocalDateTime?,
+    lastModifiedDate: LocalDateTime?,
     retryState: RetryState
 ): Mono<RetryState> {
     return if (retryState.incompleteState()) {
         logger.debug("From processCreateListNotifyEvent(), starting processing")
-        return addGuestRegistry(guestId, registryId, registryStatus, registryType, registryCreatedDate, eventDate)
+        return addGuestRegistry(guestId, registryId, registryStatus, registryType, registryCreatedDate, eventDate, addedDate, lastModifiedDate)
             .map {
                 retryState.addGuestRegistry = it
                 retryState
@@ -46,13 +49,15 @@ fun processCreateListNotifyEvent(
 fun addGuestRegistry(
     guestId: String,
     registryId: UUID,
-    registryStatus: RegistryStatus,
+    registryStatus: LIST_STATE,
     registryType: RegistryType,
     registryCreatedDate: LocalDate,
-    eventDate: LocalDate
+    eventDate: LocalDate,
+    addedDate: LocalDateTime?,
+    lastModifiedDate: LocalDateTime?
 ): Mono<Boolean> {
     // The RegistryStatus is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the registry.
-    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus, registryCreatedDate, eventDate, false, null, null))
+    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, addedDate, lastModifiedDate))
         .map { true }
         .onErrorResume {
             logger.error("Exception from addGuestRegistry() for guestID: $guestId and registryId: $registryId," +

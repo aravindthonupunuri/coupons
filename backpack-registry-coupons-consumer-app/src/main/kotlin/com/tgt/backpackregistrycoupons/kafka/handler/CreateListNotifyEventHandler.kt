@@ -1,7 +1,6 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistryclient.transport.RegistryMetaDataTO
-import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType.Companion.toRegistryType
 import com.tgt.backpackregistrycoupons.service.async.CreateListNotifyEventService
 import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
@@ -35,10 +34,12 @@ class CreateListNotifyEventHandler(
         return createListNotifyEventService.processCreateListNotifyEvent(
             guestId = createListNotifyEvent.guestId,
             registryId = createListNotifyEvent.listId,
-            registryStatus = RegistryStatus.toRegistryStatus(createListNotifyEvent.listState!!.name),
+            registryStatus = createListNotifyEvent.listState!!,
             registryType = toRegistryType(createListNotifyEvent.listSubType!!), // defaulted to baby
             registryCreatedDate = LocalDate.now(), // TODO: createListNotifyEvent not having registry create ts
             eventDate = RegistryMetaDataTO.toEntityRegistryMetadata(createListNotifyEvent.userMetaData)?.event?.eventDate!!,
+            addedDate = createListNotifyEvent.addedDate,
+            lastModifiedDate = createListNotifyEvent.lastModifiedDate,
             retryState = processingState
         ).map {
                 if (it.completeState()) {

@@ -1,7 +1,6 @@
 package com.tgt.backpackregistrycoupons.api.app
 
 import com.tgt.backpackregistryclient.transport.RegistryEventTO
-import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
@@ -63,7 +62,7 @@ class UpdateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create new registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  RegistryStatus.@INACTIVE, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 
@@ -115,7 +114,7 @@ class UpdateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
         then:
         result != null
         result.registryId == registryId1
-        result.registryStatus == RegistryStatus.@ACTIVE
+        result.registryStatus == LIST_STATE.ACTIVE.value
         result.eventDate == LocalDate.of(2100,02,01)
 
 

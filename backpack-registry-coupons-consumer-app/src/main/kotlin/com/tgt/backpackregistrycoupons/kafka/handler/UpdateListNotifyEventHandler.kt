@@ -1,7 +1,6 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistryclient.transport.RegistryMetaDataTO
-import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.service.async.UpdateListNotifyEventService
 import com.tgt.lists.atlas.kafka.model.UpdateListNotifyEvent
 import com.tgt.lists.msgbus.event.EventHeaderFactory
@@ -32,7 +31,7 @@ class UpdateListNotifyEventHandler(
 
         return updateListNotifyEventService.processUpdateListNotifyEvent(
             registryId = updateListNotifyEvent.listId,
-            registryStatus = RegistryStatus.toRegistryStatus(updateListNotifyEvent.listState!!.name),
+            registryStatus = updateListNotifyEvent.listState!!,
             eventDate = RegistryMetaDataTO.toEntityRegistryMetadata(updateListNotifyEvent.userMetaData)?.event?.eventDate!!,
             retryState = processingState
         ).map {

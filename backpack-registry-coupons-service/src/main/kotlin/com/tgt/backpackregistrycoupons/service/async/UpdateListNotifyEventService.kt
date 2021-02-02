@@ -3,9 +3,9 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
+import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.LocalDate
@@ -21,7 +21,7 @@ private val logger = KotlinLogging.logger { UpdateListNotifyEventService::class.
 
 fun processUpdateListNotifyEvent(
     registryId: UUID,
-    registryStatus: RegistryStatus,
+    registryStatus: LIST_STATE,
     eventDate: LocalDate,
     retryState: RetryState
 ): Mono<RetryState> {
@@ -81,11 +81,11 @@ private fun updateEventDate(
 private fun updateRegistryStatus(
     registry: Registry,
     registryId: UUID,
-    registryStatus: RegistryStatus,
+    registryStatus: LIST_STATE,
     retryState: RetryState
 ): Mono<RetryState> {
-    return if (registry.registryStatus != registryStatus) {
-        registryRepository.updateRegistryStatus(registryId, registryStatus).map { true }
+    return if (registry.registryStatus != registryStatus.value) {
+        registryRepository.updateRegistryStatus(registryId, registryStatus.value).map { true }
             .onErrorResume {
                 logger.error("Exception from updateRegistryStatus() for registryId: $registryId and " +
                     "registryStatus $registryStatus sending it for retry", it)
