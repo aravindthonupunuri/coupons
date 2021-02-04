@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 1.0.2
+  version: 1.0.3
   title: registries_coupons-v1
   description: Api to get list of registry coupons associated with the registries
 host: api.target.com
@@ -13,7 +13,7 @@ consumes:
   - application/json
 x-api-definition:
   dependencies: []
-  api_name: registry_coupons-v1
+  api_name: registries_coupons-v1
   personnel:
     portfolio: Digital
     owner: Indrakumar.Thimmaiah
@@ -51,7 +51,7 @@ x-api-definition:
     - description: slack
       id: GQ10ZD7UZ
   slack_channel_id: GQ10ZD7UZ
-  nuid_ad_groups: null
+  nuid_ad_groups: [APP-BACKPACK-REGISTRY-PROD-READ]
   risk_rating: MEDIUM
   last_pentest_date: null
   links:
@@ -71,13 +71,13 @@ x-api-definition:
     api_spec: https://git.target.com/Registry-Modernization/backpack_registrycoupons/blob/master/api-spec/backpack-registry-coupons-v1.yml
   endpoints:
     external:
-      production: https://api.target.com/registry_coupons/v1
-      stage: https://stage-api.target.com/registry_coupons/v1
+      production: https://api.target.com/registries_coupons/v1
+      stage: https://stage-api.target.com/registries_coupons/v1
       qa: null
       ci: null
     internal:
-      production: https://api-internal.target.com/registry_coupons/v1
-      stage: https://stgapi-internal.target.com/registry_coupons/v1
+      production: https://api-internal.target.com/registries_coupons/v1
+      stage: https://stgapi-internal.target.com/registries_coupons/v1
       qa: null
       ci: null
 securityDefinitions:
