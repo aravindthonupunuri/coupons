@@ -74,7 +74,7 @@ class UpdateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
     def "Test UpdateListNotifyEvent, update event date and registry status"() {
         given:
         PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
-        def registryMetaData = registryDataProvider.getRegistryMetaDataMap(UUID.randomUUID(), false, false, null, null, new RegistryEventTO("city", "state", "country", LocalDate.of(2100,02,01)), null, null, null, null)
+        def registryMetaData = registryDataProvider.getRegistryMetaDataMap(UUID.randomUUID(), "1234", false, false, null, null, new RegistryEventTO("city", "state", "country", LocalDate.of(2100,02,01)), null, null, null, null, "abcd", "xyz")
         def event = new UpdateListNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), "title", "channel", "subChannel", LIST_STATE.ACTIVE, registryMetaData ,LocalDate.now().plusDays(50),null,
         null, null, null, null)
 

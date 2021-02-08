@@ -57,7 +57,7 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     RegistryDataProvider registryDataProvider = new RegistryDataProvider()
 
-    def getDetailsURI = "/registries/v2/"+registryId1+"/get_details"
+    def getDetailsURI = "/registries/v2/"+registryId1+"/summary_details"
 
     def setupSpec() {
         testEventListener = new TestEventListener()

@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 1.0.3
+  version: 1.0.4
   title: registries_coupons-v1
   description: Api to get list of registry coupons associated with the registries
 host: api.target.com
@@ -174,7 +174,7 @@ paths:
         - name: registry_type
           in: query
           description: The registry type for which coupons will be used
-          enum: [ "BABY", "WEDDING"]
+          enum: [ "BABY", "WEDDING", "CUSTOM", "CHARITY"]
           required: true
           type: string
         - name: coupon_type
@@ -264,6 +264,8 @@ definitions:
     enum:
       - BABY
       - WEDDING
+      - CUSTOM
+      - CHARITY
 
   CouponType:
     type: string
