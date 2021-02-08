@@ -25,6 +25,7 @@ import spock.util.concurrent.PollingConditions
 
 import javax.inject.Inject
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.stream.Collectors
 
 @MicronautTest
@@ -75,7 +76,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
     def "Test CouponAssignmentNotifyEvent"() {
         given:
         PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
-        def registryCouponMetaData = registryDataProvider.getRegistryCouponMetaDataMap(onlineCouponCode, CouponRedemptionStatus.AVAILABLE, storeCouponCode, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now())
+        def registryCouponMetaData = registryDataProvider.getRegistryCouponMetaDataMap(onlineCouponCode, CouponRedemptionStatus.AVAILABLE, storeCouponCode, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now(), LocalDateTime.now(), LocalDateTime.now())
         def event = new CouponAssignmentNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), registryCouponMetaData,null)
 
         testEventListener.preDispatchLambda = new PreDispatchLambda() {

@@ -14,6 +14,7 @@ class RegistryDataProvider {
 
     fun getRegistryMetaDataMap(
         profileAddressId: UUID?,
+        alternateRegistryId: String?,
         giftCardsEnabled: Boolean?,
         groupGiftEnabled: Boolean?,
         groupGiftAmount: String?,
@@ -22,10 +23,13 @@ class RegistryDataProvider {
         babyRegistry: RegistryBabyTO?,
         guestRulesMetaData: RegistryGuestRuleMetaDataTO?,
         imageMetaData: RegistryImageMetaDataTO?,
-        customUrl: String?
+        customUrl: String?,
+        organizationName: String?,
+        occasionName: String?
     ): Map<String, Any>? {
-        return toUserMetaData(RegistryMetaDataTO.toStringRegistryMetadata(RegistryMetaDataTO(profileAddressId, giftCardsEnabled, groupGiftEnabled,
-            groupGiftAmount, recipients, event, babyRegistry, guestRulesMetaData, imageMetaData, customUrl)))?.metadata
+        return toUserMetaData(RegistryMetaDataTO.toStringRegistryMetadata(RegistryMetaDataTO(profileAddressId, alternateRegistryId,
+            giftCardsEnabled, groupGiftEnabled, groupGiftAmount, recipients, event, babyRegistry, guestRulesMetaData, imageMetaData,
+            customUrl, organizationName, occasionName)))?.metadata
     }
 
     fun getRegistryCouponMetaDataMap(
@@ -34,10 +38,12 @@ class RegistryDataProvider {
         storeCouponCode: String,
         storeCouponStatus: CouponRedemptionStatus,
         couponIssueDate: LocalDate,
-        couponExpiryDate: LocalDate
+        couponExpiryDate: LocalDate,
+        addedDate: LocalDateTime,
+        lastModifiedTime: LocalDateTime
     ): Map<String, Any>? {
         return toUserMetaData(RegistryCouponMetaDataTO.toStringRegistryCouponMetadata(RegistryCouponMetaDataTO(onlineCouponCode, onlineCouponStatus, storeCouponCode,
-                    storeCouponStatus, couponIssueDate, couponExpiryDate)))?.metadata
+                    storeCouponStatus, couponIssueDate, couponExpiryDate, addedDate, lastModifiedTime)))?.metadata
     }
 
     fun createCronEvent(eventLocalDateTime: LocalDateTime, minuteBlockOfHour: Long, eventIntervalMinutes: Long, timeZoneId: ZoneId): CronEvent {
