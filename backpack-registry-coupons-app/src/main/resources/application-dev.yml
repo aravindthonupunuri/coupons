@@ -42,12 +42,10 @@ filter:
       onbehalf-filter: 51
       lists-brave-tracing-server-filter: 100
       list-authorization-filter: 200
-      id2-groupvalidation-filter: 201
       sanitizing-filter: 300
   client:
     order:
       lists-brave-tracing-client-filter: 900
-      id2-groupvalidation-filter: 200
       resilience-client-filter: 800
       oauth-filter: 701
       oauth-key-filter: 700
@@ -91,16 +89,6 @@ components:
     classes:
       - com.tgt.lists.common.components.exception.BaseErrorCodes #Haven't defined app specific error codes yet
   server:
-    id2-groupvalidation-filter:
-      enabled: true
-      base-uri: /lists_permissions/v1
-      ad-group-permissions:
-        post-access:
-          permissions[0]:
-            groups:
-              - APP-BACKPACK-REGISTRY-STG-READ
-            urls:
-              - /lists_permissions/v1**
     onbehalf-filter:
       enabled: true
       gsp-validation-base-url: "https://backpackregistrycoupons.dev.target.com"
@@ -113,6 +101,13 @@ components:
     list-authorization-filter:
       enabled: false
       base-uri: /backpackregistrycoupons
+    ad-group-permissions:
+      post-access:
+        permissions[0]:
+          groups:
+            - APP-BACKPACK-REGISTRY-STG-READ
+          urls:
+            - /uploads
     id2-custom-scopes:
       names:
         - axiom.user
@@ -136,10 +131,10 @@ msgbus:
       enabled: false
     dlqproducer:
       enabled: true
-    topic: registry-internal-data-bus-stage
+    topic: registry-internal-data-bus-dev
     consumer-group: backpack-registry-coupons-bus-stage
     consumer-batch-size: 10
-    dlq-topic: registry-internal-data-bus-stage-dlq
+    dlq-topic: registry-internal-data-bus-dev-dlq
     dlq-consumer-group: backpack-registry-coupons-bus-stage-dlq
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
@@ -151,7 +146,7 @@ notification-tracer:
   kafka:
     producer:
       enabled: true
-    topic: registry-internal-data-bus-stage
+    topic: registry-internal-data-bus-dev
 
 registry:
   baby:
