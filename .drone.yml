@@ -129,7 +129,7 @@ pipeline:
     registry: docker.target.com
     repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
     dockerfile: ./backpack-registry-coupons-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:38}'
+    tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
       branch: stage_setup
@@ -193,7 +193,7 @@ pipeline:
     registry: docker.target.com
     repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
     dockerfile: ./backpack-registry-coupons-migration-consumer-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:38}'
+    tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
       branch: stage_setup
@@ -224,7 +224,7 @@ pipeline:
     registry: docker.target.com
     repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
     dockerfile: ./backpack-registry-coupons-promo-consumer-app/Dockerfile
-    tags: 'rc.${DRONE_TAG:38}'
+    tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
       branch: stage_setup
