@@ -59,6 +59,6 @@ class RegistryDataProvider {
     }
 
     fun getRegistryDetails(registryId: String): RegistryDetailsResponseTO {
-        return RegistryDetailsResponseTO(UUID.fromString(registryId), "", "", null, null, "regfname", "reglname", "coregfname", "coreglname", LocalDate.now())
+        return RegistryDetailsResponseTO(UUID.fromString(registryId), "", "", null, null, null, "regfname", "reglname", "coregfname", "coreglname", LocalDate.now())
     }
 }
