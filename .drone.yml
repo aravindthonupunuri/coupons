@@ -53,7 +53,7 @@ pipeline:
   publish-config-backpack-registry-coupons-stage:
     when:
       event: tag
-      branch: stage_setup
+      branch: master
       ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
@@ -132,7 +132,7 @@ pipeline:
     tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
-      branch: stage_setup
+      branch: master
       ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
     secrets:
       - {source: artifactory_username, target: plugin_username}
@@ -163,7 +163,7 @@ pipeline:
     tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
-      branch: stage_setup
+      branch: master
       ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
     secrets:
       - {source: artifactory_username, target: plugin_username}
@@ -194,7 +194,7 @@ pipeline:
     tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
-      branch: stage_setup
+      branch: master
       ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
     secrets:
       - { source: artifactory_username, target: plugin_username }
@@ -225,7 +225,7 @@ pipeline:
     tags: 'rc.${DRONE_TAG:35}'
     when:
       event: tag
-      branch: stage_setup
+      branch: master
       ref: 'refs/tags/conf.stage.backpackregistrycoupons.*'
     secrets:
       - { source: artifactory_username, target: plugin_username }
