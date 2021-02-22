@@ -14,7 +14,7 @@ import com.tgt.lists.atlas.api.type.LIST_STATE
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Shared
 import static com.tgt.backpackregistrycoupons.test.DataProvider.*
 

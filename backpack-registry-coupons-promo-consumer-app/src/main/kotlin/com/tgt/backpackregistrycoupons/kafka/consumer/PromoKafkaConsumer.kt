@@ -24,13 +24,14 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @KafkaListener(
-    clientId = ("\${promo.kafka.consumer.client-id}"),
+    clientId = ("ex\${APP_UUID}"),
     batch = true,
     offsetReset = OffsetReset.EARLIEST,
     groupId = ("\${promo.kafka.consumer.consumer-group}"),
     offsetStrategy = OffsetStrategy.DISABLED
 )
 class PromoKafkaConsumer<K, V>(
+    @Value("ex\${APP_UUID}") val clientId: String,
     @Value("\${promo.kafka.consumer.consumer-group}") val consumerName: String,
     @Value("\${promo.source}") val defaultEventSource: String,
     @Value("\${promo.kafka.consumer.consumer-batch-size}") val consumerBatchSize: Int,
@@ -48,6 +49,7 @@ class PromoKafkaConsumer<K, V>(
     @Inject val mdcContext: MdcContext? = null
 ) : GenericConsumer<K, V>(
     consumerName,
+    clientId,
     defaultEventSource,
     consumerRegistry,
     eventDispatcher,

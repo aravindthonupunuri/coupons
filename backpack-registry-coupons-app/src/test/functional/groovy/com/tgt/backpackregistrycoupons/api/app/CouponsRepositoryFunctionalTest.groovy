@@ -5,7 +5,7 @@ import com.tgt.backpackregistrycoupons.domain.model.Coupons
 import com.tgt.backpackregistrycoupons.persistence.repository.coupons.CouponsRepository
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.util.CouponType
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Stepwise
 
 import javax.inject.Inject

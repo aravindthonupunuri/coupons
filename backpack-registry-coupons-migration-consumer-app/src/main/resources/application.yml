@@ -138,7 +138,7 @@ kafka:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
-    backpack-registry-coupons-migration-bus-stage-producer:
+    backpack-registry-coupons-migration-data-bus-stage-producer:
       retries: 3
       retry:
         backoff:
