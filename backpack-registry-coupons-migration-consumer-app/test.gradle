@@ -29,11 +29,13 @@ tasks.withType(Test) {
 }
 
 test {
+    environment "container", "true"
     useJUnitPlatform()
     dependsOn testFunctional
 }
 
 testFunctional {
+    environment "container", "true"
     useJUnitPlatform()
 }
 

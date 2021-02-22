@@ -47,7 +47,7 @@ class BaseKafkaFunctionalTest extends BasePersistenceFunctionalTest implements T
     Map<String, String> getProperties() {
         def map = super.getProperties()
         String kafkaBootstrapServers = System.getenv("KAFKA_BOOTSTRAP_SERVERS")
-
+        System.setProperty("APP_UUID", UUID.randomUUID().toString())
         if (kafkaBootstrapServers == null) {
             LOG.info("Using testcontainer kafka")
 

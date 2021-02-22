@@ -10,7 +10,7 @@ import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
  import com.tgt.lists.atlas.api.type.LIST_STATE
- import io.micronaut.test.annotation.MicronautTest
+ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Shared
 import spock.lang.Stepwise
 

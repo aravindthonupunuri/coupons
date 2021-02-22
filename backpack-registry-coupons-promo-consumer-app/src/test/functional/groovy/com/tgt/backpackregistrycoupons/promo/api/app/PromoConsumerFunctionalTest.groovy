@@ -20,7 +20,7 @@ import com.tgt.lists.msgbus.GenericConsumer
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventLifecycleNotificationProvider
 import io.micronaut.context.annotation.Value
-import io.micronaut.test.annotation.MicronautTest
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.opentracing.Tracer
 import org.jetbrains.annotations.NotNull
 import spock.lang.Ignore
