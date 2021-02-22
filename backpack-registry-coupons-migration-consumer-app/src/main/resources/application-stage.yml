@@ -67,10 +67,9 @@ beacon:
     dlq-source: backpack-registry-coupons-migration-kafkapp-consumer-dlq
     kafka:
       consumer:
-        client-id: backpack-registry-coupons-migration-consumer-app-cron-beacon
         topic: registry-internal-data-bus-stage
         metrics-name: backpack-registry-coupons-migration-beacon-metrics
-        consumer-group: backpack-registry-coupons-migration-consumer-app-cron-beacon
+        consumer-group: backpack-registry-coupons-migration-consumer-app-stage-cron-beacon
         consumer-batch-size: 1
         max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
 
