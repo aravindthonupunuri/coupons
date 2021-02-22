@@ -78,6 +78,17 @@ kafka-sources:
     - backpack-registry-coupons-promo-consumer-app
     - backpack-registry-coupons-promo-consumer-app-dlq
 
+promo:
+  source: promo
+  kafka:
+    consumer:
+      topic: promo-coupon-redemption-notifications-v2
+      metrics-name: promo-producer
+      consumer-group: promo-msg-consumer-stage
+      default-event-type: promo-update-event
+      consumer-batch-size: 10
+      max-count-down-latch-wait-time: 10 # in seconds
+
 kafka:
   bootstrap:
     servers: ${kafkaenv.servers}
