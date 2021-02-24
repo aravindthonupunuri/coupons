@@ -228,7 +228,7 @@ allprojects {
         publications {
             client(MavenPublication) {
                 artifactId = 'backpack-coupons-client'
-                version = System.properties["VERSION"]
+                version = '2.201.0'
                 artifact tasks.clientJar
                 artifact tasks.clientSourcesJar
             }
