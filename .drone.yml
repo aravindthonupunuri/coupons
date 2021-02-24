@@ -233,9 +233,8 @@ pipeline:
 
   publish-client:
     when:
-      event: tag
-      branch: master
-      ref: 'refs/tags/client.*'
+      event: push
+      branch: coupons_jar
     image: openjdk:11
     environment:
       JAVA_TOOL_OPTIONS: -Xmx3000M

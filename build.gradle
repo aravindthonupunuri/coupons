@@ -200,7 +200,7 @@ allprojects {
             mask = "*.kt,"
         }
     }
-    def clientJarName = 'backpack-registry-coupons-client'
+    def clientJarName = 'backpack-coupons-client'
     task clientJar(type: Jar, dependsOn: classes) {
         baseName = clientJarName
         version =  System.properties["VERSION"]
@@ -227,7 +227,7 @@ allprojects {
     publishing {
         publications {
             client(MavenPublication) {
-                artifactId = 'backpack-registry-coupons-client'
+                artifactId = 'backpack-coupons-client'
                 version = System.properties["VERSION"]
                 artifact tasks.clientJar
                 artifact tasks.clientSourcesJar
