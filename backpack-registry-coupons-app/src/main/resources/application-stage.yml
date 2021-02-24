@@ -65,8 +65,8 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-app
-  dlq-source: backpack-registry-coupons-app-dlq
+  source: backpack-registry-coupons-app-stage
+  dlq-source: backpack-registry-coupons-app-dlq-stage
   kafka:
     consumer:
       enabled: false
@@ -88,8 +88,8 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 notification:
-  source: backpack-registry-coupons-app
-  dlq-source: backpack-registry-coupons-app-dlq
+  source: backpack-registry-coupons-app-stage
+  dlq-source: backpack-registry-coupons-app-dlq-stage
   enabled: true
 
 kafka:

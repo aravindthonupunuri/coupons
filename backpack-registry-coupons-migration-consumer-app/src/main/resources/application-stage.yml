@@ -55,16 +55,16 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 notification:
-  source: backpack-registry-coupons-migration-consumer-app
-  dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
+  source: backpack-registry-coupons-migration-consumer-app-stage
+  dlq-source: backpack-registry-coupons-migration-consumer-app-dlq-stage
   enabled: false
 
 
 beacon:
   client:
     enabled: false
-    source: backpack-registry-coupons-migration-kafkapp-consumer
-    dlq-source: backpack-registry-coupons-migration-kafkapp-consumer-dlq
+    source: backpack-registry-coupons-migration-consumer-app-stage
+    dlq-source: backpack-registry-coupons-migration-consumer-app-dlq-stage
     kafka:
       consumer:
         topic: registry-internal-data-bus-stage
@@ -75,12 +75,12 @@ beacon:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-migration-consumer-app
-    - backpack-registry-coupons-migration-consumer-app-dlq
-    - cronbeacon
-    - cronbeacon-dlq
-    - backpack-registry
-    - backpack-registry-dlq
+    - backpack-registry-coupons-migration-consumer-app-stage
+    - backpack-registry-coupons-migration-consumer-app-dlq-stage
+    - cronbeacon-stage
+    - cronbeacon-dlq-stage
+    - backpack-registry-stage
+    - backpack-registry-dlq-stage
     - migration-GRWS
 
 kafka:
@@ -98,12 +98,12 @@ kafka:
   security:
     protocol: ssl
   consumers:
-    backpack-registry-coupons-migration-bus-stage-consumer:
+    backpack-registry-coupons-migration-data-bus-stage-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    backpack-registry-coupons-migration-bus-stage-dlq-consumer:
+    backpack-registry-coupons-migration-data-bus-stage-dlq-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:

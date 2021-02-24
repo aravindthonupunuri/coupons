@@ -32,19 +32,19 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-promo-consumer-app
-  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq
+  source: backpack-registry-coupons-promo-consumer-app-stage
+  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-stage
   kafka:
     consumer:
       enabled: false
     producer:
       enabled: true
-      client-id: backpack-registry-coupons-promo-consumer-data-bus-stage-producer
+      client-id: backpack-registry-coupons-promo-data-bus-stage-producer
     dlqconsumer:
       enabled: false
     dlqproducer:
       enabled: true
-      client-id: backpack-registry-coupons-promo-consumer-data-bus-stage-dlq-producer
+      client-id: backpack-registry-coupons-promo-data-bus-stage-dlq-producer
     topic: registry-internal-data-bus-stage
     consumer-group: backpack-registry-coupons-promo-data-bus-stage-consumer
     consumer-batch-size: 50
@@ -55,15 +55,15 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 notification:
-  source: backpack-registry-coupons-promo-consumer-app
-  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq
+  source: backpack-registry-coupons-promo-consumer-app-stage
+  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-stage
   enabled: false
 
 beacon:
   client:
     enabled: false
-    source: backpack-registry-coupons-promo-consumer-app
-    dlq-source: backpack-registry-coupons-promo-consumer-app-dlq
+    source: backpack-registry-coupons-promo-consumer-app-stage
+    dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-stage
     kafka:
       consumer:
         client-id: backpack-registry-coupons-promo-consumer-app-cron-beacon-consumer
@@ -75,8 +75,8 @@ beacon:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-promo-consumer-app
-    - backpack-registry-coupons-promo-consumer-app-dlq
+    - backpack-registry-coupons-promo-consumer-app-stage
+    - backpack-registry-coupons-promo-consumer-app-dlq-stage
 
 promo:
   source: promo

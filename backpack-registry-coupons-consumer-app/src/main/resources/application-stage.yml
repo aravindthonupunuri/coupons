@@ -43,19 +43,19 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-consumer-app
-  dlq-source: backpack-registry-coupons-consumer-app-dlq
+  source: backpack-registry-coupons-consumer-app-stage
+  dlq-source: backpack-registry-coupons-consumer-app-dlq-stage
   kafka:
     consumer:
       enabled: true
     producer:
       enabled: true
-      client-id: backpack-registry-coupons-consumer-data-bus-stage-producer
+      client-id: backpack-registry-coupons-data-bus-stage-producer
     dlqconsumer:
       enabled: true
     dlqproducer:
       enabled: true
-      client-id: backpack-registry-coupons-consumer-data-bus-stage-dlq-producer
+      client-id: backpack-registry-coupons-data-bus-stage-dlq-producer
     topic: registry-internal-data-bus-stage
     consumer-group: backpack-registry-coupons-data-bus-stage-consumer
     consumer-batch-size: 50
@@ -66,15 +66,15 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 notification:
-  source: backpack-registry-coupons-consumer-app
-  dlq-source: backpack-registry-coupons-consumer-app-dlq
+  source: backpack-registry-coupons-consumer-app-stage
+  dlq-source: backpack-registry-coupons-consumer-app-dlq-stage
   enabled: true
 
 beacon:
   client:
     enabled: true
-    source: backpack-registry-coupons-consumer-app
-    dlq-source: backpack-registry-coupons-consumer-app-dlq
+    source: backpack-registry-coupons-consumer-app-stage
+    dlq-source: backpack-registry-coupons-consumer-app-dlq-stage
     kafka:
       consumer:
         client-id: backpack-registry-coupons-consumer-app-cron-beacon-consumer
@@ -86,13 +86,13 @@ beacon:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-consumer-app
-    - backpack-registry-coupons-consumer-app-dlq
-    - cronbeacon
-    - cronbeacon-dlq
-    - backpack-registry
-    - backpack-registry-dlq
-    - backpackregistry-migration
+    - backpack-registry-coupons-consumer-app-stage
+    - backpack-registry-coupons-consumer-app-dlq-stage
+    - cronbeacon-stage
+    - cronbeacon-dlq-stage
+    - backpack-registry-stage
+    - backpack-registry-dlq-stage
+    - backpackregistry-migration-stage
 
 kafka:
   bootstrap:
@@ -109,12 +109,12 @@ kafka:
   security:
     protocol: ssl
   consumers:
-    backpack-registry-coupons-bus-stage-consumer:
+    backpack-registry-coupons-data-bus-stage-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    backpack-registry-coupons-bus-stage-dlq-consumer:
+    backpack-registry-coupons-data-bus-stage-dlq-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
@@ -126,7 +126,7 @@ kafka:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
-    backpack-registry-coupons-bus-stage-producer:
+    backpack-registry-coupons-data-bus-stage-producer:
       retries: 3
       retry:
         backoff:
