@@ -200,49 +200,6 @@ allprojects {
             mask = "*.kt,"
         }
     }
-    def clientJarName = 'backpack-coupons-client'
-    task clientJar(type: Jar, dependsOn: classes) {
-        baseName = clientJarName
-        version =  System.properties["VERSION"]
-        includeEmptyDirs = false
-        from (sourceSets.main.output)
-        from (project(':backpack-registry-coupons-service').sourceSets.main.output) {
-            // exclude backpack-registry-coupons-service module's META-INF/services
-            exclude "**\\META-INF\\services\\**\\*"
-        }
-        // META-INF/services should be included when any of the included classes use micronaut annotations e.g. @Client, @Filter etc.
-        // Include Enum classes with <Classname>* rather than <Classname>.* as it may cause issues with Enums using companion objects
-        // Include micronaut's $ prefixed and suffixed classes for compiled time injection to work
-        include ("**\\META-INF\\services\\**\\*", "**\\transport\\**\\*", "**\\util\\**")
-    }
-    task clientSourcesJar(type: Jar, dependsOn: classes) {
-        baseName = clientJarName
-        version =  System.properties["VERSION"]
-        classifier = 'sources'
-        includeEmptyDirs = false
-        from (project(':backpack-registry-coupons-service').sourceSets.main.kotlin, sourceSets.main.kotlin)
-        include ("**\\transport\\**\\*", "**\\util\\**")
-    }
-
-    publishing {
-        publications {
-            client(MavenPublication) {
-                artifactId = 'backpack-coupons-client'
-                version = '2.201.0'
-                artifact tasks.clientJar
-                artifact tasks.clientSourcesJar
-            }
-        }
-        repositories {
-            maven {
-                credentials {
-                    username = System.getProperty('USERNAME')
-                    password = System.getProperty('PASSWORD')
-                }
-                url 'https://binrepo.target.com/artifactory/lists-v4'
-            }
-        }
-    }
 }
 
 task downloadDependencies() {
@@ -254,6 +211,18 @@ task downloadDependencies() {
                     c.files
                 }
             }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            credentials {
+                username = System.getProperty('USERNAME')
+                password = System.getProperty('PASSWORD')
+            }
+            url 'https://binrepo.target.com/artifactory/lists-v4'
         }
     }
 }
