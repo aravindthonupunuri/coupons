@@ -243,7 +243,7 @@ pipeline:
       GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false
     commands:
       - ./gradlew clean build publish -DUSERNAME=$ARTIFACTORY_USERNAME -DPASSWORD=$ARTIFACTORY_PASSWORD -DVERSION="${DRONE_TAG}"
-      secrets: [ ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD ]
+    secrets: [ ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD ]
 
 secrets:
   cache_s3_server:
