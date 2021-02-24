@@ -241,7 +241,7 @@ pipeline:
       GRADLE_USER_HOME: .gradle
       GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false
     commands:
-      - ./gradlew publish -DUSERNAME=$ARTIFACTORY_USERNAME -DPASSWORD=$ARTIFACTORY_PASSWORD -DVERSION="${DRONE_TAG}"
+      - ./gradlew publish -DUSERNAME=$ARTIFACTORY_USERNAME -DPASSWORD=$ARTIFACTORY_PASSWORD -DVERSION="2.201.0"
     secrets: [ ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD ]
 
 secrets:
