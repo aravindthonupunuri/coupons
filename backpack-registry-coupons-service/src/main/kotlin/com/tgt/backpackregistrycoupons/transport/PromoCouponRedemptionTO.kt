@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.transport
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
@@ -18,6 +19,7 @@ data class PromoCouponRedemptionTO(
     val status: String? = null,
     @JsonDeserialize(using = LocalDateTimeDeserializer::class)
     @JsonSerialize(using = LocalDateTimeSerializer::class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     val transactionTime: LocalDateTime? = null,
     val registerId: String? = null,
     val transactionId: String? = null,
