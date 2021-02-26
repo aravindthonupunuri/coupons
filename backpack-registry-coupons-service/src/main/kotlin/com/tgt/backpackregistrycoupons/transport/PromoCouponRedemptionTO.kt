@@ -23,7 +23,7 @@ data class PromoCouponRedemptionTO(
     @JsonProperty("transaction_id")
     val tranId: String? = null,
     @JsonProperty("registry_id")
-    val registryId: UUID? = null
+    val registryId: UUID
 ) {
     companion object {
         private val jsonMapper = jacksonObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
