@@ -1,29 +1,26 @@
 package com.tgt.backpackregistrycoupons.transport
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.time.LocalDateTime
 import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class PromoCouponRedemptionTO(
-    @JsonProperty("location_id")
     val locationId: String? = null,
-    @JsonProperty("coupon_code")
     val couponCode: String,
-    @JsonProperty("coupon_type")
     val couponType: String? = null,
-    @JsonProperty("status")
     val status: String? = null,
-    @JsonProperty("transaction_time")
+    @JsonDeserialize(using = LocalDateTimeDeserializer::class)
+    @JsonSerialize(using = LocalDateTimeSerializer::class)
     val transactionTime: LocalDateTime? = null,
-    @JsonProperty("register_id")
     val registerId: String? = null,
-    @JsonProperty("transaction_id")
-    val tranId: String? = null,
-    @JsonProperty("registry_id")
+    val transactionId: String? = null,
     val registryId: UUID
 ) {
     companion object {

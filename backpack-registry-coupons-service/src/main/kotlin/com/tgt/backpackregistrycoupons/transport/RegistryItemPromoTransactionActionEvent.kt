@@ -7,7 +7,7 @@ import com.tgt.lists.msgbus.EventType
 
 data class RegistryItemPromoTransactionActionEvent(
 
-    @JsonProperty("registry_transaction")
+    @JsonProperty("promo_coupon_redemption")
     val promoCouponRedemptionTO: PromoCouponRedemptionTO
 
 ) {
