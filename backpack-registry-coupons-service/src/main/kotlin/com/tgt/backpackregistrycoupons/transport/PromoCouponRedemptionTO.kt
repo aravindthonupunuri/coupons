@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import java.time.LocalDateTime
 import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class PromoCouponRedemptionTO(
     @JsonProperty("location_id")
-    val storeId: String? = null,
+    val locationId: String? = null,
     @JsonProperty("coupon_code")
     val couponCode: String,
     @JsonProperty("coupon_type")
@@ -17,7 +18,7 @@ data class PromoCouponRedemptionTO(
     @JsonProperty("status")
     val status: String? = null,
     @JsonProperty("transaction_time")
-    val transactionTime: String? = null,
+    val transactionTime: LocalDateTime? = null,
     @JsonProperty("register_id")
     val registerId: String? = null,
     @JsonProperty("transaction_id")
