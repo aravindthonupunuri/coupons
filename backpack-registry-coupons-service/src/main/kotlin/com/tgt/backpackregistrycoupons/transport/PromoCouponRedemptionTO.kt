@@ -13,7 +13,7 @@ import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class PromoCouponRedemptionTO(
-    val locationId: String? = null,
+    val locationId: Long? = null,
     val couponCode: String,
     val couponType: String? = null,
     val status: String? = null,
