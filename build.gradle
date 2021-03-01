@@ -16,6 +16,7 @@ plugins {
     id "io.gitlab.arturbosch.detekt" version "1.0.0-RC15" apply false
     id "org.sonarqube" version "2.7.1" apply false
     id "org.flywaydb.flyway" version "6.0.4" apply false
+    id "maven-publish"
 }
 
 apply plugin: "com.target.platform.connector"
@@ -210,6 +211,18 @@ task downloadDependencies() {
                     c.files
                 }
             }
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            credentials {
+                username = System.getProperty('USERNAME')
+                password = System.getProperty('PASSWORD')
+            }
+            url 'https://binrepo.target.com/artifactory/lists-v4'
         }
     }
 }
