@@ -69,7 +69,7 @@ allprojects {
         implementation "com.lmax:disruptor:3.4.2"
 
         implementation("com.tgt.lists:atlas-client:2.231.1")
-        implementation("com.tgt.lists:lists-components:2.231.2") {
+        implementation("com.tgt.lists:lists-components:2.231.6") {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
 
