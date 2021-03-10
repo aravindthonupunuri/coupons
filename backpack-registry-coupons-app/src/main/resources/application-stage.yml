@@ -44,8 +44,8 @@ components:
       approver-email-ids:
         - Indrakumar.Thimmaiah@target.com
     list-authorization-filter:
-      enabled: false
-      base-uri: /backpackregistrycoupons
+      enabled: true
+      base-uri: /registries_coupons/v1
     ad-group-permissions:
       post-access:
         permissions[0]:
