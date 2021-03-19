@@ -39,16 +39,18 @@ class RegistryRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
     UUID registryId3 = UUID.randomUUID()
     @Shared
     UUID registryId4 = UUID.randomUUID()
+    @Shared
+    String alternateRegistryId = "12345"
 
     @Shared
     List<String> couponCodes = ["1234", "4567", "7890", "0123"]
 
     def "test save Registry and RegistryCoupons"() {
         given:
-        def registry1 = new Registry(registryId1, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
-        def registry2 = new Registry(registryId2, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
-        def registry3 = new Registry(registryId3, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
-        def registry4 = new Registry(registryId4, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry1 = new Registry(registryId1, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def registry2 = new Registry(registryId2, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
+        def registry3 = new Registry(registryId3, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry4 = new Registry(registryId4, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
 
 
         def registryCoupons11 = new RegistryCoupons(couponCodes[0], registry1, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)

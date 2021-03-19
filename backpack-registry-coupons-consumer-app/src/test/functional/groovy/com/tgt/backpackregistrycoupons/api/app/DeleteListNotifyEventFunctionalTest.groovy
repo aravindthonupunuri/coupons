@@ -73,7 +73,8 @@ class DeleteListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create registry and registry coupons"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def alternateRegistryId = "12345"
+        def registry = new Registry(registryId1, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
 
         def registryCoupons1 = new RegistryCoupons(couponCodes[0], registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         def registryCoupons2 = new RegistryCoupons(couponCodes[1], registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)

@@ -62,7 +62,8 @@ class UpdateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create new registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def alternateRegistryId = "12345"
+        def registry = new Registry(registryId1, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 

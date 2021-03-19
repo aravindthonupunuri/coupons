@@ -44,11 +44,13 @@ class CompositeTransactionalRepositoryFunctionalTest extends BasePersistenceFunc
     String couponCode3 =  "3000000"
     @Shared
     String couponCode4 =  "4000000"
+    @Shared
+    String alternateRegistryId = "12345"
 
     def "test save Registry and RegistryCoupons"() {
         given:
-        def registry1 = new Registry(registryId1, RegistryType.BABY, LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
-        def registry2 = new Registry(registryId2, RegistryType.WEDDING, LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
+        def registry1 = new Registry(registryId1, alternateRegistryId, RegistryType.BABY, LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def registry2 = new Registry(registryId2, alternateRegistryId, RegistryType.WEDDING, LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now(), true, null, null)
 
         def coupons1 = new Coupons(couponCode1, CouponType.STORE, RegistryType.BABY, LocalDate.now(), "1", LocalDateTime.now(), LocalDateTime.now())
         def coupons2 = new Coupons(couponCode2, CouponType.ONLINE, RegistryType.BABY, LocalDate.now().plusDays(1), "1", LocalDateTime.now(), LocalDateTime.now())

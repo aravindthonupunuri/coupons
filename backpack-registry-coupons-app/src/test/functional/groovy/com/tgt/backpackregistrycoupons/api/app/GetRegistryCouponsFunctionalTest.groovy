@@ -33,9 +33,12 @@ class GetRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest {
     @Shared
     def registryId = UUID.randomUUID()
 
+    @Shared
+    def alternateRegistryId = "12345"
+
     def "test save Registry and RegistryCoupons"() {
         given:
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
 
         def registryCoupons11 = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         def registryCoupons12 = new RegistryCoupons("3456", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)

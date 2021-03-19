@@ -18,6 +18,9 @@ data class Registry(
     @Column(name = "registry_id")
     val registryId: UUID,
 
+    @Column(name = "alternate_registry_id")
+    val alternateRegistryId: String?,
+
     @Column(name = "registry_type")
     val registryType: RegistryType,
 

@@ -38,7 +38,7 @@ class RegistryCouponService(
                 } else {
                     null
                 }
-                RegistryCouponsTO(registryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it.registryCoupons ?: emptySet()))
+                RegistryCouponsTO(registryId, it.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it.registryCoupons ?: emptySet()))
             }
     }
 }

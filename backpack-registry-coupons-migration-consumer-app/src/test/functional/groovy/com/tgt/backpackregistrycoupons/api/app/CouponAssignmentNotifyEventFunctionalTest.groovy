@@ -35,11 +35,14 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
     @Shared
     @Inject
     Tracer tracer
+
     @Shared
     @Inject
     EventLifecycleNotificationProvider eventNotificationsProvider
+
     @Shared
     TestEventListener testEventListener
+
     @Inject
     ListMsgBusClient msgBusClient
 
@@ -49,6 +52,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
     @Shared def registryId1 = UUID.randomUUID()
     @Shared def onlineCouponCode = "1234"
     @Shared def storeCouponCode = "5678"
+    @Shared def alternateRegistryId = "12345"
 
     RegistryDataProvider registryDataProvider = new RegistryDataProvider()
 
@@ -64,7 +68,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
 
     def "create new registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
+        def registry = new Registry(registryId1, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(4), LocalDate.now().plusDays(20), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 

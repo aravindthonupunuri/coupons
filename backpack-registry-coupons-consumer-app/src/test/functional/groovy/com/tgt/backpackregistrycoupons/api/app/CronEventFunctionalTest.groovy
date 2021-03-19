@@ -71,7 +71,8 @@ class CronEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     def "create registry"() {
         given:
-        def registry = new Registry(registryId1, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(50), LocalDate.now().plusDays(1), false, null, null)
+        def alternateRegistryId = "12345"
+        def registry = new Registry(registryId1, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(50), LocalDate.now().plusDays(1), false, null, null)
         when:
         def result = registryRepository.save(registry).block()
 

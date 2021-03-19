@@ -34,6 +34,7 @@ class CreateListNotifyEventHandler(
         return createListNotifyEventService.processCreateListNotifyEvent(
             guestId = createListNotifyEvent.guestId,
             registryId = createListNotifyEvent.listId,
+            alternateRegistryId = RegistryMetaDataTO.toEntityRegistryMetadata(createListNotifyEvent.userMetaData)?.alternateRegistryId,
             registryStatus = createListNotifyEvent.listState!!,
             registryType = toRegistryType(createListNotifyEvent.listSubType!!), // defaulted to baby
             registryCreatedDate = LocalDate.now(), // TODO: createListNotifyEvent not having registry create ts

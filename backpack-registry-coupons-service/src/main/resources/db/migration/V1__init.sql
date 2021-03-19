@@ -11,6 +11,7 @@ create table COUPONS (
 
 create table REGISTRY (
                                   REGISTRY_ID uuid not null,
+                                  ALTERNATE_REGISTRY_ID text not null,
                                   REGISTRY_TYPE text not null,
                                   REGISTRY_STATUS text not null,
                                   REGISTRY_CREATED_TS timestamp not null,

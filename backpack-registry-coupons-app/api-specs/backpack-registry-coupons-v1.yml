@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 1.0.4
+  version: 1.0.5
   title: registries_coupons-v1
   description: Api to get list of registry coupons associated with the registries
 host: api.target.com
@@ -223,6 +223,7 @@ definitions:
   RegistryCouponsTO:
     required:
       - registry_id
+      - alternate_registry_id
       - registry_status
       - registry_type
     type: object
@@ -230,6 +231,8 @@ definitions:
       registry_id:
         type: string
         format: uuid
+      alternate_registry_id:
+        type: string
       registry_type:
         $ref: '#/definitions/RegistryType'
       registry_status:

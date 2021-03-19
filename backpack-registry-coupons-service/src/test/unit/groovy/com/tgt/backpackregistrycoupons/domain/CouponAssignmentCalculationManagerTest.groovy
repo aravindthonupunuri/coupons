@@ -23,8 +23,9 @@ class CouponAssignmentCalculationManagerTest extends Specification {
         def registryId = UUID.randomUUID()
         def registryCreatedDate = LocalDate.now().minusDays(3)
         def eventDate = LocalDate.now()
+        def alternateRegistryId = "12345"
 
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
@@ -38,8 +39,9 @@ class CouponAssignmentCalculationManagerTest extends Specification {
         def registryId = UUID.randomUUID()
         def registryCreatedDate = LocalDate.now()
         def eventDate = LocalDate.now().plusDays(60)
+        def alternateRegistryId = "12345"
 
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
@@ -53,8 +55,9 @@ class CouponAssignmentCalculationManagerTest extends Specification {
         def registryId = UUID.randomUUID()
         def registryCreatedDate = LocalDate.now()
         def eventDate = LocalDate.now().plusDays(60) // wedding registry
+        def alternateRegistryId = "12345"
 
-        def registry = new Registry(registryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)

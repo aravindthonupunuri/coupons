@@ -30,7 +30,9 @@ class RegistryCouponsServiceTest extends Specification {
         def registryId = UUID.randomUUID()
         def registryCreatedDate = LocalDate.now().minusDays(3)
         def eventDate = LocalDate.now()
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def alternateRegistryId = "12345"
+
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = registryCouponService.getRegistryCoupons(registryId).block()
@@ -47,8 +49,9 @@ class RegistryCouponsServiceTest extends Specification {
         def registryId = UUID.randomUUID()
         def registryCreatedDate = LocalDate.now()
         def eventDate = LocalDate.now().plusDays(60)
+        def alternateRegistryId = "12345"
 
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = registryCouponService.getRegistryCoupons(registryId).block()
@@ -65,8 +68,9 @@ class RegistryCouponsServiceTest extends Specification {
         def registryId = UUID.randomUUID()
         def registryCreatedDate = LocalDate.now()
         def eventDate = LocalDate.now().plusDays(60)
+        def alternateRegistryId = "12345"
 
-        def registry = new Registry(registryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate,  eventDate, false, null, null)
 
         when:
         def actual = registryCouponService.getRegistryCoupons(registryId).block()
@@ -81,7 +85,9 @@ class RegistryCouponsServiceTest extends Specification {
     def "Test getRegistryCoupons with INACTIVE registry"() {
         given:
         def registryId = UUID.randomUUID()
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(3),  LocalDate.now(), false, null, null)
+        def alternateRegistryId = "12345"
+
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.INACTIVE.value, LocalDate.now().minusDays(3),  LocalDate.now(), false, null, null)
         def registryCoupons = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         registry.registryCoupons = [registryCoupons] as Set
 
@@ -98,7 +104,9 @@ class RegistryCouponsServiceTest extends Specification {
     def "Test getRegistryCoupons with coupon code already assigned"() {
         given:
         def registryId = UUID.randomUUID()
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3),  LocalDate.now(), false, null, null)
+        def alternateRegistryId = "12345"
+
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3),  LocalDate.now(), false, null, null)
         def registryCoupons = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         registry.registryCoupons = [registryCoupons] as Set
 

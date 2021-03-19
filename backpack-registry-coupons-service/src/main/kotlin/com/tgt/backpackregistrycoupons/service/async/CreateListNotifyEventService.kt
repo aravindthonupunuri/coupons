@@ -25,6 +25,7 @@ private val logger = KotlinLogging.logger { CreateListNotifyEventService::class.
 fun processCreateListNotifyEvent(
     guestId: String,
     registryId: UUID,
+    alternateRegistryId: String?,
     registryStatus: LIST_STATE,
     registryType: RegistryType,
     registryCreatedDate: LocalDate,
@@ -35,7 +36,7 @@ fun processCreateListNotifyEvent(
 ): Mono<RetryState> {
     return if (retryState.incompleteState()) {
         logger.debug("From processCreateListNotifyEvent(), starting processing")
-        return addGuestRegistry(guestId, registryId, registryStatus, registryType, registryCreatedDate, eventDate, addedDate, lastModifiedDate)
+        return addGuestRegistry(guestId, registryId, alternateRegistryId, registryStatus, registryType, registryCreatedDate, eventDate, addedDate, lastModifiedDate)
             .map {
                 retryState.addGuestRegistry = it
                 retryState
@@ -49,6 +50,7 @@ fun processCreateListNotifyEvent(
 fun addGuestRegistry(
     guestId: String,
     registryId: UUID,
+    alternateRegistryId: String?,
     registryStatus: LIST_STATE,
     registryType: RegistryType,
     registryCreatedDate: LocalDate,
@@ -57,7 +59,7 @@ fun addGuestRegistry(
     lastModifiedDate: LocalDateTime?
 ): Mono<Boolean> {
     // The RegistryStatus is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the registry.
-    return registryCouponsRepository.save(Registry(registryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, addedDate, lastModifiedDate))
+    return registryCouponsRepository.save(Registry(registryId, alternateRegistryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, addedDate, lastModifiedDate))
         .map { true }
         .onErrorResume {
             logger.error("Exception from addGuestRegistry() for guestID: $guestId and registryId: $registryId," +

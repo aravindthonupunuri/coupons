@@ -53,24 +53,26 @@ class CronEventServiceTest extends Specification {
         // First registry: No coupons assigned
         def registryCreatedDate1 = LocalDate.now().minusDays(15)
         def eventDate1 = LocalDate.now().minusDays(5)
-        def registry1 = new Registry(UUID.randomUUID(), RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate1,  eventDate1, false, null, null)
+        def alternateRegistryId = "12345"
+
+        def registry1 = new Registry(UUID.randomUUID(), alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate1,  eventDate1, false, null, null)
 
         // Second registry: Partial coupon assigned
         def registryCreatedDate2 = LocalDate.now().minusDays(60)
         def eventDate2 = LocalDate.now()
-        def registry2 = new Registry(UUID.randomUUID(), RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate2,  eventDate2, false, null, null)
+        def registry2 = new Registry(UUID.randomUUID(), alternateRegistryId, RegistryType.WEDDING,  LIST_STATE.ACTIVE.value, registryCreatedDate2,  eventDate2, false, null, null)
         def registryCoupons21 = new RegistryCoupons("1234", registry2, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         registry2.registryCoupons = [registryCoupons21] as Set
 
         // Third registry: Registry not ready for coupon assignment yet
         def registryCreatedDate3 = LocalDate.now()
         def eventDate3 = LocalDate.now()
-        def registry3 = new Registry(UUID.randomUUID(), RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate3,  eventDate3, false, null, null)
+        def registry3 = new Registry(UUID.randomUUID(), alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate3,  eventDate3, false, null, null)
 
         // Fourth registry: Assign only one coupons type (partial assignment)
         def registryCreatedDate4 = LocalDate.now().minusDays(15)
         def eventDate4 = LocalDate.now().minusDays(5)
-        def registry4 = new Registry(UUID.randomUUID(), RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate4,  eventDate4, false, null, null)
+        def registry4 = new Registry(UUID.randomUUID(), alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, registryCreatedDate4,  eventDate4, false, null, null)
 
         def cronEventDate = LocalDateTime.now()
         def recordMetadata = GroovyMock(RecordMetadata)
