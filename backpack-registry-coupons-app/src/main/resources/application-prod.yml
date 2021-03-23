@@ -1,0 +1,151 @@
+micronaut:
+  application:
+    name: backpack-registry-coupons-app
+  server:
+    host: ${backpack-registry-coupons-app-host:localhost}
+    port: 8081
+    idle-timeout: 2000ms
+    multipart:
+      max-file-size: 100mb
+  metrics:
+    binders:
+      web:
+        enabled: false # we are using our own binder via our custom micronaut-metrics lib
+
+filter:
+  server:
+    order:
+      mdc-filter: 50
+      onbehalf-filter: 51
+      lists-brave-tracing-server-filter: 100
+      list-authorization-filter: 200
+      sanitizing-filter: 300
+  client:
+    order:
+      lists-brave-tracing-client-filter: 900
+      resilience-client-filter: 800
+      oauth-filter: 701
+      oauth-key-filter: 700
+
+components:
+  apispec:
+    filepath: apispec/backpack-registry-coupons-v1.yml
+  errocodes:
+    classes:
+      - com.tgt.lists.common.components.exception.BaseErrorCodes #Haven't defined app specific error codes yet
+  server:
+    onbehalf-filter:
+      enabled: true
+      gsp-validation-base-url: "https://backpackregistrycoupons.prod.target.com"
+      team-email-ids:
+        - Indrakumar.Thimmaiah@target.com
+        - Kiran.Shivalingaiah@target.com
+        - Parthasarathy.Hd@target.com
+      approver-email-ids:
+        - Indrakumar.Thimmaiah@target.com
+    list-authorization-filter:
+      enabled: true
+      base-uri: /registries_coupons/v1
+    ad-group-permissions:
+      post-access:
+        permissions[0]:
+          groups:
+            - APP-BACKPACK-REGISTRY-PROD-READ
+          urls:
+            - /uploads
+    id2-custom-scopes:
+      names:
+        - axiom.user
+        - axiom.admin
+        - axiom.leader
+      profile-header: member_id
+    sanitizing-filter:
+      enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
+
+msgbus:
+  source: backpack-registry-coupons-app-prod
+  dlq-source: backpack-registry-coupons-app-dlq-prod
+  kafka:
+    consumer:
+      enabled: false
+    producer:
+      enabled: true
+      client-id: backpack-registry-coupons-data-bus-prod-producer
+    dlqconsumer:
+      enabled: false
+    dlqproducer:
+      enabled: true
+      client-id: backpack-registry-coupons-data-bus-prod-dlq-producer
+    topic: registry-internal-data-bus-prod
+    consumer-group: backpack-registry-coupons-data-bus-prod-consumer
+    consumer-batch-size: 50
+    dlq-topic: registry-internal-data-bus-prod-dlq
+    dlq-consumer-group: backpack-registry-coupons-data-bus-prod-dlq-consumer
+    dlq-event-retry-interval-secs: 1
+    dlq-max-event-retry-count: 2
+    dlq-consumer-batch-size: 10
+
+notification:
+  source: backpack-registry-coupons-app-prod
+  dlq-source: backpack-registry-coupons-app-dlq-prod
+  enabled: true
+
+kafka:
+  bootstrap:
+    servers: ${kafkaenv.servers}
+  ssl:
+    endpoint.identification.algorithm: ""# disable karka broker cert's hostname verification
+    keystore:
+      location: /lists-bus-keystore.jks
+      password: ${kafka-secret.keystore-password}
+    truststore:
+      location: /client-truststore.jks
+      password: ${kafka-secret.truststore-password}
+      type: PKCS12
+  security:
+    protocol: ssl
+  consumers:
+    backpack-registry-coupons-data-bus-prod-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    backpack-registry-coupons-data-bus-prod-dlq-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+  producers:
+    # default is a Jackson based JSON serializer for key/value
+    backpack-registry-coupons-data-bus-prod-producer:
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+    notification-tracer-producer:
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+
+postgres:
+  max-db-pool-size: 5
+  min-db-pool-size: 1

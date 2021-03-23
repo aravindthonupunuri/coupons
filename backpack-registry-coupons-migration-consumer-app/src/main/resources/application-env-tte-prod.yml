@@ -1,0 +1,2 @@
+kafkaenv:
+  servers: kafka-tte-app.prod.target.com:9093

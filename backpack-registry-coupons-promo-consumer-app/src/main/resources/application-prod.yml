@@ -1,0 +1,137 @@
+micronaut:
+  application:
+    name: backpack-registry-coupons-promo-consumer
+  server:
+    host: ${backpack-registry-coupons-promo-consumer-host:localhost}
+    port: 8085
+  metrics:
+    binders:
+      web:
+        enabled: false # we are using our own binder via our custom micronaut-metrics lib
+
+filter:
+  server:
+    order:
+      lists-brave-tracing-server-filter: 100
+      list-authorization-filter: 200
+      registry-channel-subchannel-filter: 400
+  client:
+    order:
+      lists-brave-tracing-client-filter: 900
+      resilience-client-filter: 800
+      oauth-filter: 701
+      oauth-key-filter: 700
+
+components:
+  server:
+    list-authorization-filter:
+      enabled: false
+    sanitizing-filter:
+      enabled: false
+    registry-channel-subchannel-filter:
+      enabled: false
+
+msgbus:
+  source: backpack-registry-coupons-promo-consumer-app-prod
+  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-prod
+  kafka:
+    consumer:
+      enabled: false
+    producer:
+      enabled: true
+      client-id: backpack-registry-coupons-promo-data-bus-prod-producer
+    dlqconsumer:
+      enabled: false
+    dlqproducer:
+      enabled: true
+      client-id: backpack-registry-coupons-promo-data-bus-prod-dlq-producer
+    topic: registry-internal-data-bus-prod
+    consumer-group: backpack-registry-coupons-promo-data-bus-prod-consumer
+    consumer-batch-size: 50
+    dlq-topic: registry-internal-data-bus-prod-dlq
+    dlq-consumer-group: backpack-registry-coupons-promo-data-bus-prod-dlq-consumer
+    dlq-event-retry-interval-secs: 1
+    dlq-max-event-retry-count: 2
+    dlq-consumer-batch-size: 10
+
+notification:
+  source: backpack-registry-coupons-promo-consumer-app-prod
+  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-prod
+  enabled: false
+
+beacon:
+  client:
+    enabled: false
+    source: backpack-registry-coupons-promo-consumer-app-prod
+    dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-prod
+    kafka:
+      consumer:
+        client-id: backpack-registry-coupons-promo-consumer-app-cron-beacon-prod-consumer
+        topic: registry-internal-data-bus-prod
+        metrics-name: backpack-registry-coupons-promo-consumer-app-cron-beacon-metrics-prod
+        consumer-group: backpack-registry-coupons-promo-consumer-app-cron-beacon-prod
+        consumer-batch-size: 1
+        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
+
+kafka-sources:
+  allow:
+    - backpack-registry-coupons-promo-consumer-app-prod
+    - backpack-registry-coupons-promo-consumer-app-dlq-prod
+
+promo:
+  source: promo
+  kafka:
+    consumer:
+      topic: promo-coupon-redemption-notifications-v2
+      metrics-name: promo-producer
+      consumer-group: promo-msg-consumer-prod
+      default-event-type: promo-update-event
+      consumer-batch-size: 10
+      max-count-down-latch-wait-time: 10 # in seconds
+
+kafka:
+  bootstrap:
+    servers: ${kafkaenv.servers}
+  ssl:
+    endpoint.identification.algorithm: ""# disable karka broker cert's hostname verification
+    keystore:
+      location: /lists-bus-keystore.jks
+      password: ${kafka-secret.keystore-password}
+    truststore:
+      location: /client-truststore.jks
+      password: ${kafka-secret.truststore-password}
+      type: PKCS12
+  security:
+    protocol: ssl
+  producers:
+    # default is a Jackson based JSON serializer for key/value
+    backpack-registry-coupons-promo-data-bus-prod-producer:
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+    backpack-registry-coupons-promo-data-bus-prod-dlq-producer:
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+
+postgres:
+  max-db-pool-size: 5
+  min-db-pool-size: 1
