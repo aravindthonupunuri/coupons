@@ -18,9 +18,14 @@ class RegistryTransactionEventHandler(
 
     private val logger = KotlinLogging.logger { RegistryTransactionEventHandler::class.java.name }
 
-    fun handleCouponTransaction(promoCouponRedemptionTO: PromoCouponRedemptionTO, eventHeaders: EventHeaders): Mono<EventProcessingResult> {
+    fun handleCouponTransaction(
+        promoCouponRedemptionTO: PromoCouponRedemptionTO,
+        eventHeaders: EventHeaders,
+        isPoisonEvent: Boolean
+    ): Mono<EventProcessingResult> {
         return registryTransactionService.processCouponCode(promoCouponRedemptionTO).map {
             if (it) {
+                logger.debug("promoCouponRedemptionEvent processing is complete")
                 EventProcessingResult(it, eventHeaders, promoCouponRedemptionTO)
             } else {
                 handleFailedEvents(promoCouponRedemptionTO, eventHeaders)
@@ -31,6 +36,7 @@ class RegistryTransactionEventHandler(
 }
 
     private fun handleFailedEvents(promoCouponRedemptionTO: PromoCouponRedemptionTO, eventHeaders: EventHeaders): EventProcessingResult {
+        logger.debug("promoCouponRedemptionEvent didn't complete, adding it to DLQ for retry")
         val message = "Error from RegistryCouponTransactionEventHandler() for transaction:" + promoCouponRedemptionTO.couponCode
         val retryHeader = eventHeaderFactory.nextRetryHeaders(eventHeaders = eventHeaders,
             errorCode = 500, errorMsg = message)

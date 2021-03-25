@@ -30,7 +30,7 @@ open class BackpackRegistryCouponsMigrationEventDispatcher(
                 CouponAssignmentNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
                     val assignCouponNotifyEvent = data as CouponAssignmentNotifyEvent
-                    logger.debug { "Got cron Event: $assignCouponNotifyEvent" }
+                    logger.debug { "Source : ${eventHeaders.source} | Got coupon assignment Event: $assignCouponNotifyEvent" }
                     return migrationCouponAssignmentNotifyEventHandler.handleMigrationAssignCouponNotifyEventHandler(assignCouponNotifyEvent, eventHeaders, isPoisonEvent)
                 }
             }
