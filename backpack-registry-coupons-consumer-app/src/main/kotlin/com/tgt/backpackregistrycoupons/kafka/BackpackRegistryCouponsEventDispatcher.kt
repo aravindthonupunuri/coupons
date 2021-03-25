@@ -36,25 +36,25 @@ open class BackpackRegistryCouponsEventDispatcher(
                 CreateListNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
                     val createListNotifyEvent = data as CreateListNotifyEvent
-                    logger.debug { "Got CreateList Event: $createListNotifyEvent" }
+                    logger.debug { "Source : ${eventHeaders.source} | Got CreateList Event: $createListNotifyEvent" }
                     return createListNotifyEventHandler.handleCreateListNotifyEvent(createListNotifyEvent, eventHeaders, isPoisonEvent)
                 }
                 UpdateListNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
                     val updateListNotifyEvent = data as UpdateListNotifyEvent
-                    logger.debug { "Got UpdateList Event: $updateListNotifyEvent" }
+                    logger.debug { "Source : ${eventHeaders.source} | Got UpdateList Event: $updateListNotifyEvent" }
                     return updateListNotifyEventHandler.handleUpdateListNotifyEvent(updateListNotifyEvent, eventHeaders, isPoisonEvent)
                 }
                 DeleteListNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
                     val deleteListNotifyEvent = data as DeleteListNotifyEvent
-                    logger.debug { "Got DeleteList Event: $deleteListNotifyEvent" }
+                    logger.debug { "Source : ${eventHeaders.source} | Got DeleteList Event: $deleteListNotifyEvent" }
                     return deleteListNotifyEventHandler.handleDeleteListNotifyEvent(deleteListNotifyEvent, eventHeaders, isPoisonEvent)
                 }
                 CronEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
                     val cronEvent = data as CronEvent
-                    logger.debug { "Got cron Event: $cronEvent" }
+                    logger.debug { "Source : ${eventHeaders.source} | Got cron Event: $cronEvent" }
                     return cronEventHandler.handleCronEvent(cronEvent, eventHeaders, isPoisonEvent)
                 }
             }
