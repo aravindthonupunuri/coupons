@@ -67,7 +67,7 @@ beacon:
     kafka:
       consumer:
         client-id: backpack-registry-coupons-promo-consumer-app-cron-beacon-consumer
-        topic: registry-internal-data-bus-stage
+        topic: backpack-beacon-stage
         metrics-name: backpack-registry-coupons-promo-consumer-app-cron-beacon-metrics
         consumer-group: backpack-registry-coupons-promo-consumer-app-cron-beacon
         consumer-batch-size: 1

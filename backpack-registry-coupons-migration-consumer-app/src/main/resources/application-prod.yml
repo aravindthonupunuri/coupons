@@ -47,12 +47,12 @@ msgbus:
       client-id: backpack-registry-coupons-migration-data-bus-prod-dlq-producer
     topic: registry-internal-data-bus-prod
     consumer-group: backpack-registry-coupons-migration-data-bus-prod-consumer
-    consumer-batch-size: 50
+    consumer-batch-size: 100
     dlq-topic: registry-internal-data-bus-prod-dlq
     dlq-consumer-group: backpack-registry-coupons-migration-data-bus-prod-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
-    dlq-consumer-batch-size: 10
+    dlq-consumer-batch-size: 50
 
 notification:
   source: backpack-registry-coupons-migration-consumer-app-prod
@@ -67,7 +67,7 @@ beacon:
     dlq-source: backpack-registry-coupons-migration-consumer-app-dlq-prod
     kafka:
       consumer:
-        topic: registry-internal-data-bus-prod
+        topic: backpack-beacon-prod
         metrics-name: backpack-registry-coupons-migration-beacon-metrics-prod
         consumer-group: backpack-registry-coupons-migration-consumer-app-prod-cron-beacon
         consumer-batch-size: 1
@@ -76,9 +76,7 @@ beacon:
 kafka-sources:
   allow:
     - backpack-registry-coupons-migration-consumer-app-prod
-    - backpack-registry-coupons-migration-consumer-app-dlq-prod
     - cronbeacon-prod
-    - cronbeacon-dlq-prod
     - backpack-registry-prod
     - migration-GRWS
 

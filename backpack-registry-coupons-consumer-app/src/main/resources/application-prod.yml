@@ -58,12 +58,12 @@ msgbus:
       client-id: backpack-registry-coupons-data-bus-prod-dlq-producer
     topic: registry-internal-data-bus-prod
     consumer-group: backpack-registry-coupons-data-bus-prod-consumer
-    consumer-batch-size: 50
+    consumer-batch-size: 100
     dlq-topic: registry-internal-data-bus-prod-dlq
     dlq-consumer-group: backpack-registry-coupons-data-bus-prod-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 2
-    dlq-consumer-batch-size: 10
+    dlq-consumer-batch-size: 50
 
 notification:
   source: backpack-registry-coupons-consumer-app-prod
@@ -78,7 +78,7 @@ beacon:
     kafka:
       consumer:
         client-id: backpack-registry-coupons-consumer-app-cron-beacon-prod-consumer
-        topic: registry-internal-data-bus-prod
+        topic: backpack-beacon-prod
         metrics-name: backpack-registry-coupons-consumer-app-cron-beacon-prod-metrics
         consumer-group: backpack-registry-coupons-consumer-app-cron-beacon-prod
         consumer-batch-size: 1
@@ -87,9 +87,7 @@ beacon:
 kafka-sources:
   allow:
     - backpack-registry-coupons-consumer-app-prod
-    - backpack-registry-coupons-consumer-app-dlq-prod
     - cronbeacon-prod
-    - cronbeacon-dlq-prod
     - backpack-registry-prod
     - backpackregistry-migration-prod
 
