@@ -312,9 +312,10 @@ pipeline:
       - { source: artifactory_password, target: plugin_password }
 
   publish-client:
+    target_tags: ${DRONE_TAG:7}
     when:
       event: tag
-      ref: refs/tags/client.*
+      ref: 'refs/tags/client.*'
     image: openjdk:11
     environment:
       JAVA_TOOL_OPTIONS: -Xmx3000M

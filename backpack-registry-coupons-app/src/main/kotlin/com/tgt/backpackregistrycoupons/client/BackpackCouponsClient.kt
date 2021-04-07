@@ -1,4 +1,4 @@
-package client
+package com.tgt.backpackregistrycoupons.client
 
 import com.tgt.backpackregistryclient.util.BackpackRegistryConstants
 import com.tgt.backpackregistryclient.util.RegistryType
