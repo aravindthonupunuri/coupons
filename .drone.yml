@@ -314,7 +314,7 @@ pipeline:
   publish-client:
     when:
       event: tag
-      ref: refs/tags/*
+      ref: refs/tags/client.*
     image: openjdk:11
     environment:
       JAVA_TOOL_OPTIONS: -Xmx3000M
