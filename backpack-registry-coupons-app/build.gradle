@@ -37,7 +37,7 @@ task clientJar(type: Jar, dependsOn: classes) {
         // exclude backpack-registry-coupons-service module's META-INF/services
         exclude "**\\META-INF\\services\\**\\*"
     }
-    include ("**\\META-INF\\client\\**\\*", "**\\client\\**\\*")
+    include ("**\\client\\**\\*")
 }
 task clientSourcesJar(type: Jar, dependsOn: classes) {
     baseName = clientJarName
@@ -47,7 +47,7 @@ task clientSourcesJar(type: Jar, dependsOn: classes) {
     from (project(':backpack-registry-coupons-service').sourceSets.main.kotlin, sourceSets.main.kotlin)
     include ("**\\transport\\**\\*", "**\\util\\**")
     from (project(':backpack-registry-coupons-app').sourceSets.main.output)
-    include ("**\\META-INF\\client\\**\\*", "**\\client\\**\\*")
+    include ("**\\client\\**\\*")
 }
 
 publishing {
