@@ -33,10 +33,7 @@ task clientJar(type: Jar, dependsOn: classes) {
     // Include Enum classes with <Classname>* rather than <Classname>.* as it may cause issues with Enums using companion objects
     // Include micronaut's $ prefixed and suffixed classes for compiled time injection to work
     include ("**\\META-INF\\services\\**\\*", "**\\transport\\**\\*", "**\\util\\**")
-    from (project(':backpack-registry-coupons-app').sourceSets.main.output) {
-        // exclude backpack-registry-coupons-service module's META-INF/services
-        exclude "**\\META-INF\\services\\**\\*"
-    }
+    from (project(':backpack-registry-coupons-app').sourceSets.main.output)
     include ("**\\client\\**\\*")
 }
 task clientSourcesJar(type: Jar, dependsOn: classes) {
