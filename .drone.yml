@@ -312,9 +312,9 @@ pipeline:
       - { source: artifactory_password, target: plugin_password }
 
   publish-client:
-    target_tags: ${DRONE_TAG:7}
     when:
       event: tag
+      branch: master
       ref: 'refs/tags/client.*'
     image: openjdk:11
     environment:
@@ -322,7 +322,7 @@ pipeline:
       GRADLE_USER_HOME: .gradle
       GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false
     commands:
-      - ./gradlew publish -DUSERNAME=$ARTIFACTORY_USERNAME -DPASSWORD=$ARTIFACTORY_PASSWORD -DVERSION="${DRONE_TAG}"
+      - ./gradlew publish -DUSERNAME=$ARTIFACTORY_USERNAME -DPASSWORD=$ARTIFACTORY_PASSWORD -DVERSION="${DRONE_TAG:7}"
     secrets: [ ARTIFACTORY_USERNAME, ARTIFACTORY_PASSWORD ]
 
 secrets:
