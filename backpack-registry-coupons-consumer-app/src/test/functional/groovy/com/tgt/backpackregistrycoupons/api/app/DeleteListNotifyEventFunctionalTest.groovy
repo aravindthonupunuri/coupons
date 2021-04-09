@@ -98,7 +98,8 @@ class DeleteListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
     def "Test DeleteListNotifyEvent, delete registry and its coupons"() {
         given:
         PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
-        def event = new DeleteListNotifyEvent("1234", registryId1, listType, "title", null ,null)
+        def event = new DeleteListNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), "title", "channel", "sub_channel", "3991", "", null, LIST_STATE.INACTIVE, LocalDate.now().plusDays(50), null,
+            null, null, null, null, null, null)
 
         testEventListener.preDispatchLambda = new PreDispatchLambda() {
             @Override

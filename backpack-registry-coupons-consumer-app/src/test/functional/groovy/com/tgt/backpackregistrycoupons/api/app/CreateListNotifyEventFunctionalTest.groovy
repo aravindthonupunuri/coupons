@@ -62,8 +62,8 @@ class CreateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
         given:
         PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
         def registryMetaData = registryDataProvider.getRegistryMetaDataMap(UUID.randomUUID(), "1234", false, false, null, null, new RegistryEventTO("city", "state", "country", LocalDate.now()), null, null, null, null, "abcd", "xyz")
-        def event = new CreateListNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), "title", "channel", "subChannel", LIST_STATE.INACTIVE, registryMetaData ,LocalDate.now().plusDays(50),null,
-        null, null, null, null)
+        def event = new CreateListNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), "title", "channel", "subChannel", "3991", "", null, LIST_STATE.INACTIVE, registryMetaData ,LocalDate.now().plusDays(50), null,
+        null, null, null, null, null)
 
         testEventListener.preDispatchLambda = new PreDispatchLambda() {
             @Override
