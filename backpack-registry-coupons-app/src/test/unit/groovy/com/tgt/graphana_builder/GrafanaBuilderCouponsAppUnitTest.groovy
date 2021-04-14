@@ -23,8 +23,7 @@ class GrafanaBuilderCouponsAppUnitTest extends Specification {
             tapDashboardJsonFile: "${moduleDir}/src/test/unit/resources/tap-dashboard.json",
             apiServerSpecBasePath: "/registries_coupons/v1",
             apiServerSpecPath: "${moduleDir}/api-specs/backpack-registry-coupons-v1.yml",
-            httpClientRowTitle: "Outbound Http Clients",
-            needResiliencePanel: true,
+            needResiliencePanel: false,
             metricsAlert: metricsAlert,
             cassandra: false,
             postgres: true

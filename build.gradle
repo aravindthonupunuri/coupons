@@ -87,10 +87,10 @@ allprojects {
 
         implementation "com.tgt.lists:lists-oauth:2.231.0"
         implementation "com.tgt.lists.micronaut:micronaut-zipkin:2.231.0"
-        implementation "com.tgt.lists:lists-message-bus:2.231.2"
+        implementation "com.tgt.lists:lists-message-bus:2.231.3"
         implementation "com.tgt.lists:notification-tracer-client:1.0.1"
         implementation "com.tgt.lists:lists-logging:2.231.0"
-        implementation 'com.tgt.lists.micronaut:micronaut-jdbc:2.201.0'
+        implementation 'com.tgt.lists.micronaut:micronaut-jdbc:2.231.3'
         implementation "com.target.oss:platform-connector-micronaut:${micronautTapPlatformConnectorVersion}"
         implementation "io.swagger.core.v3:swagger-annotations"
         implementation "com.tgt.lists.micronaut:micronaut-metrics:2.231.0"

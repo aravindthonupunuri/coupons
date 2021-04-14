@@ -76,7 +76,6 @@ class GrafanaBuilderCouponsPromoConsumerUnitTest extends Specification {
 
         GrafanaBuilderConfig grafanaBuilderConfig = new GrafanaBuilderConfig(
             tapDashboardJsonFile: "${moduleDir}/src/test/unit/resources/tap-dashboard.json",
-            httpClientRowTitle: "Outbound Http Clients",
             needResiliencePanel: false,
             kafkaConsumers: kafkaConsumers,
             kafkaProducers: kafkaProducers,
