@@ -63,28 +63,6 @@ class GrafanaBuilderCouponsMigrationConsumerUnitTest extends Specification {
                     ttcCluster: "ost-ttc-prod-app'",
                     tteCluster: "ost-ttce-prod-app'"
                 )
-            ),
-            new GrafanaBuilderConfig.KafkaConsumer(
-                title: "Registry Coupons Beacon Consumer",
-                metricsName: "beacon_consumer_event",
-                devEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "backpack-beacon",
-                    consumerGroup: "backpack-registry-coupons-migration-consumer-app-dev-cron-beacon",
-                    ttcCluster: "ost-ttc-test-app",
-                    tteCluster: "ost-ttce-test-app"
-                ),
-                stageEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "backpack-beacon-stage",
-                    consumerGroup: "backpack-registry-coupons-migration-consumer-app-stage-cron-beacon",
-                    ttcCluster: "ost-ttc-test-app",
-                    tteCluster: "ost-ttce-test-app"
-                ),
-                prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "backpack-beacon-prod",
-                    consumerGroup: "backpack-registry-coupons-migration-consumer-app-prod-cron-beacon",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
-                )
             )
         ]
 
@@ -99,7 +77,7 @@ class GrafanaBuilderCouponsMigrationConsumerUnitTest extends Specification {
         GrafanaBuilderConfig grafanaBuilderConfig = new GrafanaBuilderConfig(
             tapDashboardJsonFile: "${moduleDir}/src/test/unit/resources/tap-dashboard.json",
             httpClientRowTitle: "Outbound Http Clients",
-            needResiliencePanel: true,
+            needResiliencePanel: false,
             kafkaConsumers: kafkaConsumers,
             kafkaProducers: kafkaProducers,
             metricsAlert: metricsAlert,

@@ -23,20 +23,20 @@ class GrafanaBuilderCouponsPromoConsumerUnitTest extends Specification {
                 metricsName: "msgbus_consumer_event",
                 isDlqConsumer: false,
                 devEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "registry-internal-data-bus-dev",
-                    consumerGroup: "backpack-registry-coupons-promo-bus-dev-consumer",
+                    topic: "promo-coupon-redemption-notifications-v2",
+                    consumerGroup: "promo-msg-consumer-dev",
                     ttcCluster: "ost-ttc-test-app",
                     tteCluster: "ost-ttce-test-app"
                 ),
                 stageEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "registry-internal-data-bus-stage",
-                    consumerGroup: "backpack-registry-coupons-promo-data-bus-stage-consumer",
+                    topic: "promo-coupon-redemption-notifications-v2",
+                    consumerGroup: "promo-msg-consumer-stage",
                     ttcCluster: "ost-ttc-test-app",
                     tteCluster: "ost-ttce-test-app"
                 ),
                 prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "registry-internal-data-bus-prod",
-                    consumerGroup: "backpack-registry-coupons-promo-data-bus-prod-consumer",
+                    topic: "promo-coupon-redemption-notifications-v2",
+                    consumerGroup: "promo-msg-consumer-prod",
                     ttcCluster: "ost-ttc-prod-app'",
                     tteCluster: "ost-ttce-prod-app'"
                 )
@@ -63,28 +63,6 @@ class GrafanaBuilderCouponsPromoConsumerUnitTest extends Specification {
                     ttcCluster: "ost-ttc-prod-app'",
                     tteCluster: "ost-ttce-prod-app'"
                 )
-            ),
-            new GrafanaBuilderConfig.KafkaConsumer(
-                title: "Registry Coupons Beacon Consumer",
-                metricsName: "beacon_consumer_event",
-                devEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "backpack-beacon",
-                    consumerGroup: "backpack-registry-coupons-promo-consumer-app-cron-beacon",
-                    ttcCluster: "ost-ttc-test-app",
-                    tteCluster: "ost-ttce-test-app"
-                ),
-                stageEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "backpack-beacon-stage",
-                    consumerGroup: "backpack-registry-coupons-promo-consumer-app-cron-beacon-stage",
-                    ttcCluster: "ost-ttc-test-app",
-                    tteCluster: "ost-ttce-test-app"
-                ),
-                prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
-                    topic: "backpack-beacon-prod",
-                    consumerGroup: "backpack-registry-coupons-promo-consumer-app-cron-beacon-prod",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
-                )
             )
         ]
 
@@ -99,7 +77,7 @@ class GrafanaBuilderCouponsPromoConsumerUnitTest extends Specification {
         GrafanaBuilderConfig grafanaBuilderConfig = new GrafanaBuilderConfig(
             tapDashboardJsonFile: "${moduleDir}/src/test/unit/resources/tap-dashboard.json",
             httpClientRowTitle: "Outbound Http Clients",
-            needResiliencePanel: true,
+            needResiliencePanel: false,
             kafkaConsumers: kafkaConsumers,
             kafkaProducers: kafkaProducers,
             metricsAlert: metricsAlert,

@@ -133,7 +133,7 @@ allprojects {
         testImplementation "cglib:cglib:3.3.0"
         testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.33.0'
         testImplementation "org.testcontainers:kafka:1.14.3"
-        testImplementation "com.tgt.lists:grafana-builder:2.231.11"
+        testImplementation "com.tgt.lists:grafana-builder:2.231.18"
     }
 
     configurations.all {

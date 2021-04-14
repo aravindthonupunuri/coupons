@@ -8,6 +8,17 @@ class GrafanaBuilderCouponsConsumerUnitTest extends Specification {
         given:
         def moduleDir = System.getProperty("user.dir")
 
+        def registryClient = new GrafanaBuilderConfig.ApiClient(
+            baseUriPath: "/registries/v2",
+            apiMethods: [
+                new GrafanaBuilderConfig.ApiMethod(
+                    panelTitle: "Backpack Registry api",
+                    methodName: "GET",
+                    pathUri: "/{registry_id}/summary_details"
+                )
+            ]
+        )
+
         def metricsAlert = new GrafanaBuilderConfig.MetricsAlert(
             prodTapApplication: "backpackregistrycouponsconsumer",
             prodTapCluster: "backpackregistrycouponsconsumer",
@@ -99,6 +110,7 @@ class GrafanaBuilderCouponsConsumerUnitTest extends Specification {
         GrafanaBuilderConfig grafanaBuilderConfig = new GrafanaBuilderConfig(
             tapDashboardJsonFile: "${moduleDir}/src/test/unit/resources/tap-dashboard.json",
             httpClientRowTitle: "Outbound Http Clients",
+            apiClients: [registryClient],
             needResiliencePanel: true,
             kafkaConsumers: kafkaConsumers,
             kafkaProducers: kafkaProducers,
