@@ -106,6 +106,12 @@ kafka:
   producers:
     # default is a Jackson based JSON serializer for key/value
     backpack-registry-coupons-promo-data-bus-stage-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
       retries: 3
       retry:
         backoff:
@@ -119,6 +125,12 @@ kafka:
         block:
           ms: 2000
     backpack-registry-coupons-promo-data-bus-stage-dlq-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
       retries: 3
       retry:
         backoff:

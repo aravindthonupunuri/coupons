@@ -5,6 +5,8 @@ micronaut:
     host: ${backpack-registry-coupons-app-host:localhost}
     port: 8081
     idle-timeout: 2000ms
+    netty:
+      max-header-size: 16384 # Handling RequestTooLarge headers - Default value (8192)
     multipart:
       max-file-size: 100mb
   metrics:
@@ -120,6 +122,12 @@ kafka:
   producers:
     # default is a Jackson based JSON serializer for key/value
     backpack-registry-coupons-data-bus-stage-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
       retries: 3
       retry:
         backoff:
@@ -133,6 +141,31 @@ kafka:
         block:
           ms: 2000
     notification-tracer-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+    backpack-registry-coupons-data-bus-stage-dlq-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
       retries: 3
       retry:
         backoff:
