@@ -80,7 +80,7 @@ beacon:
         client-id: backpack-registry-coupons-consumer-app-cron-beacon-consumer
         topic: backpack-beacon-stage
         metrics-name: backpack-registry-coupons-consumer-app-cron-beacon-metrics
-        consumer-group: backpack-registry-coupons-consumer-app-cron-beacon
+        consumer-group: backpack-registry-coupons-consumer-app-cron-beacon-stage
         consumer-batch-size: 1
         max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
 
@@ -116,7 +116,7 @@ kafka:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    backpack-registry-coupons-consumer-app-cron-beacon:
+    backpack-registry-coupons-consumer-app-cron-beacon-stage:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:

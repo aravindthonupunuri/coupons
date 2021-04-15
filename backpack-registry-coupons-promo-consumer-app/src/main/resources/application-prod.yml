@@ -38,10 +38,9 @@ msgbus:
     consumer:
       enabled: false
     producer:
-      enabled: true
-      client-id: backpack-registry-coupons-promo-data-bus-prod-producer
-    dlqconsumer:
       enabled: false
+    dlqconsumer:
+      enabled: true
     dlqproducer:
       enabled: true
       client-id: backpack-registry-coupons-promo-data-bus-prod-dlq-producer
