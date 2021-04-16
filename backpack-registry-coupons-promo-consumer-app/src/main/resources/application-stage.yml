@@ -80,6 +80,7 @@ kafka-sources:
 
 promo:
   source: promo
+  env: stage
   kafka:
     consumer:
       topic: promo-coupon-redemption-notifications-v2

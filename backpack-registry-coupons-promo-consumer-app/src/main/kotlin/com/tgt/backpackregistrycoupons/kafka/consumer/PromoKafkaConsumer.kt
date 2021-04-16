@@ -16,6 +16,7 @@ import io.micronaut.configuration.kafka.annotation.OffsetReset
 import io.micronaut.configuration.kafka.annotation.OffsetStrategy
 import io.micronaut.configuration.kafka.annotation.Topic
 import io.micronaut.context.annotation.Value
+import io.micronaut.context.env.Environment
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.header.Header
@@ -38,6 +39,7 @@ class PromoKafkaConsumer<K, V>(
     @Value("\${promo.kafka.consumer.max-count-down-latch-wait-time}") val maxCountDownLatchWaitTime: Long,
     @Value("\${promo.kafka.consumer.metrics-name}") val metricsName: String,
     @Value("\${promo.kafka.consumer.default-event-type}") val defaultEventType: String,
+    @Value("\${promo.env}") val environment: Environment,
     @Inject val consumerRegistry: Provider<ConsumerRegistry>,
     @Inject val eventDispatcher: EventDispatcher,
     @Inject val eventLifecycleNotificationProvider: EventLifecycleNotificationProvider,
@@ -48,6 +50,7 @@ class PromoKafkaConsumer<K, V>(
     @Inject val metricsPublisher: MetricsPublisher,
     @Inject val mdcContext: MdcContext? = null
 ) : GenericConsumer<K, V>(
+    consumerName,
     consumerName,
     clientId,
     defaultEventSource,
@@ -62,7 +65,8 @@ class PromoKafkaConsumer<K, V>(
     eventTracer,
     metricsPublisher,
     mdcContext,
-    metricsName
+    metricsName,
+    environment
 ) {
     @Topic(("\${promo.kafka.consumer.topic}"))
     fun receive(
