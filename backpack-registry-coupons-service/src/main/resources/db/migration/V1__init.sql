@@ -34,3 +34,6 @@ create table REGISTRY_COUPONS (
                                             UPDATED_TS timestamp not null DEFAULT NOW(),
                                             CONSTRAINT REGISTRY_COUPONS_PK PRIMARY KEY (COUPON_CODE)
 );
+
+CREATE INDEX coupons_registry_id_index
+    ON REGISTRY_COUPONS(REGISTRY_ID);

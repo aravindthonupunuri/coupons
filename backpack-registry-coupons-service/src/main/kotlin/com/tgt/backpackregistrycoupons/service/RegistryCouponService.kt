@@ -3,10 +3,9 @@ package com.tgt.backpackregistrycoupons.service
 import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
-import com.tgt.backpackregistrycoupons.transport.CouponsTO.Companion.toCouponsTOList
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
+import com.tgt.backpackregistrycoupons.util.toCouponsListResponse
 import com.tgt.lists.atlas.api.type.LIST_STATE
-import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.Duration
 import java.time.LocalDate
@@ -19,7 +18,6 @@ class RegistryCouponService(
     @Inject private val registryRepository: RegistryRepository,
     @Inject private val couponAssignmentCalculationManager: CouponAssignmentCalculationManager
 ) {
-    private val logger = KotlinLogging.logger { RegistryCouponService::class.java.name }
 
     fun getRegistryCoupons(registryId: UUID): Mono<RegistryCouponsTO> {
         return registryRepository.getByRegistryId(registryId)
@@ -38,7 +36,7 @@ class RegistryCouponService(
                 } else {
                     null
                 }
-                RegistryCouponsTO(registryId, it.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it.registryCoupons ?: emptySet()))
+                RegistryCouponsTO(registryId, it.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsListResponse(it.registryCoupons ?: emptySet()))
             }
     }
 }

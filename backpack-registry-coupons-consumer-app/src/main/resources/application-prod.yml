@@ -50,12 +50,12 @@ msgbus:
       enabled: true
     producer:
       enabled: true
-      client-id: backpack-registry-coupons-data-bus-prod-producer
+      client-id: backpack-registry-coupons-con-data-bus-prod-producer
     dlqconsumer:
       enabled: true
     dlqproducer:
       enabled: true
-      client-id: backpack-registry-coupons-data-bus-prod-dlq-producer
+      client-id: backpack-registry-coupons-con-dlq-prod-producer
     topic: registry-internal-data-bus-prod
     consumer-group: backpack-registry-coupons-data-bus-prod-consumer
     consumer-batch-size: 100
@@ -123,7 +123,13 @@ kafka:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
-    backpack-registry-coupons-data-bus-prod-producer:
+    backpack-registry-coupons-con-data-bus-prod-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
       retries: 3
       retry:
         backoff:
@@ -137,6 +143,31 @@ kafka:
         block:
           ms: 2000
     notification-tracer-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+    backpack-registry-coupons-con-dlq-prod-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
       retries: 3
       retry:
         backoff:

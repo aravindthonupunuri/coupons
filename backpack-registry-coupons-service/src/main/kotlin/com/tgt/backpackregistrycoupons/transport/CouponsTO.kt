@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
-import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
 import java.time.LocalDate
@@ -28,19 +27,4 @@ data class CouponsTO(
     @JsonProperty("coupon_expiry_date")
     val couponExpiryDate: LocalDate?,
     val couponState: CouponRedemptionStatus?
-) {
-constructor(registryCoupons: RegistryCoupons) : this(
-    couponCode = registryCoupons.couponCode,
-    couponType = registryCoupons.couponType,
-    couponIssueDate = registryCoupons.couponIssueDate,
-    couponExpiryDate = registryCoupons.couponExpiryDate,
-    couponState = registryCoupons.couponRedemptionStatus
 )
-
-companion object {
-    @JvmStatic
-    fun toCouponsTOList(registryCouponsList: Set<RegistryCoupons>): List<CouponsTO> {
-        return registryCouponsList.map { CouponsTO(it) }
-    }
-}
-}
