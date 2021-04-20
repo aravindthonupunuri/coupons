@@ -4,7 +4,7 @@ import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
-import com.tgt.backpackregistrycoupons.util.toCouponsTOList
+import com.tgt.backpackregistrycoupons.util.toCouponsListResponse
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import reactor.core.publisher.Mono
 import java.time.Duration
@@ -36,7 +36,7 @@ class RegistryCouponService(
                 } else {
                     null
                 }
-                RegistryCouponsTO(registryId, it.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsTOList(it.registryCoupons ?: emptySet()))
+                RegistryCouponsTO(registryId, it.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsListResponse(it.registryCoupons ?: emptySet()))
             }
     }
 }

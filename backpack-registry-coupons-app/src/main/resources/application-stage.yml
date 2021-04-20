@@ -79,7 +79,7 @@ msgbus:
       enabled: false
     dlqproducer:
       enabled: true
-      client-id: backpack-registry-coupons-data-bus-stage-dlq-producer
+      client-id: backpack-registry-coupons-dlq-stage-producer
     topic: registry-internal-data-bus-stage
     consumer-group: backpack-registry-coupons-data-bus-stage-consumer
     consumer-batch-size: 50
@@ -159,7 +159,7 @@ kafka:
                 connection: 1
         block:
           ms: 2000
-    backpack-registry-coupons-data-bus-stage-dlq-producer:
+    backpack-registry-coupons-dlq-stage-producer:
       key:
         serializer: org.apache.kafka.common.serialization.StringSerializer
       value:

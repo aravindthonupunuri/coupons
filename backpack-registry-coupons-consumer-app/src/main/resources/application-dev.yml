@@ -55,7 +55,7 @@ msgbus:
       enabled: true
     dlqproducer:
       enabled: true
-      client-id: backpack-registry-coupons-consumer-data-bus-dev-producer
+      client-id: backpack-registry-coupons-consumer-dlq-dev-producer
     topic: registry-internal-data-bus-dev
     consumer-group: backpack-registry-coupons-bus-dev-consumer
     consumer-batch-size: 100
@@ -124,7 +124,7 @@ kafka:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     # default is a Jackson based JSON serializer for key/value
-    backpack-registry-coupons-bus-dev-producer:
+    backpack-registry-coupons-consumer-data-bus-dev-producer:
       key:
         serializer: org.apache.kafka.common.serialization.StringSerializer
       value:
@@ -162,7 +162,7 @@ kafka:
                 connection: 1
         block:
           ms: 2000
-    backpack-registry-coupons-consumer-data-bus-dev-producer:
+    backpack-registry-coupons-consumer-dlq-dev-producer:
       key:
         serializer: org.apache.kafka.common.serialization.StringSerializer
       value:
