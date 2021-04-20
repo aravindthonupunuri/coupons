@@ -1,11 +1,11 @@
-package com.tgt.backpackregistrycoupons.migration.service
+package com.tgt.backpackregistrycoupons.kafka.migration.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
-import com.tgt.backpackregistrycoupons.migration.model.RegistryCouponMetaDataTO
+import com.tgt.backpackregistrycoupons.kafka.migration.model.RegistryCouponMetaDataTO
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.util.CouponType

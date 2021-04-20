@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.kafka
 
 import com.tgt.backpackregistrycoupons.kafka.handler.*
-import com.tgt.backpackregistrycoupons.migration.model.CouponAssignmentNotifyEvent
+import com.tgt.backpackregistrycoupons.kafka.migration.model.CouponAssignmentNotifyEvent
 import com.tgt.lists.msgbus.EventDispatcher
 import com.tgt.lists.msgbus.event.DeadEventTransformedValue
 import com.tgt.lists.msgbus.event.EventHeaders

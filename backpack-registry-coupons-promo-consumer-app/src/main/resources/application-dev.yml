@@ -38,10 +38,9 @@ msgbus:
     consumer:
       enabled: false
     producer:
-      enabled: true
-      client-id: backpack-registry-coupons-promo-consumer-data-bus-dev-producer
-    dlqconsumer:
       enabled: false
+    dlqconsumer:
+      enabled: true
     dlqproducer:
       enabled: true
       client-id: backpack-registry-coupons-promo-consumer-data-bus-dev-dlq-producer
@@ -80,7 +79,6 @@ kafka-sources:
 
 promo:
   source: promo
-  env: dev
   kafka:
     consumer:
       topic: promo-coupon-redemption-notifications-v2

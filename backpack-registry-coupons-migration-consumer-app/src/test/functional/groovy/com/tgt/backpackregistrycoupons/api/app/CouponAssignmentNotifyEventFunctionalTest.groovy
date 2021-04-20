@@ -2,11 +2,11 @@ package com.tgt.backpackregistrycoupons.api.app
 
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
-import com.tgt.backpackregistrycoupons.migration.model.CouponAssignmentNotifyEvent
+import com.tgt.backpackregistrycoupons.kafka.migration.model.CouponAssignmentNotifyEvent
+import com.tgt.backpackregistrycoupons.migrationconsumer.test.util.RegistryDataProvider
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
-import com.tgt.backpackregistrycoupons.test.util.RegistryDataProvider
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.lists.msgbus.event.EventHeaders
@@ -81,6 +81,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
         given:
         PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
         def registryCouponMetaData = registryDataProvider.getRegistryCouponMetaDataMap(onlineCouponCode, CouponRedemptionStatus.AVAILABLE, storeCouponCode, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now(), LocalDateTime.now(), LocalDateTime.now())
+
         def event = new CouponAssignmentNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), registryCouponMetaData,null)
 
         testEventListener.preDispatchLambda = new PreDispatchLambda() {

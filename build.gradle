@@ -68,7 +68,7 @@ allprojects {
         implementation "javax.annotation:javax.annotation-api"
         implementation "com.lmax:disruptor:3.4.2"
 
-        implementation("com.tgt.lists:atlas-client:2.231.13")
+        implementation("com.tgt.lists:atlas-client:2.231.15")
         implementation("com.tgt.lists:lists-components:2.231.6") {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
@@ -77,7 +77,7 @@ allprojects {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
-        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.39") {
+        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.40") {
             exclude group: 'com.tgt.lists', module: 'lists-components'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
@@ -87,7 +87,7 @@ allprojects {
 
         implementation "com.tgt.lists:lists-oauth:2.231.0"
         implementation "com.tgt.lists.micronaut:micronaut-zipkin:2.231.0"
-        implementation "com.tgt.lists:lists-message-bus:2.231.4"
+        implementation "com.tgt.lists:lists-message-bus:2.231.3"
         implementation "com.tgt.lists:notification-tracer-client:1.0.1"
         implementation "com.tgt.lists:lists-logging:2.231.0"
         implementation 'com.tgt.lists.micronaut:micronaut-jdbc:2.231.3'
@@ -133,6 +133,7 @@ allprojects {
         testImplementation "cglib:cglib:3.3.0"
         testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.33.0'
         testImplementation "org.testcontainers:kafka:1.14.3"
+        testImplementation "com.tgt.lists:grafana-builder:2.231.18"
     }
 
     configurations.all {
