@@ -37,8 +37,8 @@ class GrafanaBuilderCouponsPromoConsumerUnitTest extends Specification {
                 prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
                     topic: "promo-coupon-redemption-notifications-v2",
                     consumerGroup: "promo-msg-consumer-prod",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
+                    ttcCluster: "ost-ttc-prod-app",
+                    tteCluster: "ost-ttce-prod-app"
                 )
             ),
             new GrafanaBuilderConfig.KafkaConsumer(
@@ -60,8 +60,8 @@ class GrafanaBuilderCouponsPromoConsumerUnitTest extends Specification {
                 prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
                     topic: "registry-internal-data-bus-prod-dlq",
                     consumerGroup: "backpack-registry-coupons-promo-data-bus-prod-dlq-consumer",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
+                    ttcCluster: "ost-ttc-prod-app",
+                    tteCluster: "ost-ttce-prod-app"
                 )
             )
         ]

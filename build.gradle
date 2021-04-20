@@ -82,13 +82,13 @@ allprojects {
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
 
-        implementation "com.tgt.cronbeacon:beacon-client:2.231.0"
+        implementation "com.tgt.cronbeacon:beacon-client:2.231.3"
         implementation "com.tgt.lists:lists-permissions-client:2.231.0"
 
         implementation "com.tgt.lists:lists-oauth:2.231.0"
         implementation "com.tgt.lists.micronaut:micronaut-zipkin:2.231.0"
-        implementation "com.tgt.lists:lists-message-bus:2.231.3"
-        implementation "com.tgt.lists:notification-tracer-client:1.0.1"
+        implementation "com.tgt.lists:lists-message-bus:2.231.4"
+        implementation "com.tgt.lists:notification-tracer-client:2.231.1"
         implementation "com.tgt.lists:lists-logging:2.231.0"
         implementation 'com.tgt.lists.micronaut:micronaut-jdbc:2.231.3'
         implementation "com.target.oss:platform-connector-micronaut:${micronautTapPlatformConnectorVersion}"
@@ -133,7 +133,7 @@ allprojects {
         testImplementation "cglib:cglib:3.3.0"
         testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.33.0'
         testImplementation "org.testcontainers:kafka:1.14.3"
-        testImplementation "com.tgt.lists:grafana-builder:2.231.18"
+        testImplementation "com.tgt.lists:grafana-builder:2.231.19"
     }
 
     configurations.all {

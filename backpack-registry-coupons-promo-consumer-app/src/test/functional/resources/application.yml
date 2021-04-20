@@ -20,43 +20,6 @@ jdbc-stmt:
 jackson:
   property-naming-strategy: "SNAKE_CASE"
 
-kafka:
-  consumers:
-    lists-promo-msg-bus-kafkapp-consumer:
-      key:
-        deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value:
-        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    lists-promo-dlq-kafkapp-consumer:
-      key:
-        deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value:
-        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    promo-msg-consumer:
-      key:
-        deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value:
-        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-
-  producers:
-    # default is a Jackson based JSON serializer for key/value
-    lists-msg-bus-producer:
-      retries: 3
-      retry:
-        backoff:
-          ms: 1000
-      max:
-        in:
-          flight:
-            requests:
-              per:
-                connection: 1
-        block:
-          ms: 2000
-
-  embedded:
-    enabled: false
-
 components:
   server:
     list-authorization-filter:
@@ -85,10 +48,12 @@ msgbus:
       enabled: false
     producer:
       enabled: true
+      client-id: lists-promo-msg-bus-kafkapp-producer
     dlqconsumer:
       enabled: true
     dlqproducer:
       enabled: true
+      client-id: lists-promo-dlq-kafkapp-producer
     topic: lists-msg-bus
     consumer-group: lists-promo-msg-bus-kafkapp-consumer
     consumer-batch-size: 10
@@ -97,6 +62,62 @@ msgbus:
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 3
     dlq-consumer-batch-size: 10
+
+kafka:
+  consumers:
+    lists-promo-msg-bus-kafkapp-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    lists-promo-dlq-kafkapp-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    promo-msg-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+  producers:
+    lists-promo-msg-bus-kafkapp-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+    lists-promo-dlq-kafkapp-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+  embedded:
+    enabled: false
 
 kafka-sources:
   allow:
