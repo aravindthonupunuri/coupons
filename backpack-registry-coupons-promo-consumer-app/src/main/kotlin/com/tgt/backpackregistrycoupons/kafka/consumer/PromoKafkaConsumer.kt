@@ -3,7 +3,6 @@ package com.tgt.backpackregistrycoupons.kafka.consumer
 import com.tgt.lists.msgbus.EventDispatcher
 import com.tgt.lists.msgbus.GenericConsumer
 import com.tgt.lists.msgbus.ListsDlqProducer
-import com.tgt.lists.msgbus.MetricsName
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventLifecycleNotificationProvider
