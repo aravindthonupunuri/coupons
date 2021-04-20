@@ -1,4 +1,4 @@
-package com.tgt.backpackregistrycoupons.migration.model
+package com.tgt.backpackregistrycoupons.kafka.migration.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -14,7 +14,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RegistryCouponMetaDataTO(

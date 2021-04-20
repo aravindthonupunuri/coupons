@@ -1,9 +1,9 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistryclient.util.RegistryType
-import com.tgt.backpackregistrycoupons.migration.model.CouponAssignmentNotifyEvent
-import com.tgt.backpackregistrycoupons.migration.model.RegistryCouponMetaDataTO
-import com.tgt.backpackregistrycoupons.migration.service.MigrationAssignCouponNotifyEventService
+import com.tgt.backpackregistrycoupons.kafka.migration.model.CouponAssignmentNotifyEvent
+import com.tgt.backpackregistrycoupons.kafka.migration.model.RegistryCouponMetaDataTO
+import com.tgt.backpackregistrycoupons.kafka.migration.service.MigrationAssignCouponNotifyEventService
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult

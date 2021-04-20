@@ -48,8 +48,8 @@ class GrafanaBuilderCouponsConsumerUnitTest extends Specification {
                 prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
                     topic: "registry-internal-data-bus-prod",
                     consumerGroup: "backpack-registry-coupons-data-bus-prod-consumer",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
+                    ttcCluster: "ost-ttc-prod-app",
+                    tteCluster: "ost-ttce-prod-app"
                 )
             ),
             new GrafanaBuilderConfig.KafkaConsumer(
@@ -71,8 +71,8 @@ class GrafanaBuilderCouponsConsumerUnitTest extends Specification {
                 prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
                     topic: "registry-internal-data-bus-prod-dlq",
                     consumerGroup: "backpack-registry-coupons-data-bus-prod-dlq-consumer",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
+                    ttcCluster: "ost-ttc-prod-app",
+                    tteCluster: "ost-ttce-prod-app"
                 )
             ),
             new GrafanaBuilderConfig.KafkaConsumer(
@@ -93,8 +93,8 @@ class GrafanaBuilderCouponsConsumerUnitTest extends Specification {
                 prodEnvironment: new GrafanaBuilderConfig.KafkaConsumerEnvironment(
                     topic: "backpack-beacon-prod",
                     consumerGroup: "backpack-registry-coupons-consumer-app-cron-beacon-prod",
-                    ttcCluster: "ost-ttc-prod-app'",
-                    tteCluster: "ost-ttce-prod-app'"
+                    ttcCluster: "ost-ttc-prod-app",
+                    tteCluster: "ost-ttce-prod-app"
                 )
             )
         ]
