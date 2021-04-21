@@ -63,15 +63,6 @@ notification:
 beacon:
   client:
     enabled: false
-    source: backpack-registry-coupons-migration-consumer-app-stage
-    dlq-source: backpack-registry-coupons-migration-consumer-app-dlq-stage
-    kafka:
-      consumer:
-        topic: backpack-beacon-stage
-        metrics-name: backpack-registry-coupons-migration-beacon-metrics
-        consumer-group: backpack-registry-coupons-migration-consumer-app-stage-cron-beacon
-        consumer-batch-size: 1
-        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
 
 kafka-sources:
   allow:

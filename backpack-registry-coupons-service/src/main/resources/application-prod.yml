@@ -75,6 +75,7 @@ registry:
     coupon-assignment-minute-block-of-hour: 1
 
 notification-tracer:
+  client-id: notification-tracer-producer
   source: ${notification.source}
   dlq-source: ${notification.dlq-source}
   kafka:

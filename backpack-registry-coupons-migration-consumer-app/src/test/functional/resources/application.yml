@@ -25,35 +25,6 @@ jdbc-stmt:
 jackson:
   property-naming-strategy: "SNAKE_CASE"
 
-
-kafka:
-  consumers:
-    backpack-registry-coupons-migration-bus-stage-consumer:
-      key:
-        deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value:
-        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-    backpack-registry-coupons-migration-bus-stage-dlq-consumer:
-      key:
-        deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value:
-        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
-  producers:
-    # default is a Jackson based JSON serializer for key/value
-    backpack-registry-coupons-migration-data-bus-stage-producer:
-      retries: 3
-      retry:
-        backoff:
-          ms: 1000
-      max:
-        in:
-          flight:
-            requests:
-              per:
-                connection: 1
-        block:
-          ms: 2000
-
 components:
   server:
     list-authorization-filter:
@@ -80,18 +51,68 @@ msgbus:
       enabled: true
     producer:
       enabled: true
+      client-id: backpack-registry-coupons-migration-bus-test-producer
     dlqconsumer:
       enabled: true
     dlqproducer:
       enabled: true
+      client-id: backpack-registry-coupons-migration-bus-test-dlq-producer
     topic: registry-internal-data-bus-stage
-    consumer-group: backpack-registry-coupons-migration-bus-stage-consumer
+    consumer-group: backpack-registry-coupons-migration-bus-test-consumer
     consumer-batch-size: 10
     dlq-topic: registry-internal-data-bus-stage-dlq
-    dlq-consumer-group: backpack-registry-coupons-migration-bus-stage-dlq-consumer
+    dlq-consumer-group: backpack-registry-coupons-migration-bus-test-dlq-consumer
     dlq-event-retry-interval-secs: 1
     dlq-max-event-retry-count: 3
     dlq-consumer-batch-size: 10
+
+kafka:
+  consumers:
+    backpack-registry-coupons-migration-bus-test-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    backpack-registry-coupons-migration-bus-test-dlq-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+  producers:
+    backpack-registry-coupons-migration-bus-test-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
+    backpack-registry-coupons-migration-bus-test-dlq-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
 
 api-key: "testkey"
 
@@ -149,19 +170,10 @@ kafka-sources:
 
 beacon:
   client:
-    enabled: true
-    source: backpack-registry-coupons-migration-kafkapp-consumer
-    dlq-source: backpack-registry-coupons-migration-kafkapp-consumer-dlq
-    kafka:
-      consumer:
-        client-id: backpack-registry-coupons-migration-cron-beacon-consumer
-        topic: registry-internal-data-bus-stage
-        metrics-name: backpack-registry-coupons-migration-beacon-metrics
-        consumer-group: backpack-registry-coupons-migration-cron-beacon-consumer
-        consumer-batch-size: 1
-        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
+    enabled: false
 
 notification-tracer:
+  client-id: notification-tracer-client-producer
   source: testtracerclient
   dlq-source: testtracerclient-dlq
   kafka:

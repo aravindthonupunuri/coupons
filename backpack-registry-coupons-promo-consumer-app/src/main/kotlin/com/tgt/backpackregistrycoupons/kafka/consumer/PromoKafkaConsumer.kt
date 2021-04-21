@@ -16,6 +16,7 @@ import io.micronaut.configuration.kafka.annotation.OffsetReset
 import io.micronaut.configuration.kafka.annotation.OffsetStrategy
 import io.micronaut.configuration.kafka.annotation.Topic
 import io.micronaut.context.annotation.Value
+import io.micronaut.context.env.Environment
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.header.Header
@@ -32,7 +33,7 @@ import javax.inject.Provider
 )
 class PromoKafkaConsumer<K, V>(
     @Value("ex\${APP_UUID}") val clientId: String,
-    @Value("\${promo.kafka.consumer.consumer-group}") val consumerName: String,
+    @Value("\${promo.kafka.consumer.consumer-group}") val consumerGroupId: String,
     @Value("\${promo.source}") val defaultEventSource: String,
     @Value("\${promo.kafka.consumer.consumer-batch-size}") val consumerBatchSize: Int,
     @Value("\${promo.kafka.consumer.max-count-down-latch-wait-time}") val maxCountDownLatchWaitTime: Long,
@@ -46,23 +47,26 @@ class PromoKafkaConsumer<K, V>(
     @Inject val eventDispatcherExecutorFactory: EventDispatcherExecutorFactory<K>,
     @Inject val eventTracer: EventTracer,
     @Inject val metricsPublisher: MetricsPublisher,
-    @Inject val mdcContext: MdcContext? = null
+    @Inject val mdcContext: MdcContext? = null,
+    environment: Environment
 ) : GenericConsumer<K, V>(
-    consumerName,
-    clientId,
-    defaultEventSource,
-    consumerRegistry,
-    eventDispatcher,
-    eventLifecycleNotificationProvider,
-    listsDlqProducer,
-    consumerBatchSize,
-    maxCountDownLatchWaitTime,
-    eventHeaderFactory,
-    eventDispatcherExecutorFactory,
-    eventTracer,
-    metricsPublisher,
-    mdcContext,
-    metricsName
+    consumerName = "PromoKafkaConsumer",
+    consumerGroupId = consumerGroupId,
+    clientId = clientId,
+    defaultEventSource = defaultEventSource,
+    consumerRegistry = consumerRegistry,
+    eventDispatcher = eventDispatcher,
+    eventLifecycleNotificationProvider = eventLifecycleNotificationProvider,
+    listsDlqProducer = listsDlqProducer,
+    consumerBatchSize = consumerBatchSize,
+    maxCountDownLatchWaitTimeSecs = maxCountDownLatchWaitTime,
+    eventHeaderFactory = eventHeaderFactory,
+    eventDispatcherExecutorFactory = eventDispatcherExecutorFactory,
+    eventTracer = eventTracer,
+    metricsPublisher = metricsPublisher,
+    mdcContext = mdcContext,
+    metricsName = metricsName,
+    environment = environment
 ) {
     @Topic(("\${promo.kafka.consumer.topic}"))
     fun receive(

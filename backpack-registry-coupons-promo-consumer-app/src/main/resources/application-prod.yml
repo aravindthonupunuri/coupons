@@ -38,7 +38,8 @@ msgbus:
     consumer:
       enabled: false
     producer:
-      enabled: false
+      enabled: true
+      client-id: backpack-registry-coupons-promo-data-bus-prod-producer
     dlqconsumer:
       enabled: true
     dlqproducer:
@@ -103,7 +104,25 @@ kafka:
   security:
     protocol: ssl
   producers:
-    # default is a Jackson based JSON serializer for key/value
+    backpack-registry-coupons-promo-data-bus-prod-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      compression:
+        type: zstd
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+        block:
+          ms: 2000
     backpack-registry-coupons-promo-dlq-prod-producer:
       key:
         serializer: org.apache.kafka.common.serialization.StringSerializer
