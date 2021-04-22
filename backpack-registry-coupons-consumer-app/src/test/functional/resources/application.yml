@@ -194,12 +194,9 @@ endpoints:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons
-    - backpack-registry-coupons-dlq
     - cronbeacon
-    - cronbeacon-dlq
     - backpack-registry
-    - backpack-registry-dlq
+    - backpackregistry-migration
 
 beacon:
   client:

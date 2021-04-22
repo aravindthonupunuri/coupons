@@ -2,7 +2,6 @@ package com.tgt.backpackregistrycoupons.service
 
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
-import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.EventPublisher
 import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
 import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemPromoTransactionActionEvent
@@ -20,7 +19,7 @@ class RegistryTransactionService(
     private val logger = KotlinLogging.logger {}
 
     fun processCouponCode(promoCouponRedemptionTO: PromoCouponRedemptionTO): Mono<Boolean> {
-        return updateCouponStatus(promoCouponRedemptionTO.couponCode)
+        return updateCouponStatus(promoCouponRedemptionTO.couponCode, promoCouponRedemptionTO.status!!)
             .flatMap {
                 eventPublisher.publishEvent(
                         RegistryItemPromoTransactionActionEvent.getEventType(),
@@ -42,10 +41,10 @@ class RegistryTransactionService(
             }
     }
 
-    fun updateCouponStatus(couponCode: String): Mono<RegistryCoupons> {
+    fun updateCouponStatus(couponCode: String, couponStatus: String): Mono<RegistryCoupons> {
         return registryCouponsRepository.findByCouponCode(couponCode)
             .flatMap { registryCoupons ->
-                registryCouponsRepository.updateCouponRedemptionStatus(couponCode, CouponRedemptionStatus.REDEEMED.name)
+                registryCouponsRepository.updateCouponRedemptionStatus(couponCode, couponStatus)
                     .map { registryCoupons }
             }
     }

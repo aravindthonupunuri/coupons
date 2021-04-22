@@ -75,11 +75,10 @@ beacon:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-promo-consumer-app
-    - backpack-registry-coupons-promo-consumer-app-dlq
+    - coupon-promotion
 
 promo:
-  source: promo
+  source: coupon-promotion
   kafka:
     consumer:
       topic: promo-coupon-redemption-notifications-v2
@@ -103,6 +102,17 @@ kafka:
       type: PKCS12
   security:
     protocol: ssl
+  consumers:
+    backpack-registry-coupons-promo-bus-dev-dlq-consumer:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+    promo-msg-consumer-dev:
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value:
+        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
   producers:
     backpack-registry-coupons-migration-data-bus-dev-producer:
       key:

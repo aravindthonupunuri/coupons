@@ -160,12 +160,6 @@ endpoints:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-migration-consumer-app
-    - backpack-registry-coupons-migration-consumer-app-dlq
-    - cronbeacon
-    - cronbeacon-dlq
-    - backpack-registry
-    - backpack-registry-dlq
     - migration-GRWS
 
 beacon:

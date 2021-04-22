@@ -98,7 +98,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
         }
 
         when:
-        msgBusClient.sendMessage(event.listId.toString(), UUID.randomUUID(), CouponAssignmentNotifyEvent.getEventType(), "backpack-registry", event)
+        msgBusClient.sendMessage(event.listId.toString(), UUID.randomUUID(), CouponAssignmentNotifyEvent.getEventType(), "migration-GRWS", event)
 
         then:
         testEventListener.verifyEvents { consumerEvents, producerEvents, consumerStatusEvents ->

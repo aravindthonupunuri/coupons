@@ -59,16 +59,12 @@ notification:
   dlq-source: backpack-registry-coupons-migration-consumer-app-dlq-stage
   enabled: false
 
-
 beacon:
   client:
     enabled: false
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-migration-consumer-app-stage
-    - cronbeacon-stage
-    - backpack-registry-stage
     - migration-GRWS
 
 kafka:

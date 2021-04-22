@@ -87,7 +87,6 @@ beacon:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-consumer-app
     - cronbeacon
     - backpack-registry
     - backpackregistry-migration

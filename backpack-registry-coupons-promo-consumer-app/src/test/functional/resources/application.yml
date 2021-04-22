@@ -41,8 +41,8 @@ components:
 #    protocol: ssl
 
 msgbus:
-  source: backpacktransactions
-  dlq-source: backpacktransactions-dlq
+  source: backpack-registry-coupons-promo-consumer-app
+  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq
   kafka:
     consumer:
       enabled: false
@@ -54,9 +54,6 @@ msgbus:
     dlqproducer:
       enabled: true
       client-id: lists-promo-dlq-kafkapp-producer
-    topic: lists-msg-bus
-    consumer-group: lists-promo-msg-bus-kafkapp-consumer
-    consumer-batch-size: 10
     dlq-topic: lists-dlq
     dlq-consumer-group: lists-promo-dlq-kafkapp-consumer
     dlq-event-retry-interval-secs: 1
@@ -65,11 +62,6 @@ msgbus:
 
 kafka:
   consumers:
-    lists-promo-msg-bus-kafkapp-consumer:
-      key:
-        deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value:
-        deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
     lists-promo-dlq-kafkapp-consumer:
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -121,15 +113,13 @@ kafka:
 
 kafka-sources:
   allow:
-    - generic
-    - backpacktransactions-dlq
+    - coupon-promotion
 
 promo:
-  source: generic
+  source: coupon-promotion
   kafka:
     consumer:
-      client-id: backpack-promo-generic-consumer
-      topic: generic-bus
+      topic: promo-coupon-redemption-notifications-v2
       metrics-name: test-producer
       consumer-group: promo-msg-consumer
       default-event-type: promo-update-event
