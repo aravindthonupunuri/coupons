@@ -1,6 +1,9 @@
 package com.tgt.backpackregistrycoupons.test.util
 
 import com.tgt.backpackregistryclient.transport.*
+import com.tgt.backpackregistryclient.util.RegistrySearchVisibility
+import com.tgt.backpackregistryclient.util.RegistryStatus
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.cronbeacon.kafka.model.CronEvent
 import com.tgt.lists.atlas.api.type.UserMetaData.Companion.toUserMetaData
 import java.time.*
@@ -42,6 +45,7 @@ class RegistryDataProvider {
     }
 
     fun getRegistryDetails(registryId: String): RegistryDetailsResponseTO {
-        return RegistryDetailsResponseTO(UUID.fromString(registryId), "", "", null, null, null, "regfname", "reglname", "coregfname", "coreglname", LocalDate.now())
+        return RegistryDetailsResponseTO(UUID.fromString(registryId), "", "", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.BABY,
+            RegistryStatus.ACTIVE, null, null)
     }
 }

@@ -2,6 +2,7 @@ package com.tgt.backpackregistrycoupons.service.async
 
 import com.tgt.backpackregistryclient.client.BackpackRegistryClient
 import com.tgt.backpackregistryclient.transport.RegistryDetailsResponseTO
+import com.tgt.backpackregistryclient.util.RecipientType
 import com.tgt.backpackregistryclient.util.RegistryChannel
 import com.tgt.backpackregistryclient.util.RegistrySubChannel
 import com.tgt.backpackregistryclient.util.RegistryType
@@ -178,8 +179,10 @@ class CronEventService(
             earliestSendTime = null,
             latestSendTime = null,
             data = CompletionCouponNotificationTO(
-                firstName = registryDetailsResponseTO.registrantFirstName,
-                lastName = registryDetailsResponseTO.registrantLastName,
+                firstName = registryDetailsResponseTO.recipients?.first {
+                    it.recipientType == RecipientType.REGISTRANT }?.firstName,
+                lastName = registryDetailsResponseTO.recipients?.first {
+                    it.recipientType == RecipientType.REGISTRANT }?.firstName,
                 emailAddress = registryDetailsResponseTO.emailAddress,
                 registryId = registryId.toString(),
                 onlinePromoCode = registryOnlineCouponCode,

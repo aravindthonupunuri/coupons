@@ -35,5 +35,13 @@ create table REGISTRY_COUPONS (
                                             CONSTRAINT REGISTRY_COUPONS_PK PRIMARY KEY (COUPON_CODE)
 );
 
+create table WELCOME_KITS (
+                                  TCIN text not null,
+                                  CREATED_TS timestamp not null DEFAULT NOW(),
+                                  UPDATED_TS timestamp not null DEFAULT NOW(),
+                                  CONSTRAINT WELCOME_KITS_PK PRIMARY KEY (TCIN)
+);
+
 CREATE INDEX coupons_registry_id_index
     ON REGISTRY_COUPONS(REGISTRY_ID);
+

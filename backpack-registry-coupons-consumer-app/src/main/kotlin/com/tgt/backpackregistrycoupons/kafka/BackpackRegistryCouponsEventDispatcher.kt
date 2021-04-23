@@ -1,6 +1,8 @@
 package com.tgt.backpackregistrycoupons.kafka
 
 import com.tgt.backpackregistrycoupons.kafka.handler.*
+import com.tgt.backpackregistrycoupons.kafka.handler.welcomkit.RegistryItemTransactionActionEventHandler
+import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemTransactionActionEvent
 import com.tgt.cronbeacon.kafka.model.CronEvent
 import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
 import com.tgt.lists.atlas.kafka.model.DeleteListNotifyEvent
@@ -22,6 +24,7 @@ open class BackpackRegistryCouponsEventDispatcher(
     @Inject val createListNotifyEventHandler: CreateListNotifyEventHandler,
     @Inject val updateListNotifyEventHandler: UpdateListNotifyEventHandler,
     @Inject val deleteListNotifyEventHandler: DeleteListNotifyEventHandler,
+    @Inject val registryItemTransactionActionEventHandler: RegistryItemTransactionActionEventHandler,
     @Inject val cronEventHandler: CronEventHandler,
     @Value("\${msgbus.source}") val source: String,
     @Value("\${msgbus.dlq-source}") val dlqSource: String,
@@ -50,6 +53,11 @@ open class BackpackRegistryCouponsEventDispatcher(
                     val deleteListNotifyEvent = data as DeleteListNotifyEvent
                     logger.debug { "Source : ${eventHeaders.source} | Got DeleteList Event: $deleteListNotifyEvent" }
                     return deleteListNotifyEventHandler.handleDeleteListNotifyEvent(deleteListNotifyEvent, eventHeaders, isPoisonEvent)
+                }
+                RegistryItemTransactionActionEvent.getEventType() -> {
+                    val registryItemTransactActionEvent = data as RegistryItemTransactionActionEvent
+                    logger.debug { "Got Registry Item transact action event: $registryItemTransactActionEvent" }
+                    return registryItemTransactionActionEventHandler.handleItemTransactionEvent(registryItemTransactActionEvent, eventHeaders, isPoisonEvent)
                 }
                 CronEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
@@ -82,6 +90,10 @@ open class BackpackRegistryCouponsEventDispatcher(
                 DeleteListNotifyEvent.getEventType() -> {
                     val deleteListNotifyEvent = DeleteListNotifyEvent.deserialize(data)
                     EventTransformedValue("lists_${deleteListNotifyEvent.listId}", ExecutionSerialization.ID_SERIALIZATION, deleteListNotifyEvent)
+                }
+                RegistryItemTransactionActionEvent.getEventType() -> {
+                    val registryItemTransactActionEvent = RegistryItemTransactionActionEvent.deserialize(data)
+                    EventTransformedValue("lists_${registryItemTransactActionEvent.registryTransactionTO.registryId}", ExecutionSerialization.ID_SERIALIZATION, registryItemTransactActionEvent)
                 }
                 CronEvent.getEventType() -> {
                     val cronEvent = CronEvent.deserialize(data)

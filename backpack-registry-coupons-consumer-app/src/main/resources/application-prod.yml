@@ -89,6 +89,7 @@ kafka-sources:
     - cronbeacon
     - backpack-registry-prod
     - backpackregistry-migration-prod
+    - backpacktransactions-prod
 
 kafka:
   bootstrap:

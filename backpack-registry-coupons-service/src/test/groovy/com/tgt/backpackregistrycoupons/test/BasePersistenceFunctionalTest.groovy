@@ -98,6 +98,7 @@ class BasePersistenceFunctionalTest extends BaseFunctionalTest implements TestPr
                 statement.executeUpdate("TRUNCATE TABLE COUPONS")
                 statement.executeUpdate("TRUNCATE TABLE REGISTRY")
                 statement.executeUpdate("TRUNCATE TABLE REGISTRY_COUPONS")
+                statement.executeUpdate("TRUNCATE TABLE WELCOME_KITS")
             }
         } catch(Throwable t) {
             t.printStackTrace()
