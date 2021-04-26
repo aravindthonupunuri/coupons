@@ -103,8 +103,22 @@ components:
       approver-email-ids:
         - Indrakumar.Thimmaiah@target.com
     list-authorization-filter:
-      enabled: false
-      base-uri: /backpackregistrycoupons
+      enabled: true
+      base-uri: /registries_coupons/v1
+      internal-ad-group: APP-BACKPACK-REGISTRY
+    ad-group-permissions:
+      get-access:
+        permissions[0]:
+          groups:
+            - APP-BACKPACK-REGISTRY
+          urls:
+            - /registries_coupons/v1/*
+      post-access:
+        permissions[0]:
+          groups:
+            - APP-BACKPACK-REGISTRY-PROD-READ
+          urls:
+            - /uploads
     id2-custom-scopes:
       names:
         - axiom.user
