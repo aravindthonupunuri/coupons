@@ -9,6 +9,22 @@ micronaut:
       max-header-size: 16384 # Handling RequestTooLarge headers - Default value (8192)
     multipart:
       max-file-size: 100mb
+
+  http:
+    client.connect-ttl: 30m
+    client.pool.acquire-timeout: 2000ms
+    client.read-timeout: 5000ms
+    services:
+      permissions-api:
+        urls:
+          - "https://registriespermissions.dev.target.com"
+        connect-timeout: 300ms
+        read-timeout: 300ms
+        pool:
+          enabled: true
+          max-connections: 128
+          max-pending-acquires: 50
+
   metrics:
     binders:
       web:

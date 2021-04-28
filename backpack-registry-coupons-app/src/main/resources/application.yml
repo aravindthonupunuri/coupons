@@ -7,6 +7,22 @@ micronaut:
     idle-timeout: 2000ms
     multipart:
       max-file-size: 100mb
+
+  http:
+    client.connect-ttl: 30m
+    client.pool.acquire-timeout: 2000ms
+    client.read-timeout: 5000ms
+    services:
+      permissions-api:
+        urls:
+          -http://localhost:${server-port:32000}
+        connect-timeout: 300ms
+        read-timeout: 300ms
+        pool:
+          enabled: true
+          max-connections: 128
+          max-pending-acquires: 50
+
   metrics:
     binders:
       web:
