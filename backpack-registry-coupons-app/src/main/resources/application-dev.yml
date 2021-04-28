@@ -75,7 +75,7 @@ components:
       post-access:
         permissions[0]:
           groups:
-            - APP-BACKPACK-REGISTRY-STG-READ
+            - APP-BACKPACK-REGISTRY
           urls:
             - /uploads
     id2-custom-scopes:

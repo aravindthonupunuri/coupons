@@ -132,7 +132,7 @@ components:
       post-access:
         permissions[0]:
           groups:
-            - APP-BACKPACK-REGISTRY-PROD-READ
+            - APP-BACKPACK-REGISTRY
           urls:
             - /uploads
     id2-custom-scopes:
