@@ -73,11 +73,11 @@ allprojects {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
 
-        implementation("com.tgt.backpackregistry:backpack-transactions-client:2.231.9") {
+        implementation("com.tgt.backpackregistry:backpack-transactions-client:2.231.11") {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
-        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.49") {
+        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.51") {
             exclude group: 'com.tgt.lists', module: 'lists-components'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
@@ -133,7 +133,7 @@ allprojects {
         testImplementation "cglib:cglib:3.3.0"
         testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.33.0'
         testImplementation "org.testcontainers:kafka:1.14.3"
-        testImplementation "com.tgt.lists:grafana-builder:2.231.19"
+        testImplementation "com.tgt.lists:grafana-builder:2.231.24"
     }
 
     configurations.all {

@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistrycoupons.service.RegistryTransactionService
-import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
+import com.tgt.backpackregistrycoupons.transport.PromoCouponRedemptionTO
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult

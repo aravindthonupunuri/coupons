@@ -3,8 +3,8 @@ package com.tgt.backpackregistrycoupons.service
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.util.EventPublisher
-import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
-import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemPromoTransactionActionEvent
+import com.tgt.backpackregistrycoupons.transport.PromoCouponRedemptionTO
+import com.tgt.backpackregistrycoupons.transport.RegistryItemPromoTransactionActionEvent
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
