@@ -316,7 +316,7 @@ pipeline:
       event: tag
       branch: master
       ref: 'refs/tags/client.*'
-    image: openjdk:11
+    image: 'docker.target.com/tap/alpine-adoptopenjdk:11'
     environment:
       JAVA_TOOL_OPTIONS: -Xmx3000M
       GRADLE_USER_HOME: .gradle
