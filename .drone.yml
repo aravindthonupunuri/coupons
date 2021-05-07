@@ -138,7 +138,7 @@ pipeline:
       - latest
     when:
       event: [push]
-      branch: master
+      branch: reg_id_fix
     secrets:
       - {source: artifactory_username, target: plugin_username}
       - {source: artifactory_password, target: plugin_password}
