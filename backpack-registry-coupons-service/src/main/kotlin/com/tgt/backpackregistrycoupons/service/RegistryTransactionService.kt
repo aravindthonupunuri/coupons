@@ -21,6 +21,7 @@ class RegistryTransactionService(
     fun processCouponCode(promoCouponRedemptionTO: PromoCouponRedemptionTO): Mono<Boolean> {
         return updateCouponStatus(promoCouponRedemptionTO.couponCode, promoCouponRedemptionTO.status!!)
             .flatMap {
+                promoCouponRedemptionTO.registryId = it.registry?.registryId
                 eventPublisher.publishEvent(
                         RegistryItemPromoTransactionActionEvent.getEventType(),
                         RegistryItemPromoTransactionActionEvent(promoCouponRedemptionTO),
