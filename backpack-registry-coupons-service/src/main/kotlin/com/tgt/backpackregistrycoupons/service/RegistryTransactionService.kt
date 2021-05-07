@@ -22,7 +22,7 @@ class RegistryTransactionService(
         return updateCouponStatus(promoCouponRedemptionTO.couponCode, promoCouponRedemptionTO.status!!)
             .flatMap {
                 promoCouponRedemptionTO.registryId = it.registry?.registryId
-                logger.info("Registry coupons row from database -  ${it}")
+                logger.info("Registry coupons row from database -  $it")
                 logger.info("Registry_id from database -  ${it.registry?.registryId}")
                 eventPublisher.publishEvent(
                         RegistryItemPromoTransactionActionEvent.getEventType(),
