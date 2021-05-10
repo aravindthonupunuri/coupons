@@ -21,10 +21,10 @@ class RegistryTransactionService(
     fun processCouponCode(promoCouponRedemptionTO: PromoCouponRedemptionTO): Mono<Boolean> {
         return updateCouponStatus(promoCouponRedemptionTO.couponCode, promoCouponRedemptionTO.status!!)
             .flatMap {
-                promoCouponRedemptionTO.registryId = it.registry?.registryId
+                val promoCouponRedemption = promoCouponRedemptionTO.copy(registryId = it.registry?.registryId)
                 eventPublisher.publishEvent(
                         RegistryItemPromoTransactionActionEvent.getEventType(),
-                        RegistryItemPromoTransactionActionEvent(promoCouponRedemptionTO),
+                        RegistryItemPromoTransactionActionEvent(promoCouponRedemption),
                         it.registry?.registryId.toString())
                         .map { true }
                         .onErrorResume {
