@@ -43,7 +43,7 @@
 					]
 				},
 				"url": {
-					"raw": "{{host}}/upload?registry_type=BABY&coupon_type=ONLINE&offer_id=1&coupon_expiry_date=1991-12-03",
+					"raw": "{{host}}/uploads?registry_type=BABY&coupon_type=ONLINE&offer_id=1&coupon_expiry_date=1991-12-03",
 					"host": [
 						"{{host}}"
 					],
