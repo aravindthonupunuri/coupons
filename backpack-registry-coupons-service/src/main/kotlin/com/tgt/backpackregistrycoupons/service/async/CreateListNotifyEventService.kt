@@ -59,13 +59,17 @@ fun addGuestRegistry(
     lastModifiedDate: LocalDateTime?
 ): Mono<Boolean> {
     // The RegistryStatus is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the registry.
-    return registryCouponsRepository.save(Registry(registryId, alternateRegistryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, addedDate, lastModifiedDate))
-        .map { true }
-        .onErrorResume {
-            logger.error("Exception from addGuestRegistry() for guestID: $guestId and registryId: $registryId," +
-                " sending it for retry", it)
-            Mono.just(false)
-        }
+    // Coupon is assigned only for BABY and WEDDING registries, ignore all the other types
+    return if (registryType !in listOf(RegistryType.BABY, RegistryType.WEDDING)) Mono.just(true)
+    else {
+        registryCouponsRepository.save(Registry(registryId, alternateRegistryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, addedDate, lastModifiedDate))
+            .map { true }
+            .onErrorResume {
+                logger.error("Exception from addGuestRegistry() for guestID: $guestId and registryId: $registryId," +
+                    " sending it for retry", it)
+                Mono.just(false)
+            }
+    }
 }
 
 data class RetryState(

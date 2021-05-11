@@ -95,10 +95,10 @@ class BasePersistenceFunctionalTest extends BaseFunctionalTest implements TestPr
             if (jdbc != null) {
                 connection = DriverManager.getConnection(jdbc, "postgres", "postgres")
                 statement = connection.createStatement()
-                statement.executeUpdate("TRUNCATE TABLE COUPONS")
-                statement.executeUpdate("TRUNCATE TABLE REGISTRY")
                 statement.executeUpdate("TRUNCATE TABLE REGISTRY_COUPONS")
+                statement.executeUpdate("TRUNCATE TABLE COUPONS")
                 statement.executeUpdate("TRUNCATE TABLE WELCOME_KITS")
+                statement.executeUpdate("TRUNCATE TABLE REGISTRY")
             }
         } catch(Throwable t) {
             t.printStackTrace()

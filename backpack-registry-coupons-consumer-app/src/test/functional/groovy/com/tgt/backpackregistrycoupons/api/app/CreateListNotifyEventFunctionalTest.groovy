@@ -24,6 +24,7 @@ import spock.util.concurrent.PollingConditions
 
 import javax.inject.Inject
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.stream.Collectors
 
 @MicronautTest
@@ -48,6 +49,8 @@ class CreateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
 
     RegistryDataProvider registryDataProvider = new RegistryDataProvider()
 
+    PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
+
     def setupSpec() {
         testEventListener = new TestEventListener()
         testEventListener.tracer = tracer
@@ -58,12 +61,14 @@ class CreateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
         testEventListener.reset()
     }
 
-    def "Test CreateListNotifyEvent"() {
+    def "Test CreateListNotifyEvent - WEDDING registry typ, gets added into postgres"() {
         given:
-        PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
-        def registryMetaData = registryDataProvider.getRegistryMetaDataMap(UUID.randomUUID(), "1234", false, false, null, null, new RegistryEventTO("city", "state", "country", LocalDate.now()), null, null, null, null, "abcd", "xyz")
-        def event = new CreateListNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), "title", "channel", "subChannel", "3991", "", null, LIST_STATE.INACTIVE, registryMetaData ,LocalDate.now().plusDays(50), null,
-        null, null, null, null, null)
+        def registryMetaData = registryDataProvider.getRegistryMetaDataMap(UUID.randomUUID(), "1234", false,
+            false, null, null, new RegistryEventTO("city", "state", "country", LocalDate.now()),
+            null, null, null, null, "abcd", "xyz")
+        def event = new CreateListNotifyEvent("1234", registryId1, listType, RegistryType.WEDDING.name(), "title", "channel",
+            "subChannel", "3991", "", null, LIST_STATE.INACTIVE, registryMetaData ,LocalDate.now().plusDays(50), null,
+        null, LocalDateTime.now(), null, null, null)
 
         testEventListener.preDispatchLambda = new PreDispatchLambda() {
             @Override
@@ -92,6 +97,50 @@ class CreateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
                 assert completedEvents.any { it.eventHeaders.eventType == CreateListNotifyEvent.getEventType() && it.success }
             }
         }
+    }
+
+    def "Test CreateListNotifyEvent - Charity registry type, doesn't gets added into postgres"() {
+        given:
+
+        def registryId = UUID.randomUUID()
+        def registryMetaData = registryDataProvider.getRegistryMetaDataMap(UUID.randomUUID(), "1234", false,
+            false, null, null, new RegistryEventTO("city", "state", "country", LocalDate.now()),
+            null, null, null, null, "abcd", "xyz")
+        def event = new CreateListNotifyEvent("1234", registryId, listType, RegistryType.CHARITY.name(), "title", "channel",
+            "subChannel", "3991", "", null, LIST_STATE.INACTIVE, registryMetaData ,LocalDate.now().plusDays(50), null,
+            null, LocalDateTime.now(), null, null, null)
+
+        testEventListener.preDispatchLambda = new PreDispatchLambda() {
+            @Override
+            boolean onPreDispatchConsumerEvent(String topic, @NotNull EventHeaders eventHeaders, @NotNull byte[] data, boolean isPoisonEvent) {
+                if (eventHeaders.eventType == CreateListNotifyEvent.getEventType()) {
+                    def createRegistry = CreateListNotifyEvent.deserialize(data)
+                    if (createRegistry.listId.toString() == event.listId.toString() &&
+                        createRegistry.guestId == event.guestId) {
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+
+        when:
+        msgBusClient.sendMessage(event.listId.toString(), UUID.randomUUID(), CreateListNotifyEvent.getEventType(), "backpack-registry", event)
+
+        then:
+        testEventListener.verifyEvents { consumerEvents, producerEvents, consumerStatusEvents ->
+            conditions.eventually {
+                List<TestEventListener.Result> completedEvents = consumerEvents.stream().filter {
+                    def result = (TestEventListener.Result) it
+                    (!result.preDispatch)
+                }.collect(Collectors.toList())
+                assert completedEvents.any { it.eventHeaders.eventType == CreateListNotifyEvent.getEventType() && it.success }
+            }
+        }
+
+        and:
+        def result = registryRepository.findByRegistryId(registryId).block()
+        !result
     }
 
     def "check if registry got added"() {

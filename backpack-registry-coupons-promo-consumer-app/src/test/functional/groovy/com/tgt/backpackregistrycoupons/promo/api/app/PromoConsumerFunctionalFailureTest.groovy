@@ -12,7 +12,7 @@ import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
-import com.tgt.backpacktransactionsclient.transport.kafka.model.PromoCouponRedemptionTO
+import com.tgt.backpackregistrycoupons.transport.PromoCouponRedemptionTO
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.lists.micronaut.persistence.instrumentation.DatabaseExecTestListener
 import com.tgt.lists.micronaut.persistence.instrumentation.RepositoryInstrumenter

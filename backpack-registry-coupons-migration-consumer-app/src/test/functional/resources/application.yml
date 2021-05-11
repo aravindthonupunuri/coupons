@@ -67,6 +67,8 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 kafka:
+  embedded:
+    enabled: false
   consumers:
     backpack-registry-coupons-migration-bus-test-consumer:
       key:

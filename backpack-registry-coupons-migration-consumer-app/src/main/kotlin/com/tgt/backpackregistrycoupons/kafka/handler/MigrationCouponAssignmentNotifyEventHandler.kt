@@ -43,7 +43,9 @@ class MigrationCouponAssignmentNotifyEventHandler(
                 } else {
                     logger.debug("assignCouponNotifyEvent didn't complete, adding it to DLQ for retry")
                     val message = "Error from handleMigrationAssignCouponNotifyEventHandler() for registry id: " +
-                        "${couponAssignmentNotifyEvent.listId} and registry type: ${RegistryType.toRegistryType(couponAssignmentNotifyEvent.listSubType!!)}"
+                        "${couponAssignmentNotifyEvent.listId} and registry type: ${RegistryType.toRegistryType(
+                            couponAssignmentNotifyEvent.listSubType
+                        )}"
                     val retryHeader = eventHeaderFactory.nextRetryHeaders(eventHeaders = eventHeaders,
                         errorCode = 500, errorMsg = message)
                     couponAssignmentNotifyEvent.retryState = MigrationAssignCouponNotifyEventService.RetryState.serialize(it)

@@ -22,17 +22,20 @@ create table REGISTRY (
                                   CONSTRAINT REGISTRY_PK PRIMARY KEY (REGISTRY_ID)
 );
 
-
 create table REGISTRY_COUPONS (
-                                            COUPON_CODE text,
-                                            REGISTRY_ID uuid not null,
-                                            COUPON_TYPE text not null,
-                                            COUPON_REDEMPTION_STATUS text,
-                                            COUPON_ISSUE_DATE timestamp,
-                                            COUPON_EXPIRY_DATE timestamp,
-                                            CREATED_TS timestamp not null DEFAULT NOW(),
-                                            UPDATED_TS timestamp not null DEFAULT NOW(),
-                                            CONSTRAINT REGISTRY_COUPONS_PK PRIMARY KEY (COUPON_CODE)
+                                        COUPON_CODE text,
+                                        REGISTRY_ID uuid not null,
+                                        COUPON_TYPE text not null,
+                                        COUPON_REDEMPTION_STATUS text,
+                                        COUPON_ISSUE_DATE timestamp,
+                                        COUPON_EXPIRY_DATE timestamp,
+                                        CREATED_TS timestamp not null DEFAULT NOW(),
+                                        UPDATED_TS timestamp not null DEFAULT NOW(),
+                                        CONSTRAINT REGISTRY_COUPONS_PK PRIMARY KEY (COUPON_CODE),
+                                        CONSTRAINT FK_REGISTRY_COUPON
+                                            FOREIGN KEY(REGISTRY_ID)
+                                                REFERENCES REGISTRY(REGISTRY_ID)
+                                                ON DELETE CASCADE
 );
 
 create table WELCOME_KITS (

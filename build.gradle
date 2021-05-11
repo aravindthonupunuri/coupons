@@ -68,16 +68,16 @@ allprojects {
         implementation "javax.annotation:javax.annotation-api"
         implementation "com.lmax:disruptor:3.4.2"
 
-        implementation("com.tgt.lists:atlas-client:2.231.15")
+        implementation("com.tgt.lists:atlas-client:2.231.16")
         implementation("com.tgt.lists:lists-components:2.231.7") {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
 
-        implementation("com.tgt.backpackregistry:backpack-transactions-client:2.231.11") {
+        implementation("com.tgt.backpackregistry:backpack-transactions-client:2.231.14") {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
-        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.51") {
+        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.52") {
             exclude group: 'com.tgt.lists', module: 'lists-components'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
@@ -89,7 +89,7 @@ allprojects {
         implementation "com.tgt.lists.micronaut:micronaut-zipkin:2.231.0"
         implementation "com.tgt.lists:lists-message-bus:2.231.5"
         implementation "com.tgt.lists:notification-tracer-client:2.231.1"
-        implementation "com.tgt.lists:lists-logging:2.231.0"
+        implementation "com.tgt.lists:lists-logging:2.231.3"
         implementation 'com.tgt.lists.micronaut:micronaut-jdbc:2.231.3'
         implementation "com.target.oss:platform-connector-micronaut:${micronautTapPlatformConnectorVersion}"
         implementation "io.swagger.core.v3:swagger-annotations"
@@ -121,7 +121,7 @@ allprojects {
         }
         testImplementation "org.codehaus.groovy:groovy-json:3.0.5"
         testImplementation "io.micronaut.test:micronaut-test-spock"
-        testImplementation "com.tgt.swaggerlib:swagger-sync:1.210.16"
+        testImplementation "com.tgt.swaggerlib:swagger-sync:2.231.2"
         testImplementation "com.tgt.lists.micronaut:micronaut-test:2.231.0"
         testImplementation("org.objenesis:objenesis:2.6")
         testImplementation 'io.micronaut.micrometer:micronaut-micrometer-registry-prometheus'

@@ -37,7 +37,7 @@ class CreateListNotifyEventHandler(
             alternateRegistryId = RegistryMetaDataTO.toEntityRegistryMetadata(createListNotifyEvent.userMetaData)?.alternateRegistryId,
             registryStatus = createListNotifyEvent.listState!!,
             registryType = toRegistryType(createListNotifyEvent.listSubType!!), // defaulted to baby
-            registryCreatedDate = LocalDate.now(), // TODO: createListNotifyEvent not having registry create ts
+            registryCreatedDate = LocalDate.from(createListNotifyEvent.addedDate),
             eventDate = RegistryMetaDataTO.toEntityRegistryMetadata(createListNotifyEvent.userMetaData)?.event?.eventDate!!,
             addedDate = createListNotifyEvent.addedDate,
             lastModifiedDate = createListNotifyEvent.lastModifiedDate,
