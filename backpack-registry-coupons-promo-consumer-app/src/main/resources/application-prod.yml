@@ -32,7 +32,7 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-promo-consumer-app-prod
+  source: backpack-registry-coupons-prod
   dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-prod
   kafka:
     consumer:
@@ -55,23 +55,11 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 notification:
-  source: backpack-registry-coupons-promo-consumer-app-prod
-  dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-prod
   enabled: false
 
 beacon:
   client:
     enabled: false
-    source: backpack-registry-coupons-promo-consumer-app-prod
-    dlq-source: backpack-registry-coupons-promo-consumer-app-dlq-prod
-    kafka:
-      consumer:
-        client-id: backpack-registry-coupons-promo-consumer-app-cron-beacon-prod-consumer
-        topic: backpack-beacon-prod
-        metrics-name: backpack-registry-coupons-promo-consumer-app-cron-beacon-metrics-prod
-        consumer-group: backpack-registry-coupons-promo-consumer-app-cron-beacon-prod
-        consumer-batch-size: 1
-        max-count-down-latch-wait-time: 240 # in secondsConsumerRecord
 
 kafka-sources:
   allow:

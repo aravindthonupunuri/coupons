@@ -44,7 +44,7 @@ components:
 #    protocol: ssl
 
 msgbus:
-  source: backpack-registry-coupons-migration-consumer-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
   kafka:
     consumer:

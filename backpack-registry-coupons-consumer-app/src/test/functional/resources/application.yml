@@ -167,16 +167,6 @@ filter:
 
 list:
   list-type: REGISTRY
-#  max-count: 50
-#  max-pending-item-count: 3
-#  max-completed-items-count: 3
-#  abandon-after-duration-in-days: 730 # It is two years duration
-#  redsky-batch-size: 28
-#  features.dedupe: true
-#  features.sort-position: true
-#  features.fixed-default-list: false
-
-
 
 mockfilter:
   paths: /zipkin,/testserver/auth/oauth/v2/token,/,/redsky_aggregations/v1.*,/registries/v2.*
@@ -198,7 +188,7 @@ kafka-sources:
   allow:
     - cronbeacon
     - backpack-registry
-    - backpackregistry-migration
+    - backpack-transactions
 
 beacon:
   client:

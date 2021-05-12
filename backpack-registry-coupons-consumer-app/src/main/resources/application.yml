@@ -159,7 +159,7 @@ kafka:
           ms: 2_000
 
 msgbus:
-  source: backpack-registry-coupons-consumer-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-consumer-app-dlq
   kafka:
     consumer:
@@ -186,10 +186,6 @@ endpoints:
 
 kafka-sources:
   allow:
-    - backpack-registry-coupons-consumer-app
-    - backpack-registry-coupons-consumer-app-dlq
     - cronbeacon
-    - cronbeacon-dlq
     - backpack-registry
-    - backpack-registry-dlq
-    - backpackregistry-migration
+    - backpack-transactions

@@ -90,7 +90,7 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-app-dlq
   kafka:
     consumer:
@@ -113,7 +113,7 @@ msgbus:
     dlq-consumer-batch-size: 10
 
 notification:
-  source: backpack-registry-coupons-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-app-dlq
   enabled: true
 

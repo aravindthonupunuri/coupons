@@ -43,7 +43,7 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-consumer-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-consumer-app-dlq
   kafka:
     consumer:
@@ -89,8 +89,7 @@ kafka-sources:
   allow:
     - cronbeacon
     - backpack-registry
-    - backpackregistry-migration
-    - backpacktransactions
+    - backpack-transactions
 
 kafka:
   bootstrap:

@@ -43,7 +43,7 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-consumer-app-stage
+  source: backpack-registry-coupons-stage
   dlq-source: backpack-registry-coupons-consumer-app-dlq-stage
   kafka:
     consumer:
@@ -66,14 +66,14 @@ msgbus:
     dlq-consumer-batch-size: 50
 
 notification:
-  source: backpack-registry-coupons-consumer-app-stage
+  source: backpack-registry-coupons-stage
   dlq-source: backpack-registry-coupons-consumer-app-dlq-stage
   enabled: true
 
 beacon:
   client:
     enabled: true
-    source: backpack-registry-coupons-consumer-app-stage
+    source: backpack-registry-coupons-stage
     dlq-source: backpack-registry-coupons-consumer-app-dlq-stage
     kafka:
       consumer:
@@ -88,8 +88,7 @@ kafka-sources:
   allow:
     - cronbeacon
     - backpack-registry-stage
-    - backpackregistry-migration-stage
-    - backpacktransactions-stage
+    - backpack-transactions-stage
 
 kafka:
   bootstrap:

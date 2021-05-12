@@ -32,7 +32,7 @@ components:
       enabled: false
 
 msgbus:
-  source: backpack-registry-coupons-migration-consumer-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
   kafka:
     consumer:
@@ -55,7 +55,7 @@ msgbus:
     dlq-consumer-batch-size: 50
 
 notification:
-  source: backpack-registry-coupons-migration-consumer-app
+  source: backpack-registry-coupons
   dlq-source: backpack-registry-coupons-migration-consumer-app-dlq
   enabled: false
 
