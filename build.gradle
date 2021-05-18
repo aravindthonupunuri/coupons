@@ -93,7 +93,7 @@ allprojects {
         implementation 'com.tgt.lists.micronaut:micronaut-jdbc:2.231.3'
         implementation "com.target.oss:platform-connector-micronaut:${micronautTapPlatformConnectorVersion}"
         implementation "io.swagger.core.v3:swagger-annotations"
-        implementation "com.tgt.lists.micronaut:micronaut-metrics:2.231.0"
+        implementation "com.tgt.lists.micronaut:micronaut-metrics:2.231.3"
         implementation "io.micronaut.kotlin:micronaut-kotlin-runtime"
         implementation "io.micronaut:micronaut-runtime"
 
@@ -133,7 +133,7 @@ allprojects {
         testImplementation "cglib:cglib:3.3.0"
         testImplementation group: 'io.opentracing', name: 'opentracing-mock', version: '0.33.0'
         testImplementation "org.testcontainers:kafka:1.14.3"
-        testImplementation "com.tgt.lists:grafana-builder:2.231.24"
+        testImplementation "com.tgt.lists:grafana-builder:2.231.32"
     }
 
     configurations.all {

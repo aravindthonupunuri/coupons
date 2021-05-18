@@ -159,19 +159,20 @@ pipeline:
       - {source: artifactory_password, target: plugin_password}
 
   publish-docker-backpackregistrycoupons-app-prod:
-    image: 'plugins/docker:latest'
-    group: prodimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
-    dockerfile: ./backpack-registry-coupons-app/Dockerfile
-    tags: 'prod.${DRONE_TAG:34}'
+    image: 'docker.target.com/drone/docker-promotion:1'
+    environment:
+      CICD_MODE: 'true'
+    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
+    source_tag: 'rc.${DRONE_TAG:34}'
+    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-app
+    target_tags: 'prod.${DRONE_TAG:34}'
     when:
       event: tag
       branch: master
       ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
     secrets:
-      - { source: artifactory_username, target: plugin_username }
-      - { source: artifactory_password, target: plugin_password }
+      - { source: artifactory_username, target: registry_username }
+      - { source: artifactory_password, target: registry_password }
 
   publish-docker-backpack-registry-coupons-consumer-app-dev:
     image: plugins/docker
@@ -205,19 +206,20 @@ pipeline:
       - {source: artifactory_password, target: plugin_password}
 
   publish-docker-backpack-registry-coupons-consumer-app-prod:
-    image: 'plugins/docker:latest'
-    group: prodimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-consumer-app
-    dockerfile: ./backpack-registry-coupons-consumer-app/Dockerfile
-    tags: 'prod.${DRONE_TAG:34}'
+    image: 'docker.target.com/drone/docker-promotion:1'
+    environment:
+      CICD_MODE: 'true'
+    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-consumer-app
+    source_tag: 'rc.${DRONE_TAG:34}'
+    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-consumer-app
+    target_tags: 'prod.${DRONE_TAG:34}'
     when:
       event: tag
       branch: master
       ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
     secrets:
-      - { source: artifactory_username, target: plugin_username }
-      - { source: artifactory_password, target: plugin_password }
+      - { source: artifactory_username, target: registry_username }
+      - { source: artifactory_password, target: registry_password }
 
   publish-docker-backpack-registry-coupons-migration-consumer-app-dev:
     image: plugins/docker
@@ -251,19 +253,20 @@ pipeline:
       - { source: artifactory_password, target: plugin_password }
 
   publish-docker-backpack-registry-coupons-migration-consumer-app-prod:
-    image: 'plugins/docker:latest'
-    group: prodimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
-    dockerfile: ./backpack-registry-coupons-migration-consumer-app/Dockerfile
-    tags: 'prod.${DRONE_TAG:34}'
+    image: 'docker.target.com/drone/docker-promotion:1'
+    environment:
+      CICD_MODE: 'true'
+    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
+    source_tag: 'rc.${DRONE_TAG:34}'
+    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-migration-consumer-app
+    target_tags: 'prod.${DRONE_TAG:34}'
     when:
       event: tag
       branch: master
       ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
     secrets:
-      - { source: artifactory_username, target: plugin_username }
-      - { source: artifactory_password, target: plugin_password }
+      - { source: artifactory_username, target: registry_username }
+      - { source: artifactory_password, target: registry_password }
 
   publish-docker-backpack-registry-coupons-promo-consumer-app-dev:
     image: plugins/docker
@@ -297,19 +300,20 @@ pipeline:
       - { source: artifactory_password, target: plugin_password }
 
   publish-docker-backpack-registry-coupons-promo-consumer-app-prod:
-    image: 'plugins/docker:latest'
-    group: prodimggroup
-    registry: docker.target.com
-    repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
-    dockerfile: ./backpack-registry-coupons-promo-consumer-app/Dockerfile
-    tags: 'prod.${DRONE_TAG:34}'
+    image: 'docker.target.com/drone/docker-promotion:1'
+    environment:
+      CICD_MODE: 'true'
+    source_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
+    source_tag: 'rc.${DRONE_TAG:34}'
+    target_repo: docker.target.com/app/backpack-registry-coupons/backpack-registry-coupons-promo-consumer-app
+    target_tags: 'prod.${DRONE_TAG:34}'
     when:
       event: tag
       branch: master
       ref: 'refs/tags/conf.prod.backpackregistrycoupons.*'
     secrets:
-      - { source: artifactory_username, target: plugin_username }
-      - { source: artifactory_password, target: plugin_password }
+      - { source: artifactory_username, target: registry_username }
+      - { source: artifactory_password, target: registry_password }
 
   publish-client:
     when:
