@@ -6,7 +6,6 @@ micronaut:
     port: 8085
   http:
     client.connect-ttl: 30m
-    client.pool.acquire-timeout: 2000ms
     services:
       backpack-registry-api:
         urls:

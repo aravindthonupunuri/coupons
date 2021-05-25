@@ -12,7 +12,6 @@ micronaut:
 
   http:
     client.connect-ttl: 30m
-    client.pool.acquire-timeout: 2000ms
     client.read-timeout: 5000ms
     services:
       permissions-api:

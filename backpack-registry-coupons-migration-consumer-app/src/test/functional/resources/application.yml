@@ -175,7 +175,7 @@ notification-tracer:
   kafka:
     producer:
       enabled: true
-    topic: tracer-incoming-events
+    topic: tracer-general-input
 
 registry:
   baby:

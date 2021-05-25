@@ -1,6 +1,9 @@
 package com.tgt.backpackregistrycoupons.kafka
 
-import com.tgt.backpackregistrycoupons.kafka.handler.*
+import com.tgt.backpackregistrycoupons.kafka.handler.CreateListNotifyEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.CronEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.DeleteListNotifyEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.UpdateListNotifyEventHandler
 import com.tgt.backpackregistrycoupons.kafka.handler.welcomkit.RegistryItemTransactionActionEventHandler
 import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemTransactionActionEvent
 import com.tgt.cronbeacon.kafka.model.CronEvent
@@ -56,7 +59,7 @@ open class BackpackRegistryCouponsEventDispatcher(
                 }
                 RegistryItemTransactionActionEvent.getEventType() -> {
                     val registryItemTransactActionEvent = data as RegistryItemTransactionActionEvent
-                    logger.debug { "Got Registry Item transact action event: $registryItemTransactActionEvent" }
+                    logger.debug { "Source : ${eventHeaders.source} | Got Registry Item transact action event: $registryItemTransactActionEvent" }
                     return registryItemTransactionActionEventHandler.handleItemTransactionEvent(registryItemTransactActionEvent, eventHeaders, isPoisonEvent)
                 }
                 CronEvent.getEventType() -> {

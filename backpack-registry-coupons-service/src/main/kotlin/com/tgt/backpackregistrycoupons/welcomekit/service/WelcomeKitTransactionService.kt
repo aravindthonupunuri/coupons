@@ -25,11 +25,13 @@ class WelcomeKitTransactionService(
                     partitionKey = registryTransactionTO.registryId.toString())
                     .map { true }
                     .onErrorResume {
-                        logger.error("[WelcomeKitTransactionService] Error occurred while publishing WelcomeKitTransactionActionEvent event for registry: ${registryTransactionTO.registryId}")
+                        logger.error("[WelcomeKitTransactionService] Error occurred while publishing " +
+                            "WelcomeKitTransactionActionEvent event for registry: ${registryTransactionTO.registryId}")
                         Mono.just(false)
                     }
             } else {
-                logger.error("[WelcomeKitTransactionService] Not a welcome kit transaction with tcin: ${registryTransactionTO.tcin} and registry ${registryTransactionTO.registryId}, skipping processing the event")
+                logger.debug("[WelcomeKitTransactionService] Not a welcome kit transaction with tcin: ${registryTransactionTO.tcin} " +
+                    "and registry ${registryTransactionTO.registryId}, skipping processing the event")
                 Mono.just(true)
             }
         }.onErrorResume {
