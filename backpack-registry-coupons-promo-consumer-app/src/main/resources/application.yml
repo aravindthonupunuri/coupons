@@ -79,7 +79,6 @@ api:
     client-secret: ${id2-client-secret}
     nuid-username: ${id2-nuid-username}
     nuid-password: ${id2-nuid-password}
-    id2-refresh-mins: ${id2-refresh-minutes}
 
 tracing:
   zipkin:
@@ -192,7 +191,7 @@ promo:
     consumer:
       client-id: backpack-promo-generic-consumer
       topic: ${kafka-promo-msgbus-topic}
-      metrics-name: promo-producer
+      metrics-name: promo_consumer
       consumer-group: promo-msg-consumer-dev
       default-event-type: promo-update-event
       consumer-batch-size: 10
