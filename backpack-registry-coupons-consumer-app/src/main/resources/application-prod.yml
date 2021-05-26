@@ -71,7 +71,7 @@ notification:
 
 beacon:
   client:
-    enabled: true
+    enabled: false
     source: backpack-registry-coupons-prod
     dlq-source: backpack-registry-coupons-consumer-app-dlq-prod
     kafka:
