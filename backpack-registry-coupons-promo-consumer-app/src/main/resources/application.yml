@@ -192,7 +192,7 @@ promo:
     consumer:
       client-id: backpack-promo-generic-consumer
       topic: ${kafka-promo-msgbus-topic}
-      metrics-name: promo-producer
+      metrics-name: promo-consumer
       consumer-group: promo-msg-consumer-dev
       default-event-type: promo-update-event
       consumer-batch-size: 10

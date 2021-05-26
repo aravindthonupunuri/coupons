@@ -70,7 +70,7 @@ promo:
   kafka:
     consumer:
       topic: promo-coupon-redemption-notifications-v2
-      metrics-name: promo-producer
+      metrics-name: promo-consumer
       consumer-group: promo-msg-consumer-stage
       default-event-type: promo-update-event
       consumer-batch-size: 10
