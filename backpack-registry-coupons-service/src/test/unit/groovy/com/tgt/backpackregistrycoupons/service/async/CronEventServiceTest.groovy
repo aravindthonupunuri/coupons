@@ -47,7 +47,7 @@ class CronEventServiceTest extends Specification {
         backpackRegistryClient = Mock(BackpackRegistryClient)
         sendGuestNotificationsService = new SendGuestNotificationsService(notificationTracerProducer)
         couponAssignmentCalculationManager = new CouponAssignmentCalculationManager(7L , 56L, 14L)
-        cronEventService = new CronEventService(couponAssignmentCalculationManager, compositeTransactionalRepository, sendGuestNotificationsService, registryRepository, couponsRepository, backpackRegistryClient, 180)
+        cronEventService = new CronEventService(couponAssignmentCalculationManager, compositeTransactionalRepository, sendGuestNotificationsService, registryRepository, couponsRepository, backpackRegistryClient, 180, 2)
     }
 
     def "Test processCronEvent"() {
@@ -83,7 +83,7 @@ class CronEventServiceTest extends Specification {
         def actual = cronEventService.processCronEvent(cronEventDate).block()
 
         then:
-        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false) >> Flux.just(registry1, registry2, registry3, registry4)
+        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false, 2) >> Flux.just(registry1, registry2, registry3, registry4)
 
         // First Registry
         1 * registryRepository.getByRegistryId(registry1.registryId) >> Mono.just(registry1)
@@ -130,7 +130,7 @@ class CronEventServiceTest extends Specification {
         def actual = cronEventService.processCronEvent(LocalDateTime.now()).block()
 
         then:
-        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false) >> Flux.empty()
+        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false, 2) >> Flux.empty()
 
         actual
     }
@@ -140,7 +140,7 @@ class CronEventServiceTest extends Specification {
         def actual = cronEventService.processCronEvent(LocalDateTime.now()).block()
 
         then:
-        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false) >> Flux.error(new RuntimeException("some exception"))
+        1 * registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false, 2) >> Flux.error(new RuntimeException("some exception"))
 
         !actual
     }
