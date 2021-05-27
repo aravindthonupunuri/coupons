@@ -27,6 +27,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,8 +39,8 @@ class CronEventService(
     @Inject val registryRepository: RegistryRepository,
     @Inject val couponsRepository: CouponsRepository,
     @Inject val backpackClient: BackpackRegistryClient,
-    @Value("\${registry.completion-coupon.expiration-days}") val couponExpirationDays: Long
-
+    @Value("\${registry.completion-coupon.expiration-days}") val couponExpirationDays: Long,
+    @Value("\${registry.completion-coupon.db-fetch-size}") val couponDbReadLimit: Int
 ) {
     private val logger = KotlinLogging.logger { CronEventService::class.java.name }
     private final val registryCouponTypeMap = hashMapOf<RegistryType, List<CouponType>>()
@@ -50,9 +51,11 @@ class CronEventService(
     }
 
     fun processCronEvent(cronEventDate: LocalDateTime): Mono<Boolean> {
-        return registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false).collectList()
+        val readMoreDBRecords = AtomicBoolean(false)
+        return registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false, couponDbReadLimit).collectList()
             .flatMap { registryList ->
                 logger.debug("[processCronEvent], Registry's being assigned coupon code: ${registryList.size} ")
+                readMoreDBRecords.set(registryList.size == couponDbReadLimit)
                 Flux.fromIterable(registryList).flatMap { registry ->
                     val couponAssignmentDate = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
                     if (cronEventDate.isAfter(couponAssignmentDate)) {
@@ -65,6 +68,20 @@ class CronEventService(
                     logger.debug("[processCronEvent], Registry coupon assignment cron event complete")
                     true
                 }
+            }
+            .switchIfEmpty {
+                readMoreDBRecords.set(false)
+                Mono.just(true)
+            }
+            .repeat {
+                readMoreDBRecords.get()
+            }
+            .collectList()
+            .map { resultList ->
+                val failure = resultList.firstOrNull() {
+                    !it
+                }
+                failure == null
             }
             .onErrorResume {
                 logger.error("[processCronEvent], Assigning coupon codes, sending for retry")

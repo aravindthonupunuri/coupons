@@ -110,7 +110,7 @@ class RegistryRepositoryFunctionalTest extends BasePersistenceFunctionalTest  {
 
     def "test findByCouponAssignmentComplete"() {
         when:
-        def result = registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false).collectList().block()
+        def result = registryRepository.findByRegistryStatusAndCouponAssignmentComplete(LIST_STATE.ACTIVE.value, false, 2).collectList().block()
 
         then:
         result != null

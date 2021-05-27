@@ -16,7 +16,8 @@ interface RegistryRepository {
 
     fun findByRegistryId(registryId: UUID): Mono<Registry>
 
-    fun findByRegistryStatusAndCouponAssignmentComplete(registryStatus: String, couponAssignmentComplete: Boolean): Flux<Registry>
+    @Query("""SELECT * FROM registry WHERE registry_status=(:registryStatus) AND coupon_assignment_complete=(:couponAssignmentComplete) LIMIT (:couponDbReadLimit)""")
+    fun findByRegistryStatusAndCouponAssignmentComplete(registryStatus: String, couponAssignmentComplete: Boolean, couponDbReadLimit: Int): Flux<Registry>
 
     @Join(value = "registryCoupons", type = Join.Type.LEFT_FETCH)
     fun getByRegistryId(registryId: UUID): Mono<Registry>

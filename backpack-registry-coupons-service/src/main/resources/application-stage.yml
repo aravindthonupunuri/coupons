@@ -71,6 +71,7 @@ registry:
   completion-coupon:
     sla: 14
     expiration-days: 180
+    db-fetch-size: 10000
     coupon-assignment-hour-of-day: 2
     coupon-assignment-minute-block-of-hour: 1
 
