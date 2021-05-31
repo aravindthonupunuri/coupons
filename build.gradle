@@ -73,11 +73,11 @@ allprojects {
             exclude group: 'com.tgt.lists.micronaut', module: 'micronaut-resilience4j'
         }
 
-        implementation("com.tgt.backpackregistry:backpack-transactions-client:2.231.14") {
+        implementation("com.tgt.backpackregistry:backpack-transactions-client:2.231.16") {
             exclude group: 'com.tgt.backpackregistry', module: 'backpack-registry-client'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }
-        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.60") {
+        implementation("com.tgt.backpackregistry:backpack-registry-client:2.231.62") {
             exclude group: 'com.tgt.lists', module: 'lists-components'
             exclude group: 'com.tgt.lists', module: 'atlas-client'
         }

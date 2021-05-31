@@ -147,12 +147,12 @@ msgbus:
 
 registry:
   baby:
-    sla: 7
+    sla: 56
     coupon-types:
       - STORE
       - ONLINE
   wedding:
-    sla: 56
+    sla: 7
     coupon-types:
       - STORE
       - ONLINE

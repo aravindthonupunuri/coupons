@@ -18,6 +18,7 @@ import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.COMPLETION_C
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.GIFT_REGISTRY
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.PROFILE
 import com.tgt.lists.atlas.api.type.LIST_STATE
+import com.tgt.lists.atlas.api.util.ClientConstants
 import com.tgt.notification.tracer.client.model.NotificationTracerEvent
 import io.micronaut.context.annotation.Value
 import mu.KotlinLogging
@@ -116,7 +117,7 @@ class CronEventService(
                         true
                     }
                     .switchIfEmpty {
-                        logger.info("[processAssignCouponCode], Empty response getting coupon code of type: $couponType for registry $registryId with expiration $couponExpirationDate of type: $registryType")
+                        logger.error("[processAssignCouponCode], Empty response getting coupon code of type: $couponType for registry $registryId with expiration $couponExpirationDate of type: $registryType")
                         Mono.just(false)
                     }
                     .onErrorResume {
@@ -159,14 +160,14 @@ class CronEventService(
             logger.debug("[sendGuestNotification], Coupons not assigned for registry $registryId skipping notification process")
             Mono.just(true)
         } else {
-            backpackClient.getRegistryDetails("1111", registryId, 3991L, RegistryChannel.WEB, RegistrySubChannel.TGTWEB, false)
+            backpackClient.getRegistryDetails(ClientConstants.SYSTEM_PROFILE_ID, registryId, 3991L, RegistryChannel.WEB, RegistrySubChannel.TGTWEB, false)
                 .flatMap { sendNotification(it, registryId, registryCoupons) }
                 .onErrorResume {
                     logger.error("[sendGuestNotification] Exception finding registry $registryId while sending guest notification for completion coupons", it)
                     Mono.just(true)
                 }
                 .switchIfEmpty {
-                    logger.info("[sendGuestNotification] No registry found with registryId $registryId while sending guest notification for completion coupons")
+                    logger.debug("[sendGuestNotification] No registry found with registryId $registryId while sending guest notification for completion coupons")
                     Mono.just(true)
                 }
         }
