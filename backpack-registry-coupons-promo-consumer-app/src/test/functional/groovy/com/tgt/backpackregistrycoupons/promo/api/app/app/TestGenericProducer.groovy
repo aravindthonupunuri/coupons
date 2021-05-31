@@ -6,6 +6,7 @@ import com.tgt.lists.msgbus.event.EventLifecycleNotificationProvider
 import com.tgt.lists.msgbus.metrics.MetricsPublisher
 import com.tgt.lists.msgbus.tracing.EventTracer
 import com.tgt.lists.msgbus.tracing.MdcContext
+import io.micronaut.context.env.Environment
 
 import javax.inject.Inject
 
@@ -15,11 +16,12 @@ class TestGenericProducer<K,V> extends GenericProducer<K, V>  {
     TestGenericProducer(EventHeaderFactory eventHeaderFactory, TestGenericProducerClient testGenericProducerClient,
                         EventLifecycleNotificationProvider eventLifecycleNotificationProvider,
                         EventTracer eventTracer, MetricsPublisher metricsPublisher,
-                        MdcContext mdcContext) {
+                        MdcContext mdcContext, Environment environment) {
         super(
-                "TestProducer",
+                "test-producer",
                 "generic",
-                "generic-bus",
+                "backpack-registry-coupons",
+                "promo-coupon-redemption-notifications-v2",
                 eventHeaderFactory,
                 testGenericProducerClient,
                 eventLifecycleNotificationProvider,
@@ -27,6 +29,7 @@ class TestGenericProducer<K,V> extends GenericProducer<K, V>  {
                 metricsPublisher,
                 mdcContext,
                 "test-producer",
+                environment
         )
     }
 }

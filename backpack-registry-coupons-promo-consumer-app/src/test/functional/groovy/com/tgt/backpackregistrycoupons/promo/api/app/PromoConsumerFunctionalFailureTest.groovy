@@ -3,16 +3,16 @@ package com.tgt.backpackregistrycoupons.promo.api.app
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
+import com.tgt.backpackregistrycoupons.kafka.consumer.PromoKafkaConsumer
+import com.tgt.backpackregistrycoupons.kafka.handler.RegistryTransactionEventHandler
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
 import com.tgt.backpackregistrycoupons.promo.api.app.app.TestGenericProducer
-import com.tgt.backpackregistrycoupons.kafka.consumer.PromoKafkaConsumer
-import com.tgt.backpackregistrycoupons.kafka.handler.RegistryTransactionEventHandler
 import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
+import com.tgt.backpackregistrycoupons.transport.PromoCouponRedemptionTO
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
 import com.tgt.backpackregistrycoupons.util.CouponType
-import com.tgt.backpackregistrycoupons.transport.PromoCouponRedemptionTO
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import com.tgt.lists.micronaut.persistence.instrumentation.DatabaseExecTestListener
 import com.tgt.lists.micronaut.persistence.instrumentation.RepositoryInstrumenter
@@ -23,7 +23,8 @@ import io.micronaut.context.annotation.Value
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import io.opentracing.Tracer
 import org.jetbrains.annotations.NotNull
-import spock.lang.Ignore
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import spock.lang.Shared
 import spock.util.concurrent.PollingConditions
 
@@ -32,9 +33,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.stream.Collectors
 
-@Ignore
 @MicronautTest
 class PromoConsumerFunctionalFailureTest extends BaseKafkaFunctionalTest {
+
+    static Logger LOG = LoggerFactory.getLogger(PromoConsumerFunctionalFailureTest)
+
     @Value("\${promo.source}")
     String promoSource
 
@@ -113,22 +116,23 @@ class PromoConsumerFunctionalFailureTest extends BaseKafkaFunctionalTest {
     def "test generic consumer - db failure"() {
         given:
         def registryId = UUID.randomUUID()
-        def couponCode = "1234"
+        def couponCode = UUID.randomUUID().toString()
         executeTimeout = true
-        def promoCouponRedemptionTO = new PromoCouponRedemptionTO("3991", couponCode, "BABY", "REDEEMED", "2020", "1234", "1234", "1234")
-        def registry = new Registry(registryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+        def promoCouponRedemptionTO = new PromoCouponRedemptionTO(3991, couponCode, "BABY", "REDEEMED", "2020","1234", "1234",  registryId)
+        def registry = new Registry(registryId, "1234", RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
         def registryCoupons = new RegistryCoupons(couponCode, registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
         Thread.sleep(2000)
         testEventListener.preDispatchLambda = new PreDispatchLambda() {
             @Override
             boolean onPreDispatchConsumerEvent(String topic, @NotNull EventHeaders eventHeaders, @NotNull byte[] data, boolean isPoisonEvent) {
-                if (eventHeaders.source == "backpacktransactions-dlq") {
+                LOG.info("onPreDispatchConsumerEvent: Received event [eventHeaders: $eventHeaders], isPoisonEvent: $isPoisonEvent")
+                if (eventHeaders.source == "backpack-registry-coupons-promo-consumer-app-dlq") {
                     executeTimeout = false
                     registryRepository.save(registry).block()
                     registryCouponsRepository.save(registryCoupons).block()
                     return true
                 }
-                if (eventHeaders.source == "generic") {
+                if (eventHeaders.source == "backpack-registry-coupons") {
                     return true
                 }
                 return false
@@ -149,12 +153,18 @@ class PromoConsumerFunctionalFailureTest extends BaseKafkaFunctionalTest {
                 assert completedEvents.any{
                     it.success
                 } // after the first time failure , message from dlq will be processed and completed
-                assert ((TestEventListener.Result) producerEvents[0]).topic == "generic-bus"
+                assert ((TestEventListener.Result) producerEvents[0]).topic == "promo-coupon-redemption-notifications-v2"
                 // first message sendMessage when its called
                 assert ((TestEventListener.Result) producerEvents[1]).topic == "lists-dlq"
                 // on failure putting it to dlq
             }
         }
+
+        when:
+        def registryCouponsResult = registryCouponsRepository.findByCouponCode(couponCode).block()
+
+        then:
+        registryCouponsResult.couponRedemptionStatus == CouponRedemptionStatus.REDEEMED
     }
 }
 

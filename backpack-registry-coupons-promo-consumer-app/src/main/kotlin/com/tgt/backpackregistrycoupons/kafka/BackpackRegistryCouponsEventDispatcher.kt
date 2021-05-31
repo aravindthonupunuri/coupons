@@ -25,7 +25,7 @@ open class BackpackRegistryCouponsEventDispatcher(
 
     override fun dispatchEvent(eventHeaders: EventHeaders, data: Any, isPoisonEvent: Boolean): Mono<EventProcessingResult> {
         return when {
-            eventHeaders.source == source || allowedSources.contains(eventHeaders.source) -> {
+            eventHeaders.source == source || eventHeaders.source == dlqSource || allowedSources.contains(eventHeaders.source) -> {
                 val promoCouponRedemptionEvent = data as PromoCouponRedemptionTO
                 logger.debug { "Source : ${eventHeaders.source} | Got promo redemption Event: $promoCouponRedemptionEvent" }
                 registryTransactionEventHandler.handleCouponTransaction(promoCouponRedemptionEvent, eventHeaders, isPoisonEvent)
@@ -38,7 +38,7 @@ open class BackpackRegistryCouponsEventDispatcher(
     }
 
     override fun transformValue(eventHeaders: EventHeaders, data: ByteArray): EventTransformedValue? {
-        return if (eventHeaders.source == source || allowedSources.contains(eventHeaders.source)) {
+        return if (eventHeaders.source == source || eventHeaders.source == dlqSource || allowedSources.contains(eventHeaders.source)) {
             val promoCouponRedemptionTO = PromoCouponRedemptionTO.deserialize(data)
             val executionId = null
             val serializationValue = ExecutionSerialization.NO_SERIALIZATION

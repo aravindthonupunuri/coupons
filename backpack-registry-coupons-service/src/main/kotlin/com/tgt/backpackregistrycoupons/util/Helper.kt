@@ -13,3 +13,7 @@ fun toCouponsListResponse(registryCouponsList: Set<RegistryCoupons>): List<Coupo
             couponState = it.couponRedemptionStatus)
     }
 }
+
+fun toCouponRedemptionStatus(status: String): CouponRedemptionStatus {
+    return CouponRedemptionStatus.values().find { it.name.equals(status, ignoreCase = true) } ?: throw RuntimeException("Unsupported CouponRedemptionStatus value: $status")
+}

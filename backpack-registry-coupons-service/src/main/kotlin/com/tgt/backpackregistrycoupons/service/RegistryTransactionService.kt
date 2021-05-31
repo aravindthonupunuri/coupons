@@ -5,6 +5,7 @@ import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.Re
 import com.tgt.backpackregistrycoupons.util.EventPublisher
 import com.tgt.backpackregistrycoupons.transport.PromoCouponRedemptionTO
 import com.tgt.backpackregistrycoupons.transport.RegistryItemPromoTransactionActionEvent
+import com.tgt.backpackregistrycoupons.util.toCouponRedemptionStatus
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
@@ -28,16 +29,16 @@ class RegistryTransactionService(
                         it.registry?.registryId.toString())
                         .map { true }
                         .onErrorResume {
-                            logger.error { "[RegistryTransactionService] Error occurred while publishing events --  ${promoCouponRedemptionTO.couponCode}" }
+                            logger.error { "[RegistryTransactionService] Error while publishing event for coupon code:  ${promoCouponRedemptionTO.couponCode}" }
                             Mono.just(false)
                         }
             }
             .switchIfEmpty {
-                logger.error("[RegistryTransactionService] Coupon ${promoCouponRedemptionTO.couponCode} found to update CouponRedemptionStatus status")
+                logger.debug("[RegistryTransactionService] Coupon code ${promoCouponRedemptionTO.couponCode} not found for updating CouponRedemptionStatus status")
                 Mono.just(true)
             }
             .onErrorResume {
-                logger.error("[RegistryTransactionService] Exception while updating CouponRedemptionStatus for coupon  ${promoCouponRedemptionTO.couponCode}", it)
+                logger.error("[RegistryTransactionService] Exception while updating CouponRedemptionStatus for coupon code ${promoCouponRedemptionTO.couponCode}", it)
                 Mono.just(false)
             }
     }
@@ -45,7 +46,7 @@ class RegistryTransactionService(
     fun updateCouponStatus(couponCode: String, couponStatus: String): Mono<RegistryCoupons> {
         return registryCouponsRepository.findByCouponCode(couponCode)
             .flatMap { registryCoupons ->
-                registryCouponsRepository.updateCouponRedemptionStatus(couponCode, couponStatus)
+                registryCouponsRepository.updateCouponRedemptionStatus(couponCode, toCouponRedemptionStatus(couponStatus))
                     .map { registryCoupons }
             }
     }

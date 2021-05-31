@@ -36,10 +36,16 @@
         <Logger name="com.tgt.lists.micronaut.test" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="io.micronaut.data.query" level="INFO" additivity="false">
+        <Logger name="io.micronaut.data.query" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="com.tgt.lists.micronaut:micronaut-jdbc" level="INFO" additivity="false">
+        <Logger name="com.tgt.lists.micronaut:micronaut-jdbc" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.tgt.backpackregistrycoupons.kafka" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.tgt.backpackregistrycoupons.service" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
     </Loggers>

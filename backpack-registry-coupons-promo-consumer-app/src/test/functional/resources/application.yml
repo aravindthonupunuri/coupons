@@ -54,6 +54,8 @@ msgbus:
     dlqproducer:
       enabled: true
       client-id: lists-promo-dlq-kafkapp-producer
+    topic: lists-msg-bus
+    consumer-group: lists-promo-kafkapp-consumer
     dlq-topic: lists-dlq
     dlq-consumer-group: lists-promo-dlq-kafkapp-consumer
     dlq-event-retry-interval-secs: 1
@@ -92,6 +94,21 @@ kafka:
         block:
           ms: 2000
     lists-promo-dlq-kafkapp-producer:
+      key:
+        serializer: org.apache.kafka.common.serialization.StringSerializer
+      value:
+        serializer: com.tgt.lists.msgbus.ListsJsonSerde
+      retries: 3
+      retry:
+        backoff:
+          ms: 1000
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 1
+    test-producer:
       key:
         serializer: org.apache.kafka.common.serialization.StringSerializer
       value:

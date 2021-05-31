@@ -20,6 +20,6 @@ interface RegistryCouponsRepository {
     @Join(value = "registry", type = Join.Type.FETCH)
     fun findByCouponCode(couponCode: String): Mono<RegistryCoupons>
 
-    @Query("UPDATE registry_coupons SET Coupon_redemption_status = (:CouponRedemptionStatus) WHERE coupon_code=(:couponCode)")
-    fun updateCouponRedemptionStatus(couponCode: String, CouponRedemptionStatus: String): Mono<Int>
+    @Query("UPDATE registry_coupons SET coupon_redemption_status = (:couponRedemptionStatus) WHERE coupon_code=(:couponCode)")
+    fun updateCouponRedemptionStatus(couponCode: String, couponRedemptionStatus: CouponRedemptionStatus): Mono<Int>
 }
