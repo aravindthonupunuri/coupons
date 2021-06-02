@@ -10,7 +10,7 @@ jdbc-stmt:
 
 datasources:
   default:
-    url: jdbc:postgresql://pgclx10399.hq.target.com/backpackcouponsprod?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=allow
+    url: jdbc:postgresql://pgclx10790.hq.target.com,pgelx10598.hq.target.com/bp_registry_coupons_prod?targetServerType=master&ssl=true&sslmode=require
     driverClassName: org.postgresql.Driver
     username: ${postgres-secret.username}
     password: ${postgres-secret.password}

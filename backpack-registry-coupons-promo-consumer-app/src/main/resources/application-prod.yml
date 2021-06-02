@@ -92,6 +92,7 @@ kafka:
     protocol: ssl
   consumers:
     backpack-registry-coupons-promo-data-bus-prod-dlq-consumer:
+      max.poll.interval.ms: 10980000 # 3.05 hours, bring down post data migration
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
