@@ -1,5 +1,6 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
+import com.tgt.backpackregistryclient.util.RegistryType.Companion.toRegistryType
 import com.tgt.backpackregistrycoupons.service.async.DeleteListNotifyEventService
 import com.tgt.lists.atlas.kafka.model.DeleteListNotifyEvent
 import com.tgt.lists.msgbus.event.EventHeaderFactory
@@ -28,7 +29,10 @@ class DeleteListNotifyEventHandler(
             DeleteListNotifyEventService.RetryState()
         }
 
-        return deleteListNotifyEventService.processDeleteListNotifyEvent(deleteListNotifyEvent.listId, processingState)
+        return deleteListNotifyEventService.processDeleteListNotifyEvent(
+            deleteListNotifyEvent.listId,
+            toRegistryType(deleteListNotifyEvent.listSubType!!),
+            processingState)
             .map {
                 if (it.completeState()) {
                     logger.debug("deleteListNotifyEvent processing is complete")

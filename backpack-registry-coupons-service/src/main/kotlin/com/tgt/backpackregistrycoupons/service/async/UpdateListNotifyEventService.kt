@@ -3,8 +3,10 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
+import com.tgt.backpackregistrycoupons.util.isNotBabyOrWeddingRegistryType
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
@@ -21,11 +23,14 @@ private val logger = KotlinLogging.logger { UpdateListNotifyEventService::class.
 
 fun processUpdateListNotifyEvent(
     registryId: UUID,
+    registryType: RegistryType,
     registryStatus: LIST_STATE,
     eventDate: LocalDate,
     retryState: RetryState
 ): Mono<RetryState> {
-    return registryRepository.findByRegistryId(registryId).flatMap {
+    return if (isNotBabyOrWeddingRegistryType(registryType))
+        Mono.just(RetryState(true, true))
+    else registryRepository.findByRegistryId(registryId).flatMap {
         when {
             retryState.incompleteState() -> {
                 logger.debug("From processUpdateListNotifyEvent(), starting processing for listId: $registryId")

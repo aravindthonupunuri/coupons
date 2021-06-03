@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
+import com.tgt.backpackregistrycoupons.util.isNotBabyOrWeddingRegistryType
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
@@ -60,7 +61,7 @@ fun addGuestRegistry(
 ): Mono<Boolean> {
     // The RegistryStatus is INACTIVE when the registry is created. RegistryStatus is updated to ACTIVE once an item is added to the registry.
     // Coupon is assigned only for BABY and WEDDING registries, ignore all the other types
-    return if (registryType !in listOf(RegistryType.BABY, RegistryType.WEDDING)) Mono.just(true)
+    return if (isNotBabyOrWeddingRegistryType(registryType)) Mono.just(true)
     else {
         registryCouponsRepository.save(Registry(registryId, alternateRegistryId, registryType, registryStatus.value, registryCreatedDate, eventDate, false, addedDate, lastModifiedDate))
             .map { true }

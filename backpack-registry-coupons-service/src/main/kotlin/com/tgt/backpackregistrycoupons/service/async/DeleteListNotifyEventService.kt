@@ -3,7 +3,9 @@ package com.tgt.backpackregistrycoupons.service.async
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.persistence.repository.compositetransaction.CompositeTransactionalRepository
+import com.tgt.backpackregistrycoupons.util.isNotBabyOrWeddingRegistryType
 import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
@@ -19,11 +21,12 @@ private val logger = KotlinLogging.logger { DeleteListNotifyEventService::class.
 
 fun processDeleteListNotifyEvent(
     registryId: UUID,
+    registryType: RegistryType,
     retryState: RetryState
 ): Mono<RetryState> {
     return if (retryState.incompleteState()) {
         logger.debug("From processDeleteListNotifyEvent(), starting processing")
-        return deleteGuestRegistry(registryId)
+        deleteGuestRegistry(registryId, registryType)
             .map {
                 retryState.deleteGuestRegistry = it
                 retryState
@@ -35,18 +38,24 @@ fun processDeleteListNotifyEvent(
 }
 
 fun deleteGuestRegistry(
-    registryId: UUID
+    registryId: UUID,
+    registryType: RegistryType
 ): Mono<Boolean> {
-    return compositeTransactionalRepository.deleteRegistryCascaded(registryId).map { true }
-        .onErrorResume {
-            logger.error("Exception from deleteGuestRegistry() for registryId: $registryId " +
-                "sending it for retry", it)
-            Mono.just(false)
-        }
-        .switchIfEmpty {
-            logger.error("Exception from deleteGuestRegistry(), registryId: $registryId not found to delete")
-            Mono.just(true)
-        }
+    return if (isNotBabyOrWeddingRegistryType(registryType))
+        Mono.just(true)
+    else {
+        compositeTransactionalRepository.deleteRegistryCascaded(registryId)
+            .map { true }
+            .onErrorResume {
+                logger.error("Exception from deleteGuestRegistry() for registryId: $registryId " +
+                    "sending it for retry", it)
+                Mono.just(false)
+            }
+            .switchIfEmpty {
+                logger.error("Exception from deleteGuestRegistry(), registryId: $registryId not found to delete")
+                Mono.just(true)
+            }
+    }
 }
 
 data class RetryState(
