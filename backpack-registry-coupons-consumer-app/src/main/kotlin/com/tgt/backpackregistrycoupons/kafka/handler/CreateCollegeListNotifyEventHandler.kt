@@ -1,6 +1,5 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
-import com.tgt.backpackregistryclient.transport.RegistryMetaDataTO
 import com.tgt.backpackregistryclient.util.RegistryType.Companion.toRegistryType
 import com.tgt.backpackregistrycoupons.kafka.model.CreateCollegeListNotifyEvent
 import com.tgt.backpackregistrycoupons.service.async.CreateCollegeListNotifyEventService
@@ -12,6 +11,7 @@ import reactor.core.publisher.Mono
 import java.time.LocalDate
 import javax.inject.Inject
 
+@Singleton
 class CreateCollegeListNotifyEventHandler(
     @Inject private val createCollegeListNotifyEventService: CreateCollegeListNotifyEventService,
     @Inject private val eventHeaderFactory: EventHeaderFactory
