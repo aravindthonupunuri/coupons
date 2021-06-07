@@ -10,6 +10,7 @@ import mu.KotlinLogging
 import reactor.core.publisher.Mono
 import java.time.LocalDate
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class CreateCollegeListNotifyEventHandler(
