@@ -43,7 +43,7 @@ class CreateListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest {
     ListMsgBusClient msgBusClient
 
     @Inject
-    RegistryRepository registryRepositorycreateCollegeListNotifyEventHandler
+    RegistryRepository registryRepository
 
     @Shared def registryId1 = UUID.randomUUID()
 

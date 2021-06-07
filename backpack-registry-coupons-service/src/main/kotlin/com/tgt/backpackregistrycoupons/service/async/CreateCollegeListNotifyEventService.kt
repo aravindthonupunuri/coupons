@@ -13,7 +13,9 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CreateCollegeListNotifyEventService(
     @Inject val registryCouponsRepository: RegistryRepository
 ) {
