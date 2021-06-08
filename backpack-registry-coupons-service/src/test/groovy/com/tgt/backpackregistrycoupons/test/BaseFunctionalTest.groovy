@@ -76,7 +76,7 @@ class BaseFunctionalTest extends Specification implements TestPropertyProvider {
         1 * mockedEnvironment.containsProperties(_) >> true
         return new ListsMessageBusProducer("testcLient", "dummySrc", "dummyTopic", eventHeaderFactory, new MsgbusKafkaProducerClient() {
             @Override
-            Mono<RecordMetadata> sendEvent(Object partitionKey, @NotNull Object data, @NotNull byte[] eventId, @NotNull byte[] eventType,
+            Mono<RecordMetadata> sendEvent(Object partitionKey, @NotNull Mono data, @NotNull byte[] eventId, @NotNull byte[] eventType,
                                            @Nullable byte[] correlationId, @Nullable byte[] timestamp,
                                            @Nullable byte[] errorCode, @Nullable byte[] errorMessage,
                                            @Nullable byte[] retryCount, @Nullable byte[] retryTimestamp, @Nullable byte[] maxRetryCount,

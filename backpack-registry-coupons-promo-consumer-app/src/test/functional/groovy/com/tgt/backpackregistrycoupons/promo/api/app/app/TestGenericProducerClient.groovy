@@ -15,7 +15,7 @@ interface TestGenericProducerClient<K,V> extends EventProducerClient<K, V>  {
     @Topic("promo-coupon-redemption-notifications-v2")
     Mono<RecordMetadata> sendEvent(
             @KafkaKey K partitionKey,
-            V data,
+            Mono<V> data,
             // groovy doesn't like EventHeaders.EventHeaderNames.* as inline constant values.
             // Hence copying those values as string here which is not perfect but works for now, just make
             // sure this is always in sync with EventHeaders.EventHeaderNames.
