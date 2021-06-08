@@ -1,8 +1,8 @@
 package com.tgt.backpackregistrycoupons.kafka.handler
 
 import com.tgt.backpackregistryclient.util.RegistryType.Companion.toRegistryType
-import com.tgt.backpackregistrycoupons.kafka.model.CreateCollegeListNotifyEvent
-import com.tgt.backpackregistrycoupons.service.async.CreateCollegeListNotifyEventService
+import com.tgt.backpackregistrycoupons.kafka.migration.model.CreateCollegeListNotifyEvent
+import com.tgt.backpackregistrycoupons.kafka.migration.service.CreateCollegeListNotifyEventService
 import com.tgt.lists.msgbus.event.EventHeaderFactory
 import com.tgt.lists.msgbus.event.EventHeaders
 import com.tgt.lists.msgbus.event.EventProcessingResult

@@ -2,6 +2,7 @@ package com.tgt.backpackregistrycoupons.kafka
 
 import com.tgt.backpackregistrycoupons.kafka.handler.*
 import com.tgt.backpackregistrycoupons.kafka.migration.model.CouponAssignmentNotifyEvent
+import com.tgt.backpackregistrycoupons.kafka.migration.model.CreateCollegeListNotifyEvent
 import com.tgt.lists.msgbus.EventDispatcher
 import com.tgt.lists.msgbus.event.DeadEventTransformedValue
 import com.tgt.lists.msgbus.event.EventHeaders
@@ -16,6 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 open class BackpackRegistryCouponsMigrationEventDispatcher(
+    @Inject val createCollegeListNotifyEventHandler: CreateCollegeListNotifyEventHandler,
     @Inject val migrationCouponAssignmentNotifyEventHandler: MigrationCouponAssignmentNotifyEventHandler,
     @Value("\${msgbus.source}") val source: String,
     @Value("\${msgbus.dlq-source}") val dlqSource: String,
@@ -27,6 +29,13 @@ open class BackpackRegistryCouponsMigrationEventDispatcher(
     override fun dispatchEvent(eventHeaders: EventHeaders, data: Any, isPoisonEvent: Boolean): Mono<EventProcessingResult> {
         if (eventHeaders.source == source || eventHeaders.source == dlqSource || allowedSources.contains(eventHeaders.source)) {
             when (eventHeaders.eventType) {
+                // CreateCollegeListNotifyEvent is added for the one time migration of college registries, which already have a coupon assigned
+                CreateCollegeListNotifyEvent.getEventType() -> {
+                    // always use transformValue to convert raw data to concrete type
+                    val createCollegeListNotifyEvent = data as CreateCollegeListNotifyEvent
+                    logger.debug { "Source : ${eventHeaders.source} | Got CreateCollegeList Event: $createCollegeListNotifyEvent" }
+                    return createCollegeListNotifyEventHandler.handleCreateCollegeListNotifyEvent(createCollegeListNotifyEvent, eventHeaders, isPoisonEvent)
+                }
                 CouponAssignmentNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
                     val assignCouponNotifyEvent = data as CouponAssignmentNotifyEvent
@@ -47,6 +56,11 @@ open class BackpackRegistryCouponsMigrationEventDispatcher(
     override fun transformValue(eventHeaders: EventHeaders, data: ByteArray): EventTransformedValue? {
         if (eventHeaders.source == source || eventHeaders.source == dlqSource || allowedSources.contains(eventHeaders.source)) {
             return when (eventHeaders.eventType) {
+                // CreateCollegeListNotifyEvent is added for the one time migration of college registries, which already have a coupon assigned
+                CreateCollegeListNotifyEvent.getEventType() -> {
+                    val createCollegeListNotifyEvent = CreateCollegeListNotifyEvent.deserialize(data)
+                    EventTransformedValue("lists_${createCollegeListNotifyEvent.listId}", ExecutionSerialization.ID_SERIALIZATION, createCollegeListNotifyEvent)
+                }
                 CouponAssignmentNotifyEvent.getEventType() -> {
                     val couponAssignmentNotifyEvent = CouponAssignmentNotifyEvent.deserialize(data)
                     EventTransformedValue("lists_${couponAssignmentNotifyEvent.listId}", ExecutionSerialization.ID_SERIALIZATION, couponAssignmentNotifyEvent)

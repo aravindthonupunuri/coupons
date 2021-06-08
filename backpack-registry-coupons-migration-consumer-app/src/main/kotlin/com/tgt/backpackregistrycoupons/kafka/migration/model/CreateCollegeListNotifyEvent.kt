@@ -1,4 +1,4 @@
-package com.tgt.backpackregistrycoupons.kafka.model
+package com.tgt.backpackregistrycoupons.kafka.migration.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties

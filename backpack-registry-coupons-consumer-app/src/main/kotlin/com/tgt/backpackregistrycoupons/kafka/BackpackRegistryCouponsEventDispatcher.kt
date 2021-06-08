@@ -1,8 +1,10 @@
 package com.tgt.backpackregistrycoupons.kafka
 
-import com.tgt.backpackregistrycoupons.kafka.handler.*
+import com.tgt.backpackregistrycoupons.kafka.handler.CreateListNotifyEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.CronEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.DeleteListNotifyEventHandler
+import com.tgt.backpackregistrycoupons.kafka.handler.UpdateListNotifyEventHandler
 import com.tgt.backpackregistrycoupons.kafka.handler.welcomkit.RegistryItemTransactionActionEventHandler
-import com.tgt.backpackregistrycoupons.kafka.model.CreateCollegeListNotifyEvent
 import com.tgt.backpacktransactionsclient.transport.kafka.model.RegistryItemTransactionActionEvent
 import com.tgt.cronbeacon.kafka.model.CronEvent
 import com.tgt.lists.atlas.kafka.model.CreateListNotifyEvent
@@ -23,7 +25,6 @@ import javax.inject.Singleton
 @Singleton
 open class BackpackRegistryCouponsEventDispatcher(
     @Inject val createListNotifyEventHandler: CreateListNotifyEventHandler,
-    @Inject val createCollegeListNotifyEventHandler: CreateCollegeListNotifyEventHandler,
     @Inject val updateListNotifyEventHandler: UpdateListNotifyEventHandler,
     @Inject val deleteListNotifyEventHandler: DeleteListNotifyEventHandler,
     @Inject val registryItemTransactionActionEventHandler: RegistryItemTransactionActionEventHandler,
@@ -43,14 +44,6 @@ open class BackpackRegistryCouponsEventDispatcher(
                     val createListNotifyEvent = data as CreateListNotifyEvent
                     logger.debug { "Source : ${eventHeaders.source} | Got CreateList Event: $createListNotifyEvent" }
                     return createListNotifyEventHandler.handleCreateListNotifyEvent(createListNotifyEvent, eventHeaders, isPoisonEvent)
-                }
-                // CreateCollegeListNotifyEvent is added just for the one time migration of college registries, which already
-                // have a coupon assigned
-                CreateCollegeListNotifyEvent.getEventType() -> {
-                    // always use transformValue to convert raw data to concrete type
-                    val createCollegeListNotifyEvent = data as CreateCollegeListNotifyEvent
-                    logger.debug { "Source : ${eventHeaders.source} | Got CreateCollegeList Event: $createCollegeListNotifyEvent" }
-                    return createCollegeListNotifyEventHandler.handleCreateCollegeListNotifyEvent(createCollegeListNotifyEvent, eventHeaders, isPoisonEvent)
                 }
                 UpdateListNotifyEvent.getEventType() -> {
                     // always use transformValue to convert raw data to concrete type
@@ -92,12 +85,6 @@ open class BackpackRegistryCouponsEventDispatcher(
                 CreateListNotifyEvent.getEventType() -> {
                     val createListNotifyEvent = CreateListNotifyEvent.deserialize(data)
                     EventTransformedValue("lists_${createListNotifyEvent.listId}", ExecutionSerialization.ID_SERIALIZATION, createListNotifyEvent)
-                }
-                // CreateCollegeListNotifyEvent is added just for the one time migration of college registries, which already
-                // have a coupon assigned
-                CreateCollegeListNotifyEvent.getEventType() -> {
-                    val createCollegeListNotifyEvent = CreateCollegeListNotifyEvent.deserialize(data)
-                    EventTransformedValue("lists_${createCollegeListNotifyEvent.listId}", ExecutionSerialization.ID_SERIALIZATION, createCollegeListNotifyEvent)
                 }
                 UpdateListNotifyEvent.getEventType() -> {
                     val updateListNotifyEvent = UpdateListNotifyEvent.deserialize(data)

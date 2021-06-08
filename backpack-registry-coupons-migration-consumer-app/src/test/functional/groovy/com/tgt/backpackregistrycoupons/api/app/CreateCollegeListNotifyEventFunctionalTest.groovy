@@ -1,7 +1,7 @@
 package com.tgt.backpackregistrycoupons.api.app
 
 import com.tgt.backpackregistryclient.util.RegistryType
-import com.tgt.backpackregistrycoupons.kafka.model.CreateCollegeListNotifyEvent
+import com.tgt.backpackregistrycoupons.kafka.migration.model.CreateCollegeListNotifyEvent
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.test.BaseKafkaFunctionalTest
 import com.tgt.backpackregistrycoupons.test.PreDispatchLambda
@@ -55,7 +55,7 @@ class CreateCollegeListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest
         testEventListener.reset()
     }
 
-    def "Test CreateListNotifyEvent - CUSTOM registry type, gets added into postgres"() {
+    def "Test CreateCollegeListNotifyEvent - CUSTOM registry type, gets added into postgres"() {
         given:
 
         def registryId = UUID.randomUUID()
@@ -77,7 +77,7 @@ class CreateCollegeListNotifyEventFunctionalTest extends BaseKafkaFunctionalTest
         }
 
         when:
-        msgBusClient.sendMessage(event.listId.toString(), UUID.randomUUID(), CreateCollegeListNotifyEvent.getEventType(), "backpack-registry", event)
+        msgBusClient.sendMessage(event.listId.toString(), UUID.randomUUID(), CreateCollegeListNotifyEvent.getEventType(), "migration-GRWS", event)
 
         then:
         testEventListener.verifyEvents { consumerEvents, producerEvents, consumerStatusEvents ->
