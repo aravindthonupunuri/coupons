@@ -47,17 +47,28 @@ class MigrationAssignCouponNotifyEventService(
         registryId: UUID,
         registryCouponMetaDataTO: RegistryCouponMetaDataTO
     ): Mono<Boolean> {
-        return registryRepository.findByRegistryId(registryId).flatMap {
+        return registryRepository.findByRegistryId(registryId).flatMap { it ->
             val couponsList = arrayListOf<RegistryCoupons>()
             if (registryCouponMetaDataTO.onlineCouponCode != null) {
-                couponsList.add(RegistryCoupons(registryCouponMetaDataTO.onlineCouponCode, it, CouponType.ONLINE, registryCouponMetaDataTO.onlineCouponStatus, registryCouponMetaDataTO.couponIssueDate, registryCouponMetaDataTO.couponExpiryDate, null, null))
+                couponsList.add(RegistryCoupons(registryCouponMetaDataTO.onlineCouponCode, it, CouponType.ONLINE,
+                    registryCouponMetaDataTO.onlineCouponStatus, registryCouponMetaDataTO.couponIssueDate,
+                    registryCouponMetaDataTO.couponExpiryDate, null, null))
             }
             if (registryCouponMetaDataTO.storeCouponCode != null) {
-                couponsList.add(RegistryCoupons(registryCouponMetaDataTO.storeCouponCode, it, CouponType.STORE, registryCouponMetaDataTO.storeCouponStatus, registryCouponMetaDataTO.couponIssueDate, registryCouponMetaDataTO.couponExpiryDate, null, null))
+                couponsList.add(RegistryCoupons(registryCouponMetaDataTO.storeCouponCode, it, CouponType.STORE,
+                    registryCouponMetaDataTO.storeCouponStatus, registryCouponMetaDataTO.couponIssueDate,
+                    registryCouponMetaDataTO.couponExpiryDate, null, null))
             }
 
             if (couponsList.isNotEmpty()) {
-                registryCouponsRepository.saveAll(couponsList).collectList().map { true }
+                registryCouponsRepository.saveAll(couponsList).collectList()
+                    .flatMap {
+                    registryRepository.updateCouponAssignmentComplete(registryId, true)
+                        .onErrorResume {
+                            logger.error("[MigrationAssignCouponNotifyEventService] Exception from updateCouponAssignmentComplete() for registryId: $registryId sending it for retry", it)
+                            Mono.just(0)
+                        }
+                }.map { it != 0 }
             } else {
                 Mono.just(true)
             }

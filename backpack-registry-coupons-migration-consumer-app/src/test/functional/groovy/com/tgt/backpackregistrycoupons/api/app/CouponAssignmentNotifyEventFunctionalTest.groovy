@@ -120,6 +120,7 @@ class CouponAssignmentNotifyEventFunctionalTest extends BaseKafkaFunctionalTest 
         result != null
         result.registryId == registryId1
         result.getRegistryCoupons().size() == 2
+        result.getCouponAssignmentComplete()
     }
 
     @KafkaClient(acks = KafkaClient.Acknowledge.ALL, id = "registry-internal-data-bus-stage")
