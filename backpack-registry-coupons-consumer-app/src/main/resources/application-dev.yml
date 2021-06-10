@@ -116,6 +116,7 @@ kafka:
       value:
         deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
     backpack-registry-coupons-consumer-app-cron-beacon:
+      max.poll.interval.ms: 3780000 # 1.05 hours so kafka doesn't re-balance in the middle and processing won't complete
       key:
         deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value:
