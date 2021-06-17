@@ -18,7 +18,6 @@ import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.COMPLETION_C
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.GIFT_REGISTRY
 import com.tgt.backpackregistrycoupons.util.RegistryCouponsConstant.PROFILE
 import com.tgt.lists.atlas.api.type.LIST_STATE
-import com.tgt.lists.atlas.api.util.ClientConstants
 import com.tgt.lists.atlas.api.util.ClientConstants.LIST_DEFAULT_LOCATION_ID
 import com.tgt.notification.tracer.client.model.NotificationTracerEvent
 import io.micronaut.context.annotation.Value
@@ -162,7 +161,7 @@ class CronEventService(
             logger.debug("[sendGuestNotification], Coupons not assigned for registry $registryId skipping notification process")
             Mono.just(true)
         } else {
-            backpackClient.getRegistryDetails(ClientConstants.SYSTEM_PROFILE_ID, registryId, LIST_DEFAULT_LOCATION_ID.toLong(), RegistryChannel.WEB, RegistrySubChannel.TGTWEB, false)
+            backpackClient.getRegistryDetails(registryId, LIST_DEFAULT_LOCATION_ID.toLong(), RegistryChannel.WEB, RegistrySubChannel.TGTWEB, false)
                 .flatMap { sendNotification(it, registryId, registryCoupons) }
                 .onErrorResume {
                     logger.error("[sendGuestNotification] Exception finding registry $registryId while sending guest notification for completion coupons", it)

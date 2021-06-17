@@ -95,7 +95,7 @@ class CronEventServiceTest extends Specification {
             Mono.just(true)
         }
         1 * registryRepository.updateCouponAssignmentComplete(registry1.registryId, true) >> Mono.just(1)
-        1 * backpackRegistryClient.getRegistryDetails(_,_,_,_,_,_) >> Mono.just(new RegistryDetailsResponseTO(registry1.registryId, "", "some title", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.WEDDING, RegistryStatus.@ACTIVE, null, null))
+        1 * backpackRegistryClient.getRegistryDetails(*_) >> Mono.just(new RegistryDetailsResponseTO(registry1.registryId, "", "some title", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.WEDDING, RegistryStatus.@ACTIVE, null, null))
         1 * notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), _, registry1.registryId.toString()) >> Mono.just(recordMetadata)
 
         // Second Registry with partial coupon assigned
@@ -107,7 +107,7 @@ class CronEventServiceTest extends Specification {
             Mono.just(true)
         }
         1 * registryRepository.updateCouponAssignmentComplete(registry2.registryId, true) >> Mono.just(1)
-        1 * backpackRegistryClient.getRegistryDetails(_,_,_,_,_,_) >> Mono.just(new RegistryDetailsResponseTO(registry2.registryId, "", "some title", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.WEDDING, RegistryStatus.@ACTIVE, null, null))
+        1 * backpackRegistryClient.getRegistryDetails(*_) >> Mono.just(new RegistryDetailsResponseTO(registry2.registryId, "", "some title", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.WEDDING, RegistryStatus.@ACTIVE, null, null))
         1 * notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), _, registry2.registryId.toString()) >> Mono.just(recordMetadata)
 
         // Forth Registry assigning only one coupon
@@ -119,7 +119,7 @@ class CronEventServiceTest extends Specification {
             assert list.size() == 1
             Mono.just(true)
         }
-        1 * backpackRegistryClient.getRegistryDetails(_,_,_,_,_,_) >> Mono.just(new RegistryDetailsResponseTO(registry4.registryId, "", "some title", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.WEDDING, RegistryStatus.@ACTIVE, null, null))
+        1 * backpackRegistryClient.getRegistryDetails(*_) >> Mono.just(new RegistryDetailsResponseTO(registry4.registryId, "", "some title", null, null, null, null, null, RegistrySearchVisibility.PUBLIC, RegistryType.WEDDING, RegistryStatus.@ACTIVE, null, null))
         1 * notificationTracerProducer.sendMessage(NotificationTracerEvent.getEventType(), _, registry4.registryId.toString()) >> Mono.just(recordMetadata)
 
         actual
