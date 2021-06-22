@@ -16,22 +16,13 @@ usage="./${scriptname}.sh <input-file-name-with-path> <environment | $SUPPORTED_
 
 # Encryption Process
 # ==================
-# We have a public-private key pair per application => app-public-key, app-private-key
-#
-# Since public/private keys can NOT be used to encrypt/decrypt large files, we do not use app key pair to encrypt
-# file data.
-#
-# Instead we encrypt input file data using a spontaneously generated random symmetric key (random-sym-key) => encrypted-file-data
-# We use app-public-key to encrypt random-sym-key => encrypted-random-sym-key.
-# We concatenate encrypted-file-data and encrypted-random-sym-key, using a space between them as delimiter => encrypted-output-file.
-# This encrypted-output-file can be stored safely in git.
+# We have private key  per application that is used to encrypt secret data to an encrypted-output-file
+# which can be stored safely in git.
 #
 # Decryption Process
 # ==================
 # Read encrypted-output-file
-# Separate its contents using space delimiter between them => encrypted-file-data and encrypted-random-sym-key
-# Using app-private-key, decrypt encrypted-random-sym-key => decrypted-random-sym-key
-# Using decrypted-random-sym-key, decrypt the encrypted-file-data => decrypted-file-data
+# Using app-private-key, decrypt encrypted-file-data => decrypted-file-data
 
 echo " "
 log_msg "Running: $0 $@"
@@ -96,12 +87,10 @@ if [ "$use_gardenia" == true ]; then
 
     echo $privkey_base64|openssl base64 -d -A > $privkey_file
 elif [ "$use_vela" == true ]; then
-    # read private key from secret-manager for vela
-    privkey_name_full="${gitorg}_${gitrepo}_$privkey_name"
-    log_msg "Reading private key ${privkey_name_full} from secret-manager for vela"
-    privkey_file_base64_data=`$SECRET_MANAGER_PATH/secrets.sh --action show --secret-name $privkey_name_full 2>&1`
-    value_line=`grep 'LS0' <<< "$privkey_file_base64_data"`
-    echo "$value_line"|openssl base64 -d -A > $privkey_file
+    # read private key from enterprise-secrets for vela
+     log_msg "Reading private key from enterprise-secrets"
+     read_enterprise_secret_value ${envname} privkey_file_base64_data
+     echo "$privkey_file_base64_data"|openssl base64 -d -A > $privkey_file
 fi
 
 cd $scriptDir
@@ -115,9 +104,7 @@ fi
 
 # read input data file, and separate its contents into into encrypted_data and encrypted_random_key (using space delimiter)
 log_msg "Reading input data file: $file_to_decrypt"
-file_data=`cat $file_to_decrypt`
-encrypted_data=`echo $file_data|cut -d' ' -f1`
-encrypted_random_key=`echo $file_data|cut -d' ' -f2`
+encrypted_data=`cat $file_to_decrypt`
 
 # decrypt the encrypted_random_key
 echo " "
@@ -126,7 +113,7 @@ decrypted_sym_key_file=/tmp/${tmp_filename_prefix}_decrypted_random_key.bin
 echo $encrypted_random_key|openssl base64 -d -A > /tmp/${tmp_filename_prefix}_encrypted_random_key_enc.bin
 openssl rsautl -decrypt -inkey $privkey_file -in /tmp/${tmp_filename_prefix}_encrypted_random_key_enc.bin -out $decrypted_sym_key_file
 
-# decrypt the encrypted_data using decrypted_sym_key
+# decrypt the encrypted_data using private key
 echo " "
 log_msg "Decrypting encrypted_data to: $decrypted_data_file"
 encrypted_data_file=/tmp/${tmp_filename_prefix}_enc_data.txt
@@ -136,7 +123,7 @@ echo $encrypted_data > $encrypted_data_file
 # But there is a bug in openssl's base64 processing, it expects a newline at the end of the base64 encoded data.
 # This causes issues when the secret data input file is long (longer than 735 chars)
 # Therefore decode the base64 first separately i.e. don't use -base64 flag with openssl decode (enc -d) command
-echo -n $encrypted_data| openssl base64 -d -A | openssl enc -d -aes-256-cbc -out $decrypted_data_file -pass file:$decrypted_sym_key_file
+echo -n $encrypted_data| openssl base64 -d -A | openssl enc -d -aes-256-cbc -out $decrypted_data_file -pass file:$privkey_file
 
 #remove newline from end of file, if any (TAP doesn't like newline char at end of base64 coded secrets)
 perl -pi -e 'chomp if eof' $decrypted_data_file
