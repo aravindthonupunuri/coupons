@@ -32,7 +32,7 @@ steps:
   - name: publish-config-backpack-registry-coupons-dev
     ruleset:
       event: [ push ]
-      branch: master
+      branch: vela
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
       CICD_MODE: 'true'
@@ -88,7 +88,7 @@ steps:
         - latest
     ruleset:
       event: [ push ]
-      branch: master
+      branch: vela
     environment:
       CICD_MODE: 'true'
     secrets: [ docker_username, docker_password ]

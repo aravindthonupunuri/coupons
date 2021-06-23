@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x
+
 set -e
 
 # script to read/write app private key to enterprise-secrets as well as post as vela secret
@@ -44,8 +44,7 @@ fi
 cd $scriptDir
 
 echo " "
-privkey_name=${appname}-privkey-${envname}
-privkey_name_full="${gitorg}_${gitrepo}_$privkey_name"
+secret_name=`build_enterprise_secret_name envname`
 if [ "$1" == "read" ]; then
     log_msg "Reading private key from enterprise-secrets"
     echo " "
@@ -56,11 +55,15 @@ elif [ "$1" == "write" ]; then
     set +e
     read_enterprise_secret_value ${envname} existing_key
     set -e
+    echo "existing_key is $existing_key"
+    if [[ "$existing_key" = null ]]; then
+      log_err "Exiting due to missing vault policy secret $secret_name"
+    fi
     if [[ "$existing_key" != *"404"* ]]; then
         proceed=""
         while [[ "$proceed" != "Y" && "$proceed" != "y" && "$proceed" != "N" && "$proceed" != "n" ]]; do
             echo " "
-            read -p "WARNING: $privkey_name_full already exists, do you want to overwrite? [Y/N]: " proceed
+            read -p "WARNING: $secret_name already exists, do you want to overwrite? [Y/N]: " proceed
             if [[ "$proceed" == "N" || "$proceed" == "n" ]]; then
                 echo "Exiting without overwriting..."
                 exit 0
