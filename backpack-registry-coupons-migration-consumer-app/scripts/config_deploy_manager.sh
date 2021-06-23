@@ -74,9 +74,6 @@ app_private_key="$app_private_key_file" tap_api_token="$tap_api_token" $scriptDi
 cat "$service_resources_location"/application-${envname}.yml >> "$resources_location"/application-${envname}.yml
 app_private_key="$app_private_key_file" tap_api_token="$tap_api_token" $scriptDir/deploy_tap_config.sh "$envname" configs "$resources_location"/application-${envname}.yml false
 
-# deploy proxy-config.yml
-app_private_key="$app_private_key_file" tap_api_token="$tap_api_token" $scriptDir/deploy_tap_config.sh "$envname" configs "$resources_location"/proxy-config-${envname}.yml false
-
 # deploy log4j2.properties
 app_private_key="$app_private_key_file" tap_api_token="$tap_api_token" $scriptDir/deploy_tap_config.sh "$envname" configs "$resources_location"/log4j2-${envname}.properties false
 
