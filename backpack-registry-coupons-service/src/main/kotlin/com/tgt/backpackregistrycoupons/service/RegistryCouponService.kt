@@ -2,8 +2,10 @@ package com.tgt.backpackregistrycoupons.service
 
 import com.tgt.backpackregistryclient.util.RegistryStatus
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
+import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
+import com.tgt.backpackregistrycoupons.util.CouponType
 import com.tgt.backpackregistrycoupons.util.toCouponsListResponse
 import com.tgt.lists.atlas.api.type.LIST_STATE
 import reactor.core.publisher.Mono
@@ -22,6 +24,14 @@ class RegistryCouponService(
     fun getRegistryCoupons(registryId: UUID): Mono<RegistryCouponsTO> {
         return registryRepository.getByRegistryId(registryId)
             .map {
+                if (!it.registryCoupons.isNullOrEmpty()) {
+                    val storeCoupons = it.registryCoupons?.filter { it.couponType == CouponType.STORE }?.sortedByDescending { it.couponIssueDate }
+                    val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
+                    if (!storeCoupons.isNullOrEmpty() && !onlineCoupons.isNullOrEmpty()) {
+                        val registryCoupons: Set<RegistryCoupons>? = setOf(storeCoupons[0], onlineCoupons[0])
+                        it.registryCoupons = registryCoupons
+                    }
+                }
                 val registryType = it.registryType
                 val registryStatus = RegistryStatus.toRegistryStatus(LIST_STATE.values().first { listState -> listState.value == it.registryStatus }.name)
                 val couponCountDownDays: Long? =
