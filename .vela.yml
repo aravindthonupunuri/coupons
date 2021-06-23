@@ -45,12 +45,12 @@ steps:
     commands:
       - export BACKPACK_REGISTRY_COUPONS_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_app_private_key_dev/privkey)
       - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-app/scripts/config_deploy_manager.sh conf.dev.0.0
-      - export BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_consumer_app_private_key_dev/privkey)
-      - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0
-      - export BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_migration_consumer_app_private_key_dev/privkey)
-      - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-migration-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0
-      - export BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_promo_consumer_app_private_key_dev/privkey)
-      - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-promo-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0
+#      - export BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_consumer_app_private_key_dev/privkey)
+#      - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0
+#      - export BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_migration_consumer_app_private_key_dev/privkey)
+#      - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_MIGRATION_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-migration-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0
+#      - export BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_DEV=$(cat /vela/secrets/backpack_registry_coupons_promo_consumer_app_private_key_dev/privkey)
+#      - tap_api_token=$TAP_API_TOKEN app_private_key=$BACKPACK_REGISTRY_COUPONS_PROMO_CONSUMER_APP_PRIVATE_KEY_DEV ./backpack-registry-coupons-promo-consumer-app/scripts/config_deploy_manager.sh conf.dev.0.0
 
   - name: publish-config-backpack-registry-coupons-stage
     ruleset:
