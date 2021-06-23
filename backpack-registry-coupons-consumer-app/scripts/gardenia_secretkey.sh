@@ -9,7 +9,7 @@ scriptname="gardenia_secretkey"
 . $scriptDir/utils.sh
 
 usage="
-./${scriptname}.sh <command | list>
+./${scriptname}.sh <command | list> <environment | $SUPPORTED_ENVIRONMENTS>
 ./${scriptname}.sh <command | read> <environment | $SUPPORTED_ENVIRONMENTS>
 ./${scriptname}.sh <command | write> <environment | $SUPPORTED_ENVIRONMENTS> <priv-key-file-base64>
 "

@@ -14,22 +14,13 @@ usage="./${scriptname}.sh <input-data-file-with-path> <environment | $SUPPORTED_
 
 # Encryption Process
 # ==================
-# We have a public-private key pair per application => app-public-key, app-private-key
-#
-# Since public/private keys can NOT be used to encrypt/decrypt large files, we do not use app key pair to encrypt
-# file data.
-#
-# Instead we encrypt input file data using a spontaneously generated random symmetric key (random-sym-key) => encrypted-file-data
-# We use app-public-key to encrypt random-sym-key => encrypted-random-sym-key.
-# We concatenate encrypted-file-data and encrypted-random-sym-key, using a space between them as delimiter => encrypted-output-file.
-# This encrypted-output-file can be stored safely in git.
+# We have private key  per application that is used to encrypt secret data to an encrypted-output-file
+# which can be stored safely in git.
 
 # Decryption Process
 # ==================
 # Read encrypted-output-file
-# Separate its contents using space delimiter between them => encrypted-file-data and encrypted-random-sym-key
-# Using app-private-key, decrypt encrypted-random-sym-key => decrypted-random-sym-key
-# Using decrypted-random-sym-key, decrypt the encrypted-file-data => decrypted-file-data
+# Using app-private-key, decrypt encrypted-file-data => decrypted-file-data
 #
 
 echo " "
@@ -46,11 +37,6 @@ fi
 
 check_environment "$2"
 envname=$2
-
-pubkey_file="$data_folder"/${appname}_publickey_${envname}.pem
-if [ ! -f $pubkey_file ]; then
-    log_err "Missing public key file: $pubkey_file"
-fi
 
 cd $scriptDir
 
@@ -76,32 +62,16 @@ echo " "
 log_msg "Removing existing file: $encrypted_data_outfile"
 rm -f $encrypted_data_outfile
 
-# generate a random private key
-random_sym_key_file=/tmp/${filename_prefix}_random_sym_key.bin
+# get applications private key
+tmp_filename_prefix=${appname}encrypttmp
+privkey_file=/tmp/${tmp_filename_prefix}_privkey.pem
+read_enterprise_secret_value ${envname} privkey_file_base64_data
+echo "$privkey_file_base64_data"|openssl base64 -d -A > $privkey_file
 
-echo " "
-log_msg "Generating random symmetric key [file: $random_sym_key_file] for encrypting input file: $file_to_encrypt"
-openssl rand -base64 32 -out $random_sym_key_file
-
-# Encrypt the input data file using random symmetric key
+# Encrypt the input data file using private key
 echo " "
 log_msg "Encrypting data file to output file: $encrypted_data_outfile"
-openssl enc -base64 -A -aes-256-cbc -salt -in $file_to_encrypt -out $encrypted_data_outfile -pass file:$random_sym_key_file
-
-# Encrypt the symmetric key
-echo " "
-log_msg "Encrypting random symmetric key (output: base64)"
-encrypted_random_sym_key=`openssl rsautl -encrypt -inkey $pubkey_file -pubin -in $random_sym_key_file | openssl base64 | tr -d '\n'`
-
-# append encrypted_random_sym_key to output file
-echo " "
-log_msg "Appending random symmetric key to output file: $encrypted_data_outfile"
-echo -n " $encrypted_random_sym_key" >> $encrypted_data_outfile
-
-# delete unencrypted  random private key file
-echo " "
-log_msg "Deleting unencrypted random symmetric key file: $random_sym_key_file"
-rm -f $random_sym_key_file
+openssl enc -base64 -A -aes-256-cbc -salt -in $file_to_encrypt -out $encrypted_data_outfile -pass file:$privkey_file
 
 echo " "
 echo "=========================================================================================="
