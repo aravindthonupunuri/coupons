@@ -132,5 +132,5 @@ secrets:
       parameters:
         log_level: debug
         items:
-          - source: secret/registries-modernization/dev/backpack-registry-coupons/backpackregistrycoupons-privkey
+          - source: secret/registries-modernization/dev/backpack-registry-coupons/backpackregistrycoupons
             path: backpack_registry_coupons_app_private_key_dev
