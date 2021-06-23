@@ -60,7 +60,7 @@ steps:
       - './gradlew build distTar'
 
   - name: rebuild_cache
-    image: docker.target.com/vela-plugins/s3-cache:2
+    image: docker.target.com/vela-plugins/s3-cache:v0.5.1-1
     secrets: [ cache_s3_access_key, cache_s3_secret_key, cache_s3_server ]
     parameters:
       action: rebuild
@@ -68,7 +68,7 @@ steps:
         - .gradle
 
   - name: flush_cache
-    image: docker.target.com/vela-plugins/s3-cache:2
+    image: docker.target.com/vela-plugins/s3-cache:v0.5.1-1
     secrets: [ cache_s3_access_key, cache_s3_secret_key, cache_s3_server ]
     parameters:
       action: flush
