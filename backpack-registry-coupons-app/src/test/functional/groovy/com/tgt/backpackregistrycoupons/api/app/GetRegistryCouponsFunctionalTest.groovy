@@ -40,13 +40,9 @@ class GetRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest {
     @Shared
     def alternateRegistryId = "12345"
 
-    def "test save Registry and RegistryCoupons"() {
+    def "test save Registry without RegistryCoupons"() {
         given:
         def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
-
-        def registryCoupons11 = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
-        def registryCoupons12 = new RegistryCoupons("3456", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
-
 
         when:
         def result1 = registryRepository.saveAll([registry] as Set).collectList().block()
@@ -55,6 +51,21 @@ class GetRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest {
         result1.size() == 1
 
         and:
+
+        when:
+        def result3 = couponService.getRegistryCoupons(registryId).block()
+
+        then:
+        result3.coupons.size() == 0
+        result3.couponCountDownDays > 0L
+    }
+
+    def "test save Registry and RegistryCoupons"() {
+        given:
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+
+        def registryCoupons11 = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
+        def registryCoupons12 = new RegistryCoupons("3456", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
 
         when:
         def result3 = registryCouponsRepository.saveAll([registryCoupons11, registryCoupons12]).collectList().block()

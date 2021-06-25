@@ -1,7 +1,6 @@
 package com.tgt.backpackregistrycoupons.service
 
 import com.tgt.backpackregistryclient.util.RegistryStatus
-import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
@@ -24,28 +23,20 @@ class RegistryCouponService(
 
     fun getRegistryCoupons(registryId: UUID): Mono<RegistryCouponsTO> {
         return registryRepository.getByRegistryId(registryId)
-            .map {
-                if (!it.registryCoupons.isNullOrEmpty() && it.registryType != RegistryType.CUSTOM) {
-                    val storeCoupons = it.registryCoupons?.filter { it.couponType == CouponType.STORE }?.sortedByDescending { it.couponIssueDate }
-                    val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
-                    if (!storeCoupons.isNullOrEmpty() && !onlineCoupons.isNullOrEmpty()) {
-                        val registryCoupons: Set<RegistryCoupons>? = setOf(storeCoupons[0], onlineCoupons[0])
-                        it.registryCoupons = registryCoupons
-                    }
-                } else if (!it.registryCoupons.isNullOrEmpty()) {
-                    /* In custom types only college registries having coupons and There won't be any store coupon for college registry */
-                    val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
-                    if (!onlineCoupons.isNullOrEmpty()) {
-                        val registryCoupons: Set<RegistryCoupons>? = setOf(onlineCoupons[0])
-                        it.registryCoupons = registryCoupons
-                    }
+            .map { registry ->
+                val registryCoupons = mutableSetOf<RegistryCoupons>()
+                if (!registry.registryCoupons.isNullOrEmpty()) {
+                    val storeCoupons = registry.registryCoupons?.filter { it.couponType == CouponType.STORE }?.sortedByDescending { it.couponIssueDate }
+                    val onlineCoupons = registry.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
+                    if (!storeCoupons.isNullOrEmpty()) registryCoupons.add(storeCoupons.first())
+                    if (!onlineCoupons.isNullOrEmpty()) registryCoupons.add(onlineCoupons.first())
                 }
-                val registryType = it.registryType
-                val registryStatus = RegistryStatus.toRegistryStatus(LIST_STATE.values().first { listState -> listState.value == it.registryStatus }.name)
+                val registryType = registry.registryType
+                val registryStatus = RegistryStatus.toRegistryStatus(LIST_STATE.values().first { listState -> listState.value == registry.registryStatus }.name)
                 val couponCountDownDays: Long? =
                     if (registryStatus == RegistryStatus.ACTIVE) {
-                        if (it.registryCoupons.isNullOrEmpty()) {
-                            val couponAssignmentDate = couponAssignmentCalculationManager.calculateCouponAssignmentDate(it)
+                        if (registryCoupons.isNullOrEmpty()) {
+                            val couponAssignmentDate = couponAssignmentCalculationManager.calculateCouponAssignmentDate(registry)
                             val duration: Duration = Duration.between(LocalDate.now().atStartOfDay(), couponAssignmentDate)
                             if (duration.isNegative) 0L else duration.toDays()
                         } else {
@@ -54,7 +45,7 @@ class RegistryCouponService(
                 } else {
                     null
                 }
-                RegistryCouponsTO(registryId, it.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsListResponse(it.registryCoupons ?: emptySet()))
+                RegistryCouponsTO(registryId, registry.alternateRegistryId, registryType, registryStatus, couponCountDownDays, toCouponsListResponse(registryCoupons))
             }
     }
 }
