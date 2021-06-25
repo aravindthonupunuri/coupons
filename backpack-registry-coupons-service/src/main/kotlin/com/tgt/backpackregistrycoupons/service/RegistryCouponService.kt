@@ -32,7 +32,7 @@ class RegistryCouponService(
                         val registryCoupons: Set<RegistryCoupons>? = setOf(storeCoupons[0], onlineCoupons[0])
                         it.registryCoupons = registryCoupons
                     }
-                } else if(!it.registryCoupons.isNullOrEmpty()) {
+                } else if (!it.registryCoupons.isNullOrEmpty()) {
                     val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
                     if (!onlineCoupons.isNullOrEmpty()) {
                         val registryCoupons: Set<RegistryCoupons>? = setOf(onlineCoupons[0])
