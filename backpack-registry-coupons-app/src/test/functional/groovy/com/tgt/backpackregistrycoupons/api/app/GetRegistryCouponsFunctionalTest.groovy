@@ -5,6 +5,7 @@ import com.tgt.backpackregistrycoupons.domain.model.Registry
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
 import com.tgt.backpackregistrycoupons.persistence.repository.registrycoupons.RegistryCouponsRepository
+import com.tgt.backpackregistrycoupons.service.RegistryCouponService
 import com.tgt.backpackregistrycoupons.test.BasePersistenceFunctionalTest
 import com.tgt.backpackregistrycoupons.transport.RegistryCouponsTO
 import com.tgt.backpackregistrycoupons.util.CouponRedemptionStatus
@@ -30,19 +31,18 @@ class GetRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest {
     @Inject
     RegistryCouponsRepository registryCouponsRepository
 
+    @Inject
+    RegistryCouponService couponService;
+
     @Shared
     def registryId = UUID.randomUUID()
 
     @Shared
     def alternateRegistryId = "12345"
 
-    def "test save Registry and RegistryCoupons"() {
+    def "test save Registry without RegistryCoupons"() {
         given:
         def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
-
-        def registryCoupons11 = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
-        def registryCoupons12 = new RegistryCoupons("3456", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
-
 
         when:
         def result1 = registryRepository.saveAll([registry] as Set).collectList().block()
@@ -53,10 +53,43 @@ class GetRegistryCouponsFunctionalTest extends BasePersistenceFunctionalTest {
         and:
 
         when:
+        def result3 = couponService.getRegistryCoupons(registryId).block()
+
+        then:
+        result3.coupons.size() == 0
+        result3.couponCountDownDays > 0L
+    }
+
+    def "test save Registry and RegistryCoupons"() {
+        given:
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+
+        def registryCoupons11 = new RegistryCoupons("1234", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
+        def registryCoupons12 = new RegistryCoupons("3456", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
+
+        when:
         def result3 = registryCouponsRepository.saveAll([registryCoupons11, registryCoupons12]).collectList().block()
 
         then:
         result3.size() == 2
+    }
+
+    def "test save Registry and multiple RegistryCoupons"() {
+        given:
+        def registry = new Registry(registryId, alternateRegistryId, RegistryType.BABY,  LIST_STATE.ACTIVE.value, LocalDate.now().minusDays(3), LocalDate.now(), true, null, null)
+
+        def registryCoupons11 = new RegistryCoupons("4567", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.parse("2018-11-10"), LocalDate.now().plusDays(2), null , null)
+        def registryCoupons12 = new RegistryCoupons("9876", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.parse("2018-11-10"), LocalDate.now().plusDays(2), null , null)
+        def registryCoupons13 = new RegistryCoupons("2345", registry, CouponType.STORE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
+        def registryCoupons14 = new RegistryCoupons("4321", registry, CouponType.ONLINE, CouponRedemptionStatus.AVAILABLE, LocalDate.now(), LocalDate.now().plusDays(2), null , null)
+
+
+        when:
+        registryCouponsRepository.saveAll([registryCoupons11, registryCoupons12, registryCoupons13, registryCoupons14]).collectList().block()
+        def result3 = couponService.getRegistryCoupons(registryId).block()
+
+        then:
+        result3.getCoupons().size() == 2
     }
 
     def "test get registry coupons integrity"() {
