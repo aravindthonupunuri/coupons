@@ -33,6 +33,7 @@ class RegistryCouponService(
                         it.registryCoupons = registryCoupons
                     }
                 } else if (!it.registryCoupons.isNullOrEmpty()) {
+                    /* In custom types only college registries having coupons and There won't be any store coupon for college registry */
                     val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
                     if (!onlineCoupons.isNullOrEmpty()) {
                         val registryCoupons: Set<RegistryCoupons>? = setOf(onlineCoupons[0])
