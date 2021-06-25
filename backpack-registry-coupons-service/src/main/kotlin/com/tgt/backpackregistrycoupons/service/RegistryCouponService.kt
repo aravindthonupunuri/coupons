@@ -1,6 +1,7 @@
 package com.tgt.backpackregistrycoupons.service
 
 import com.tgt.backpackregistryclient.util.RegistryStatus
+import com.tgt.backpackregistryclient.util.RegistryType
 import com.tgt.backpackregistrycoupons.domain.CouponAssignmentCalculationManager
 import com.tgt.backpackregistrycoupons.domain.model.RegistryCoupons
 import com.tgt.backpackregistrycoupons.persistence.repository.registry.RegistryRepository
@@ -24,11 +25,17 @@ class RegistryCouponService(
     fun getRegistryCoupons(registryId: UUID): Mono<RegistryCouponsTO> {
         return registryRepository.getByRegistryId(registryId)
             .map {
-                if (!it.registryCoupons.isNullOrEmpty()) {
+                if (!it.registryCoupons.isNullOrEmpty() && it.registryType != RegistryType.CUSTOM) {
                     val storeCoupons = it.registryCoupons?.filter { it.couponType == CouponType.STORE }?.sortedByDescending { it.couponIssueDate }
                     val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
                     if (!storeCoupons.isNullOrEmpty() && !onlineCoupons.isNullOrEmpty()) {
                         val registryCoupons: Set<RegistryCoupons>? = setOf(storeCoupons[0], onlineCoupons[0])
+                        it.registryCoupons = registryCoupons
+                    }
+                } else if(!it.registryCoupons.isNullOrEmpty()) {
+                    val onlineCoupons = it.registryCoupons?.filter { it.couponType == CouponType.ONLINE }?.sortedByDescending { it.couponIssueDate }
+                    if (!onlineCoupons.isNullOrEmpty()) {
+                        val registryCoupons: Set<RegistryCoupons>? = setOf(onlineCoupons[0])
                         it.registryCoupons = registryCoupons
                     }
                 }
