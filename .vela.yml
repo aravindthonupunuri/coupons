@@ -32,7 +32,7 @@ steps:
   - name: publish-config-backpack-registry-coupons-dev
     ruleset:
       event: [ push ]
-      branch: vela
+      branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
       CICD_MODE: 'true'
@@ -56,7 +56,7 @@ steps:
     ruleset:
       event: tag
       tag: conf.stage.backpackregistrycoupons.*
-      branch: vela
+      branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
       CICD_MODE: 'true'
@@ -80,7 +80,7 @@ steps:
     ruleset:
       event: tag
       tag: conf.prod.backpackregistrycoupons.*
-      branch: vela
+      branch: master
     image: 'docker.target.com/app/lists/alpine-bash-curl-ssl:1.0.5'
     environment:
       CICD_MODE: 'true'
@@ -143,7 +143,7 @@ steps:
         - latest
     ruleset:
       event: [ push ]
-      branch: vela
+      branch: master
     environment:
       CICD_MODE: 'true'
     secrets: [ docker_username, docker_password ]
@@ -158,7 +158,7 @@ steps:
       tags: 'rc.${BUILD_TAG:35}'
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.stage.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -174,7 +174,7 @@ steps:
       tags: "rc.${BUILD_TAG:34}"
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.prod.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -196,7 +196,7 @@ steps:
         - latest
     ruleset:
       event: [ push ]
-      branch: vela
+      branch: master
     environment:
       CICD_MODE: 'true'
     secrets: [ docker_username, docker_password ]
@@ -211,7 +211,7 @@ steps:
       tags: 'rc.${BUILD_TAG:35}'
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.stage.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -227,7 +227,7 @@ steps:
       tags: "rc.${BUILD_TAG:34}"
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.prod.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -249,7 +249,7 @@ steps:
         - latest
     ruleset:
       event: [ push ]
-      branch: vela
+      branch: master
     environment:
       CICD_MODE: 'true'
     secrets: [ docker_username, docker_password ]
@@ -264,7 +264,7 @@ steps:
       tags: 'rc.${BUILD_TAG:35}'
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.stage.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -280,7 +280,7 @@ steps:
       tags: "rc.${BUILD_TAG:34}"
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.prod.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -303,7 +303,7 @@ steps:
         - latest
     ruleset:
       event: [ push ]
-      branch: vela
+      branch: master
     environment:
       CICD_MODE: 'true'
     secrets: [ docker_username, docker_password ]
@@ -318,7 +318,7 @@ steps:
       tags: 'rc.${BUILD_TAG:35}'
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.stage.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
@@ -334,7 +334,7 @@ steps:
       tags: "rc.${BUILD_TAG:34}"
     ruleset:
       event: tag
-      branch: vela
+      branch: master
       tag: conf.prod.backpackregistrycoupons.*
     environment:
       CICD_MODE: 'true'
