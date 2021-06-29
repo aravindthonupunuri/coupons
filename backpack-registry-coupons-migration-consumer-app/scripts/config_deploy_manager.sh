@@ -68,7 +68,6 @@ app_private_key="$app_private_key_file" tap_api_token="$tap_api_token" $scriptDi
 # deploy Base64 encoded lists-bus.target ssl cert
 app_private_key="$app_private_key_file" tap_api_token="$tap_api_token" $scriptDir/deploy_tap_config.sh "$envname" secrets "$secret_resources_location"/lists-bus-keystore-base64-${envname}.jks true
 
-
 #### Configuration deployment section ####
 
 # append app.yml from service folder to the main app.yml and deploy application.yml
